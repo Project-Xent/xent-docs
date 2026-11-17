@@ -1,0 +1,9 @@
+version: 2
+
+build:
+  os: ubuntu-24.04
+  commands:
+    - git fetch --depth 1 origin rtd-html
+    - case "$READTHEDOCS_LANGUAGE" in zh*) echo zh_CN ;; *) echo en ;; esac > .rtd-lang
+    - mkdir -p "$READTHEDOCS_OUTPUT/html"
+    - git archive FETCH_HEAD "$(cat .rtd-lang)" | tar -x --strip-components=1 -C "$READTHEDOCS_OUTPUT/html"

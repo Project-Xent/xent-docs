@@ -1,0 +1,73 @@
+name: docs
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: docs
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: xent-docs
+      - uses: actions/checkout@v4
+        with:
+          repository: Project-Xent/xent-core
+          path: xent-core
+      - uses: actions/checkout@v4
+        with:
+          repository: Project-Xent/xent-kit
+          path: xent-kit
+      - uses: actions/checkout@v4
+        with:
+          repository: Project-Xent/fluxent
+          path: fluxent
+      - uses: actions/checkout@v4
+        with:
+          repository: Project-Xent/cwinrt
+          path: cwinrt
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Build
+        working-directory: xent-docs
+        run: |
+          test -f "/c/Program Files/LLVM/bin/clang.exe"
+          python -m pip install -r requirements.txt
+          python -m sphinx -b html -d _build/doctrees/en source _build/rtd/en
+          python -m sphinx -b html -d _build/doctrees/zh_CN -D language=zh_CN source _build/rtd/zh_CN
+
+      - name: Publish
+        working-directory: xent-docs/_build/rtd
+        run: |
+          git init -q -b rtd-html
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Build ${GITHUB_SHA}"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" rtd-html
+
+      - name: Trigger Read the Docs
+        if: ${{ vars.RTD_PROJECTS != '' }}
+        env:
+          RTD_TOKEN: ${{ secrets.RTD_TOKEN }}
+          RTD_PROJECTS: ${{ vars.RTD_PROJECTS }}
+        run: |
+          for p in $RTD_PROJECTS; do
+            curl -fsS -X POST -H "Authorization: Token $RTD_TOKEN" \
+              "https://readthedocs.org/api/v3/projects/$p/versions/latest/builds/"
+          done
