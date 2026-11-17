@@ -1,0 +1,228 @@
+# Project Xent Architecture & Core Concepts (zh_CN)
+# Copyright (C) 2026, Project Xent
+# This file is distributed under the same license as the Xent package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Xent 0.3.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-18 01:31+0800\n"
+"PO-Revision-Date: 2026-11-18 01:35+0800\n"
+"Last-Translator: Project Xent\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/concepts.rst:2
+msgid "Architecture & Core Concepts"
+msgstr "架构与核心概念"
+
+#: ../../source/concepts.rst:4
+msgid ""
+"This page explains how ``xent-core``, ``xent-kit``, and ``fluxent`` "
+"divide responsibilities in **Xent 0.3.3**, along with the core runtime "
+"guarantees for retained controls, binary size, and background threads."
+msgstr ""
+"本页说明 **Xent 0.3.3** 中 ``xent-core`` 、 ``xent-kit`` 与 ``fluxent`` 的职责分层，"
+"以及保留式控件、可执行文件裁剪与后台线程通信的核心约定。"
+
+#: ../../source/concepts.rst:9
+msgid "Three-Layer Package Responsibilities"
+msgstr "三层包职责划分"
+
+#: ../../source/concepts.rst:11
+msgid ""
+"Project Xent separates layout calculation, control semantics, and native "
+"OS rendering into three distinct layers:"
+msgstr "Project Xent 将布局计算、控件协议语义与操作系统原生渲染划分为清晰的三层："
+
+#: ../../source/concepts.rst:14
+msgid "``xent-core`` — **Headless Layout & Display Lists**"
+msgstr "``xent-core`` —— **无头布局引擎与显示列表**"
+
+#: ../../source/concepts.rst:16
+msgid ""
+"Maintains the generation-checked ``XentNodeId`` tree so stale handles are"
+" detected reliably even after node slots are reused."
+msgstr "维护带代次校验的 ``XentNodeId`` 节点树，即使节点槽位复用也能可靠识别过期句柄。"
+
+#: ../../source/concepts.rst:18
+msgid ""
+"Computes ``ABSOLUTE``, ``FLEX``, ``SWIFTSTACK``, and ``GRID`` layout, "
+"intrinsic content sizing, dirty propagation, focus order, accessibility "
+"semantics roles, and immutable ``XentDisplayList`` command buffers."
+msgstr ""
+"负责 ``ABSOLUTE`` 、 ``FLEX`` 、 ``SWIFTSTACK`` 与 ``GRID`` 布局计算、固有内容测量、"
+"脏标记传播、焦点顺序、无障碍语义角色以及不可变 ``XentDisplayList`` 绘制指令列表。"
+
+#: ../../source/concepts.rst:21
+msgid ""
+"Written in portable C23 for use by platform hosts, headless layout tools,"
+" and shared layout types (``XentFlexAlign``, ``XentInsets``) re-exported "
+"through ``xent-kit``."
+msgstr ""
+"采用可移植 C23 实现，供各平台宿主、无头排版工具直接调用，并通过 ``xent-kit`` 导出共享布局类型"
+"（如 ``XentFlexAlign`` 、 ``XentInsets`` ）。"
+
+#: ../../source/concepts.rst:25
+msgid "``xent-kit`` — **Control Protocol, Retained Host ABI, & Reconciler**"
+msgstr "``xent-kit`` —— **控件协议、保留式宿主 ABI 与协调器**"
+
+#: ../../source/concepts.rst:27
+msgid ""
+"Defines the standard catalog of 70+ controls, typed properties, and "
+"normalized events generated from ``tools/catalog.lua``."
+msgstr "定义由 ``tools/catalog.lua`` 生成的 70 余种标准控件目录、强类型属性与标准化事件。"
+
+#: ../../source/concepts.rst:29
+msgid ""
+"Defines ``XtkBatch``, the atomic mutation wire format: a host validates "
+"and prepares every operation in a batch before committing, preserving the"
+" previous live tree intact whenever an error occurs."
+msgstr ""
+"定义原子化变更编码格式 ``XtkBatch`` ：宿主在提交前对整批操作完成校验与准备，遇到任何错误时完整保留原有活动树状态。"
+
+#: ../../source/concepts.rst:32
+msgid ""
+"Provides both public programming models on top of that protocol: the "
+"imperative ``XtkScene`` / ``XtkTxn`` API and the declarative ``xtk_*`` "
+"reconciler."
+msgstr "在该协议之上同时提供两套公开编程接口：命令式 ``XtkScene`` / ``XtkTxn`` API 与声明式 ``xtk_*`` 协调器。"
+
+#: ../../source/concepts.rst:36
+msgid "``fluxent`` — **Native Windows Host**"
+msgstr "``fluxent`` —— **Windows 原生宿主**"
+
+#: ../../source/concepts.rst:38
+msgid ""
+"Implements ``XtkHost`` on Windows 10 1903+ over Win32, Direct2D, "
+"DirectWrite (text shaping, grapheme editing, IME), DirectComposition and "
+"DirectManipulation (smooth scrolling and Mica/Acrylic backdrops), Windows"
+" Imaging Component (async image decoding), UI Automation (screen "
+"readers), and ``cwinrt`` (pure-C WinRT projections)."
+msgstr ""
+"基于 Win32、Direct2D、DirectWrite（文本塑形、字素级编辑、输入法）、DirectComposition 与 "
+"DirectManipulation（平滑滚动与 Mica/Acrylic 背景材质）、WIC（异步图像解码）、UI Automation"
+"（屏幕阅读器无障碍）以及 ``cwinrt`` （纯 C WinRT 投影）在 Windows 10 1903+ 上实现 ``XtkHost`` 。"
+
+#: ../../source/concepts.rst:43
+msgid ""
+"Provides ``flux_run`` for declarative applications alongside "
+"``flux_app_*`` and ``flux_host_*`` for imperative applications and "
+"desktop shell integration (file dialogs, menus, popups, drag-and-drop, "
+"clipboard)."
+msgstr ""
+"提供面向声明式应用的 ``flux_run`` 入口，以及面向命令式应用与桌面外壳集成（文件对话框、菜单、弹出层、"
+"拖放、剪贴板）的 ``flux_app_*`` 与 ``flux_host_*`` 接口。"
+
+#: ../../source/concepts.rst:48
+msgid "Retained Control Architecture"
+msgstr "保留式控件架构"
+
+#: ../../source/concepts.rst:50
+msgid ""
+"Xent uses a **retained** UI architecture across both declarative and "
+"imperative modes:"
+msgstr "无论采用声明式还是命令式，Xent 均运行在统一的 **保留式（Retained）** 控件架构之上："
+
+#: ../../source/concepts.rst:53
+msgid ""
+"The Fluxent host owns persistent native control instances with stateful "
+"text selection, IME composition, keyboard focus navigation, inertial "
+"scrolling, and OS accessibility peers."
+msgstr ""
+"Fluxent 宿主维护持久的原生控件实例，完整保留文本选区、输入法组字状态、键盘焦点导航、惯性滚动与系统无障碍节点。"
+
+#: ../../source/concepts.rst:56
+msgid ""
+"In declarative mode, ``view()`` constructs lightweight arena-allocated "
+"descriptors when messages arrive; the reconciler diffs them against the "
+"prior composition and commits incremental ``XtkBatch`` patches to the "
+"existing controls."
+msgstr ""
+"在声明式模式下， ``view()`` 在消息到达时于帧内存池中构造轻量描述节点，协调器将其与上一帧结构比对后，向现有控件提交增量 ``XtkBatch`` 补丁。"
+
+#: ../../source/concepts.rst:60
+msgid ""
+"Event-driven scheduling keeps idle windows asleep until user input, "
+"active animations, async image completion, or ``flux_app_post`` / "
+"``flux_app_redraw`` requests a frame."
+msgstr ""
+"事件驱动的帧调度使空闲窗口保持休眠，在用户输入、活动动画、异步图像解码完成或调用 ``flux_app_post`` / ``flux_app_redraw`` 时按需唤醒渲染。"
+
+#: ../../source/concepts.rst:65
+msgid "Modular Control Registration & Binary Size"
+msgstr "模块化控件注册与体积裁剪"
+
+#: ../../source/concepts.rst:67
+msgid ""
+"In **Fluxent 0.3.3**, every control is packaged as an independent "
+"``FluxControlModule`` declared in ``<fluxent/flux_controls.h>`` (such as "
+"``flux_ctrl_container``, ``flux_ctrl_text``, ``flux_ctrl_button``, "
+"``flux_ctrl_textbox``, and ``flux_ctrl_list``), allowing linker dead-"
+"stripping to include only the controls your application registers:"
+msgstr ""
+"在 **Fluxent 0.3.3** 中，每种控件都封装为声明在 ``<fluxent/flux_controls.h>`` 中的独立 "
+"``FluxControlModule`` （如 ``flux_ctrl_container`` 、 ``flux_ctrl_text`` 、 ``flux_ctrl_button`` 、 "
+"``flux_ctrl_textbox`` 、 ``flux_ctrl_list`` ），配合链接器死代码消除，只将实际注册的控件编入最终程序："
+
+#: ../../source/concepts.rst:73
+msgid ""
+"**Selective registration (** ``flux_controls_use(&flux_ctrl_<name>)`` "
+"**)**: Registers individual control modules (each module automatically "
+"registers any internal sub-controls it depends on). Unused controls are "
+"stripped by the linker, keeping single-file executables compact."
+msgstr ""
+"**按需注册（** ``flux_controls_use(&flux_ctrl_<name>)`` **）** ：逐个注册所需控件模块"
+"（每个模块会自动注册其内部依赖的子控件），未使用的控件代码会被链接器裁掉，使单文件可执行程序保持精简。"
+
+#: ../../source/concepts.rst:77
+msgid ""
+"**Full catalog registration (** ``flux_controls_all()`` **)**: Registers "
+"every built-in control module in one call—handy during rapid prototyping "
+"or in applications that use a wide variety of controls."
+msgstr ""
+"**全量注册（** ``flux_controls_all()`` **）** ：一次调用注册全部内置控件模块，适合快速原型验证或使用大量控件的综合型应用。"
+
+#: ../../source/concepts.rst:83
+msgid ""
+"Register every control module your application instantiates before the "
+"first batch commits; creating an unregistered control returns "
+"``XTK_BATCH_ERR_BACKEND``."
+msgstr "请在首次批次提交前完成所用控件模块的注册；创建未注册的控件类型会返回 ``XTK_BATCH_ERR_BACKEND`` 。"
+
+#: ../../source/concepts.rst:88
+msgid "Thread Safety & Background Work"
+msgstr "线程安全与后台任务"
+
+#: ../../source/concepts.rst:90
+msgid ""
+"UI trees, ``XtkScene``, and ``FluxApp`` windows run on the main UI "
+"thread. Background worker threads performing network requests, disk I/O, "
+"or compute tasks deliver results back to the UI thread through "
+"``FluxApp``'s thread-safe posting functions:"
+msgstr ""
+"UI 树、 ``XtkScene`` 与 ``FluxApp`` 窗口运行在主 UI 线程上。执行网络请求、磁盘读写或计算任务的后台工作线程，"
+"通过 ``FluxApp`` 提供的线程安全投递函数将结果传回 UI 线程："
+
+#: ../../source/concepts.rst:95
+msgid ""
+"``flux_app_post(app, xtk_msg_i(MSG_DONE, status))`` — Enqueues an "
+"``XtkMsg`` from any thread and wakes the window event loop."
+msgstr "``flux_app_post(app, xtk_msg_i(MSG_DONE, status))`` —— 从任意线程将 ``XtkMsg`` 入队并唤醒窗口事件循环。"
+
+#: ../../source/concepts.rst:97
+msgid ""
+"``flux_app_poststring(app, xtk_msg(MSG_LOG), text, len)`` — Copies a "
+"UTF-8 buffer and delivers it to ``update()`` on the UI thread."
+msgstr "``flux_app_poststring(app, xtk_msg(MSG_LOG), text, len)`` —— 拷贝 UTF-8 字符串并在 UI 线程上投递给 ``update()`` 。"
+
+#: ../../source/concepts.rst:99
+msgid ""
+"``flux_app_invoke(app, fn, ctx)`` — Schedules ``fn(ctx)`` to execute on "
+"the UI thread."
+msgstr "``flux_app_invoke(app, fn, ctx)`` —— 调度 ``fn(ctx)`` 到 UI 线程执行。"

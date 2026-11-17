@@ -1,0 +1,113 @@
+# Project Xent API Reference — xent-core (zh_CN)
+# Copyright (C) 2026, Project Xent
+# This file is distributed under the same license as the Xent package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Xent 0.3.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-18 01:26+0800\n"
+"PO-Revision-Date: 2026-11-18 01:38+0800\n"
+"Last-Translator: Project Xent\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/api/core.rst:2
+msgid "xent-core"
+msgstr "xent-core"
+
+#: ../../../xent-core/include/xent/xent.h:17
+#: ../../../xent-core/include/xent/xent.h:24
+msgid "Fails while an observer is running."
+msgstr "生命周期观察者正在执行期间调用将返回失败。"
+
+#: ../../../xent-core/include/xent/xent.h:19
+msgid "Destroys the subtree. Fails while an observer is running."
+msgstr "销毁整棵子树。生命周期观察者正在执行期间调用将返回失败。"
+
+#: ../../../xent-core/include/xent/xent.h:22
+msgid ""
+"Detaches `child` from its current parent and appends it. Fails while an "
+"observer is running, or if `child` is an ancestor of `parent`."
+msgstr "将 `child` 从当前父节点分离并追加到 `parent` 末尾。观察者执行期间或 `child` 为 `parent` 祖先时返回失败。"
+
+#: ../../../xent-core/include/xent/xent.h:27
+msgid ""
+"`before == XENT_NODE_INVALID` appends. `child` must have no parent. Fails"
+" while an observer is running, or if `child` is an ancestor of `parent`."
+msgstr ""
+"当 `before == XENT_NODE_INVALID` 时追加到末尾。要求 `child` 尚无父节点；观察者执行期间或 `child` 为 `parent` 祖先时返回失败。"
+
+#: ../../../xent-core/include/xent/xent.h:29
+msgid ""
+"`before == XENT_NODE_INVALID` moves to the end. `child` must already be "
+"under `parent`. Fails while an observer is running."
+msgstr "当 `before == XENT_NODE_INVALID` 时移至末尾。要求 `child` 已位于 `parent` 之下；观察者执行期间返回失败。"
+
+#: ../../../xent-core/include/xent/xent.h:31
+msgid ""
+"`before == XENT_NODE_INVALID` appends. `child` must already have a "
+"different parent. Fails while an observer is running, or if `child` is an"
+" ancestor of `new_parent`."
+msgstr ""
+"当 `before == XENT_NODE_INVALID` 时追加到末尾。要求 `child` 原先挂在另一个父节点下；观察者执行期间或 `child` 为 `new_parent` 祖先时返回失败。"
+
+#: ../../../xent-core/include/xent/xent.h:34
+msgid ""
+"Borrows `observer->userdata` until `xent_node_delobs` or "
+"`xent_ctx_destroy`."
+msgstr "借用 `observer->userdata` 直至调用 `xent_node_delobs` 或 `xent_ctx_destroy` 。"
+
+#: ../../../xent-core/include/xent/xent.h:39
+msgid "Copies `label`. NULL is stored as an empty string. The caller may free it."
+msgstr "拷贝 `label` （传入 NULL 时存为空字符串），调用方随后可释放原缓冲区。"
+
+#: ../../../xent-core/include/xent/xent.h:65
+msgid ""
+"Borrowed until the next `xent_sem_setlabel` on this node, or until the "
+"node is destroyed."
+msgstr "借用指针有效至该节点下一次调用 `xent_sem_setlabel` 或节点销毁为止。"
+
+#: ../../../xent-core/include/xent/xent.h:67
+msgid ""
+"Borrowed until the next `xent_settext` on this node, or until the node is"
+" destroyed."
+msgstr "借用指针有效至该节点下一次调用 `xent_settext` 或节点销毁为止。"
+
+#: ../../../xent-core/include/xent/xent_text.h:27
+msgid "Copies `text`. NULL is stored as an empty string. The caller may free it."
+msgstr "拷贝 `text` （传入 NULL 时存为空字符串），调用方随后可释放原缓冲区。"
+
+#: ../../../xent-core/include/xent/xent_text.h:36
+msgid "Copies `family`. NULL or \"\" clears it. The caller may free it."
+msgstr "拷贝 `family` （传入 NULL 或 \"\" 清空设置），调用方随后可释放原缓冲区。"
+
+#: ../../../xent-core/include/xent/xent_text.h:43
+msgid "Copies `runs` and each `font_family`. The caller may free the input."
+msgstr "拷贝 `runs` 数组及每个 `font_family` 字符串，调用方随后可释放输入缓冲区。"
+
+#: ../../../xent-core/include/xent/xent_measure.h:15
+msgid ""
+"Borrows `userdata` until `xent_node_clearmeasure` or the node is "
+"destroyed."
+msgstr "借用 `userdata` 直至调用 `xent_node_clearmeasure` 或节点销毁。"
+
+#: ../../../xent-core/include/xent/xent_display.h:195
+#: ../../../xent-core/include/xent/xent_display.h:199
+msgid "Copies `utf8`. The caller may free it."
+msgstr "拷贝 `utf8` 字符串，调用方随后可释放原缓冲区。"
+
+#: ../../../xent-core/include/xent/xent_display.h:229
+msgid ""
+"Consumes `b`, including when a clip, transform, or opacity push is still "
+"open."
+msgstr "消费并结束构建器 `b` （即使仍有未闭合的裁剪、变换或透明度压栈状态）。"
+
+#: ../../../xent-core/include/xent/xent_display.h:235
+msgid "Points into `list` until `xent_dl_free`."
+msgstr "返回指向 `list` 内部的只读指针，有效至调用 `xent_dl_free` 为止。"

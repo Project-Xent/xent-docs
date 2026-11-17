@@ -1,0 +1,9 @@
+_build/
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.mo
+.DS_Store
+Thumbs.db
+Desktop.ini

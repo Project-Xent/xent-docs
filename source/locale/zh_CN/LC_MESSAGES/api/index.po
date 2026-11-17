@@ -1,0 +1,59 @@
+# Project Xent API Reference (zh_CN)
+# Copyright (C) 2026, Project Xent
+# This file is distributed under the same license as the Xent package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Xent 0.3.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-18 01:31+0800\n"
+"PO-Revision-Date: 2026-11-18 01:35+0800\n"
+"Last-Translator: Project Xent\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/api/index.rst:2
+msgid "API Reference"
+msgstr "API 参考"
+
+#: ../../source/api/index.rst:4
+msgid ""
+"The C API reference below is generated from the public C23 headers in the"
+" sibling repositories by `Hawkmoth <https://hawkmoth.readthedocs.io/>`__."
+" Declaration comments specify ownership, ``NULL`` handling, borrowing "
+"lifetimes, threading rules, and error behavior."
+msgstr ""
+"以下 C API 参考由 `Hawkmoth <https://hawkmoth.readthedocs.io/>`__ 直接从同级源码仓库的公开 C23 "
+"头文件生成。声明注释标明了所有权、 ``NULL`` 处理、借用生命周期、线程规则与错误行为。"
+
+#: ../../source/api/index.rst:9
+msgid ""
+":doc:`core` — Headless layout, node tree, intrinsic/text measurement, and"
+" display lists (``<xent/xent.h>``), used when building custom hosts or "
+"headless layout pipelines."
+msgstr ""
+":doc:`core` —— 无头布局、节点树、固有尺寸/文本测量与显示列表（ ``<xent/xent.h>`` ），用于开发自定义宿主或无头排版管线。"
+
+#: ../../source/api/index.rst:12
+msgid ""
+":doc:`kit` — Atomic ``XtkBatch`` protocol, retained ``XtkHost`` ABI, "
+"event payloads, and reconciler runtime (``<xtk/...>``). Declarative "
+"element builders are declared in ``<xtk/xtk.h>``; generated imperative "
+"control wrappers are declared in ``<xtk/xtk_controls.h>``."
+msgstr ""
+":doc:`kit` —— 原子化 ``XtkBatch`` 协议、保留式 ``XtkHost`` ABI、事件载荷与协调器运行时（ ``<xtk/...>`` ）。"
+"声明式元素构建器声明于 ``<xtk/xtk.h>`` ，自动生成的命令式控件包装函数声明于 ``<xtk/xtk_controls.h>`` 。"
+
+#: ../../source/api/index.rst:16
+msgid ""
+":doc:`fluxent` — Native Windows application entry points (``flux_run``, "
+"``FluxApp``), ``XtkHost`` attachment, windowing, menus, popups, file "
+"dialogs, clipboard, and drag-and-drop (``<fluxent/...>``)."
+msgstr ""
+":doc:`fluxent` —— Windows 原生应用入口（ ``flux_run`` 、 ``FluxApp`` ）、 ``XtkHost`` 挂载、"
+"窗口管理、菜单、弹出层、文件对话框、剪贴板与拖放接口（ ``<fluxent/...>`` ）。"

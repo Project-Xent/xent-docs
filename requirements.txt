@@ -1,0 +1,4 @@
+sphinx>=8
+sphinx-intl>=2.2
+hawkmoth>=0.22
+libclang>=18

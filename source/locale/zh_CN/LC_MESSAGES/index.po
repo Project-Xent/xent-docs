@@ -1,0 +1,124 @@
+# Project Xent Manual (zh_CN)
+# Copyright (C) 2026, Project Xent
+# This file is distributed under the same license as the Xent package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Xent 0.3.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-18 01:31+0800\n"
+"PO-Revision-Date: 2026-11-18 01:35+0800\n"
+"Last-Translator: Project Xent\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/index.rst:44
+msgid "Manual"
+msgstr "使用手册"
+
+#: ../../source/index.rst:2
+msgid "Project Xent"
+msgstr "Project Xent"
+
+#: ../../source/index.rst:4
+msgid ""
+"Project Xent is a native cross-platform UI stack written in C23 "
+"(current release **0.3.3**). Application code runs against a platform-"
+"neutral control protocol while a native host provides OS windowing, text "
+"shaping, input handling, and accessibility."
+msgstr ""
+"Project Xent 是使用 C23 编写的原生跨平台 UI 技术栈（当前版本 **0.3.3** ）。"
+"应用代码面向平台无关的控件协议编写，由底层原生宿主提供操作系统窗口、文本排版、"
+"输入处理与无障碍支持。"
+
+#: ../../source/index.rst:10
+msgid "Stack Overview"
+msgstr "组件栈概览"
+
+#: ../../source/index.rst:12
+msgid ""
+"Project Xent consists of three C23 packages. Application code works "
+"directly with ``xent-kit`` and the target platform host (``fluxent`` on "
+"Windows):"
+msgstr ""
+"Project Xent 由三个 C23 包组成。开发应用程序时，代码直接调用 ``xent-kit`` "
+"与目标平台宿主（Windows 上为 ``fluxent`` ）："
+
+#: ../../source/index.rst:19
+msgid "Package"
+msgstr "包名"
+
+#: ../../source/index.rst:20
+msgid "Application Usage"
+msgstr "应用层调用方式"
+
+#: ../../source/index.rst:21
+msgid "Responsibilities"
+msgstr "核心职责"
+
+#: ../../source/index.rst:22
+msgid "``xent-core``"
+msgstr "``xent-core``"
+
+#: ../../source/index.rst:23
+msgid "Pulled automatically as a dependency"
+msgstr "作为底层依赖自动拉取"
+
+#: ../../source/index.rst:24
+msgid ""
+"Platform-neutral layout engine (Flex, Grid, SwiftStack, Absolute), "
+"generation-checked node tree, intrinsic and text measurement caches, "
+"semantics, and immutable display lists."
+msgstr ""
+"平台无关的布局引擎（Flex、Grid、SwiftStack、Absolute）、带代次校验的节点树、"
+"固有尺寸与文本测量缓存、语义树以及不可变显示列表。"
+
+#: ../../source/index.rst:27
+msgid "``xent-kit``"
+msgstr "``xent-kit``"
+
+#: ../../source/index.rst:28
+msgid "``<xtk/xtk.h>`` or ``<xtk/xtk_controls.h>``"
+msgstr "``<xtk/xtk.h>`` 或 ``<xtk/xtk_controls.h>``"
+
+#: ../../source/index.rst:29
+msgid ""
+"Standard control catalog, atomic ``XtkBatch`` transaction protocol, "
+"imperative ``XtkScene`` API, and the declarative ``xtk_*`` runtime."
+msgstr ""
+"标准控件目录、原子化 ``XtkBatch`` 事务协议、命令式 ``XtkScene`` 接口，"
+"以及声明式 ``xtk_*`` 运行时。"
+
+#: ../../source/index.rst:31
+msgid "``fluxent``"
+msgstr "``fluxent``"
+
+#: ../../source/index.rst:32
+msgid "``<fluxent/fluxent.h>``"
+msgstr "``<fluxent/fluxent.h>``"
+
+#: ../../source/index.rst:33
+msgid ""
+"Native Windows 10 1903+ host built on Win32, Direct2D, DirectWrite, "
+"DirectComposition, UI Automation, and ``cwinrt``. Manages windows, Fluent"
+" control rendering, Mica/Acrylic backdrops, IME, input, and the "
+"application event loop (``flux_run`` / ``flux_app_run``)."
+msgstr ""
+"基于 Win32、Direct2D、DirectWrite、DirectComposition、UI Automation 与 ``cwinrt`` "
+"构建的 Windows 10 1903+ 原生宿主，负责窗口管理、Fluent 控件渲染、Mica/Acrylic 背景材质、"
+"输入法（IME）、输入分发以及应用主循环（ ``flux_run`` / ``flux_app_run`` ）。"
+
+#: ../../source/index.rst:40
+msgid ""
+"Official **0.3.3** language bindings share the same control catalog and "
+"host: ``oxent`` (Rust), ``zxent`` (Zig), ``xenthon`` (Python 3.12+), and "
+"``hsxent`` (Haskell). This manual covers the C23 stack."
+msgstr ""
+"官方 **0.3.3** 多语言绑定共享同一套控件目录与原生宿主： ``oxent`` （Rust）、"
+" ``zxent`` （Zig）、 ``xenthon`` （Python 3.12+）与 ``hsxent`` （Haskell）。"
+"本手册介绍 C23 原生技术栈的用法。"

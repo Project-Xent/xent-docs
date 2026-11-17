@@ -1,0 +1,167 @@
+# Project Xent API Reference — Fluxent (zh_CN)
+# Copyright (C) 2026, Project Xent
+# This file is distributed under the same license as the Xent package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Xent 0.3.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-18 01:26+0800\n"
+"PO-Revision-Date: 2026-11-18 01:38+0800\n"
+"Last-Translator: Project Xent\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/api/fluxent.rst:2
+msgid "Fluxent"
+msgstr "Fluxent"
+
+#: ../../../fluxent/include/fluxent/flux_host.h:17
+msgid "`flux_host_destroy` frees the context and store this creates."
+msgstr "调用 `flux_host_destroy` 时会一并释放该函数创建的上下文与存储实例。"
+
+#: ../../../fluxent/include/fluxent/flux_host.h:19
+msgid "Does not take ownership of `ctx` or `store`."
+msgstr "借用外部传入的 `ctx` 与 `store` （所有权仍归调用方）。"
+
+#: ../../../fluxent/include/fluxent/flux_host.h:31
+msgid "Borrows `userdata` until `flux_host_unsubscribe` or `flux_host_destroy`."
+msgstr "借用 `userdata` 直至调用 `flux_host_unsubscribe` 或 `flux_host_destroy` 。"
+
+#: ../../../fluxent/include/fluxent/flux_host.h:43
+msgid ""
+"Copies `path`. The caller may free it. The id remains valid for the rest "
+"of the process."
+msgstr "拷贝 `path` ，调用方随后可释放原字符串；返回的资源 ID 在整个进程生命周期内有效。"
+
+#: ../../../fluxent/include/fluxent/flux_app.h:68
+msgid "Borrows `ctx` until this callback is replaced or the app is destroyed."
+msgstr "借用 `ctx` 直至该回调被替换或应用销毁。"
+
+#: ../../../fluxent/include/fluxent/flux_app.h:77
+msgid "Borrows `ctx` until `fn` runs on the window thread."
+msgstr "借用 `ctx` 直至 `fn` 在窗口线程上执行完毕。"
+
+#: ../../../fluxent/include/fluxent/flux_app.h:80
+msgid ""
+"Copies `data` and delivers it on the window thread. The caller may free "
+"`data`. `len > 0` with NULL `data` is rejected."
+msgstr "拷贝 `data` 并投递到窗口线程，调用方随后可释放 `data` ；当 `len > 0` 且 `data` 为 NULL 时拒绝投递。"
+
+#: ../../../fluxent/include/fluxent/flux_data.h:20
+#: ../../../fluxent/include/fluxent/flux_data.h:41
+msgid "Copies `utf8`. The caller may free it."
+msgstr "拷贝 `utf8` 字符串，调用方随后可释放原缓冲区。"
+
+#: ../../../fluxent/include/fluxent/flux_data.h:22
+msgid "Copies `paths`. The caller may free it."
+msgstr "拷贝 `paths` 字符串，调用方随后可释放原缓冲区。"
+
+#: ../../../fluxent/include/fluxent/flux_data.h:24
+msgid "Copies `bitmap->pixels`. The caller may free them."
+msgstr "拷贝 `bitmap->pixels` 像素数据，调用方随后可释放原缓冲区。"
+
+#: ../../../fluxent/include/fluxent/flux_data.h:26
+msgid "Copies `bytes`. The caller may free them."
+msgstr "拷贝 `bytes` 字节数据，调用方随后可释放原缓冲区。"
+
+#: ../../../fluxent/include/fluxent/flux_data.h:29
+#: ../../../fluxent/include/fluxent/flux_data.h:43
+msgid "malloc'd UTF-8. The caller frees it."
+msgstr "返回由 `malloc` 分配的 UTF-8 字符串，由调用方负责释放。"
+
+#: ../../../fluxent/include/fluxent/flux_data.h:31
+msgid "malloc'd UTF-8, one path per line. The caller frees it."
+msgstr "返回由 `malloc` 分配的 UTF-8 字符串（每行一个路径），由调用方负责释放。"
+
+#: ../../../fluxent/include/fluxent/flux_data.h:33
+msgid "Copies pixels into `out`. The caller frees `out->pixels`."
+msgstr "将像素数据拷贝至 `out` ，由调用方负责释放 `out->pixels` 。"
+
+#: ../../../fluxent/include/fluxent/flux_data.h:35
+msgid "malloc'd bytes. The caller frees the pointer. `*len` is the byte count."
+msgstr "返回由 `malloc` 分配的字节缓冲区（ `*len` 为字节数），由调用方负责释放该指针。"
+
+#: ../../../fluxent/include/fluxent/flux_data.h:39
+msgid "Owned. The caller destroys it."
+msgstr "返回调用方拥有的实例，使用完毕后由调用方销毁。"
+
+#: ../../../fluxent/include/fluxent/flux_data.h:46
+msgid "Borrowed, and only while a drag or drop callback is running."
+msgstr "借用引用，仅在拖放回调执行期间有效。"
+
+#: ../../../fluxent/include/fluxent/flux_filedialog.h:32
+msgid "malloc'd UTF-8, one path per line. NULL if cancelled. The caller frees it."
+msgstr "返回由 `malloc` 分配的 UTF-8 字符串（每行一个路径；用户取消时返回 NULL），由调用方负责释放。"
+
+#: ../../../fluxent/include/fluxent/flux_filedialog.h:35
+msgid ""
+"Copies the strings in `desc`. The caller may free them. The chosen paths "
+"are posted as one UTF-8 path per line."
+msgstr "拷贝 `desc` 中的各字符串，调用方随后可释放；选中的路径按每行一个 UTF-8 路径投递。"
+
+#: ../../../fluxent/include/fluxent/flux_window.h:45
+#: ../../../fluxent/include/fluxent/flux_window.h:47
+#: ../../../fluxent/include/fluxent/flux_window.h:52
+#: ../../../fluxent/include/fluxent/flux_window.h:54
+#: ../../../fluxent/include/fluxent/flux_window.h:56
+#: ../../../fluxent/include/fluxent/flux_window.h:58
+#: ../../../fluxent/include/fluxent/flux_window.h:60
+#: ../../../fluxent/include/fluxent/flux_window.h:62
+#: ../../../fluxent/include/fluxent/flux_window.h:64
+msgid "Borrows `ctx` until this callback is replaced or the window is destroyed."
+msgstr "借用 `ctx` 直至该回调被替换或窗口销毁。"
+
+#: ../../../fluxent/include/fluxent/flux_window.h:49
+msgid "Borrows `ctx` until `flux_window_delresizeobs` or the window is destroyed."
+msgstr "借用 `ctx` 直至调用 `flux_window_delresizeobs` 或窗口销毁。"
+
+#: ../../../fluxent/include/fluxent/flux_window.h:74
+msgid "Copies `passthrough`. The caller may free it."
+msgstr "拷贝 `passthrough` 区域数组，调用方随后可释放。"
+
+#: ../../../fluxent/include/fluxent/flux_popup.h:68
+#: ../../../fluxent/include/fluxent/flux_popup.h:72
+#: ../../../fluxent/include/fluxent/flux_popup.h:89
+msgid "Borrows `ctx` until this callback is replaced or the popup is destroyed."
+msgstr "借用 `ctx` 直至该回调被替换或弹出层销毁。"
+
+#: ../../../fluxent/include/fluxent/flux_popup.h:76
+msgid ""
+"Borrows `ctx` and `text` until this callback is replaced or the popup is "
+"destroyed."
+msgstr "借用 `ctx` 与 `text` 直至该回调被替换或弹出层销毁。"
+
+#: ../../../fluxent/include/fluxent/flux_gfx.h:58
+msgid ""
+"Borrows `ctx` until this callback is replaced or the gfx object is "
+"destroyed."
+msgstr "借用 `ctx` 直至该回调被替换或图形对象销毁。"
+
+#: ../../../fluxent/include/fluxent/flux_node_store.h:29
+msgid ""
+"Borrows `userdata` until this callback is replaced or the store is "
+"destroyed."
+msgstr "借用 `userdata` 直至该回调被替换或存储实例销毁。"
+
+#: ../../../fluxent/include/fluxent/flux_flyout.h:34
+#: ../../../fluxent/include/fluxent/flux_flyout.h:37
+msgid ""
+"Borrows `user_ctx` until this callback is replaced or the flyout is "
+"destroyed."
+msgstr "借用 `user_ctx` 直至该回调被替换或浮出层销毁。"
+
+#: ../../../fluxent/include/fluxent/flux_menu.h:115
+msgid "Borrows `ctx` until this callback is replaced or the menu is destroyed."
+msgstr "借用 `ctx` 直至该回调被替换或菜单销毁。"
+
+#: ../../../fluxent/include/fluxent/flux_input.h:63
+msgid ""
+"Borrows `ctx` until this callback is replaced or the input object is "
+"destroyed."
+msgstr "借用 `ctx` 直至该回调被替换或输入对象销毁。"

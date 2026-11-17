@@ -1,0 +1,54 @@
+# Project Xent API Reference — xent-kit (zh_CN)
+# Copyright (C) 2026, Project Xent
+# This file is distributed under the same license as the Xent package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Xent 0.3.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-18 01:26+0800\n"
+"PO-Revision-Date: 2026-11-18 01:38+0800\n"
+"Last-Translator: Project Xent\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/api/kit.rst:2
+msgid "xent-kit"
+msgstr "xent-kit"
+
+#: ../../../xent-kit/include/xtk/xtk_batch.h:238
+msgid ""
+"Copies string and bytes. The caller may free them. `len > 0` with a NULL "
+"pointer fails and appends nothing. A resource id is copied; `res_retain` "
+"is not called."
+msgstr ""
+"拷贝字符串与字节切片，调用方随后可释放原内存。当 `len > 0` 且指针为 NULL 时返回失败且保持批次原样；资源 ID 按值拷贝。"
+
+#: ../../../xent-kit/include/xtk/xtk_batch.h:243
+msgid "Borrows `arg` until unsubscribe or the host is destroyed."
+msgstr "借用 `arg` 直至取消订阅或宿主销毁。"
+
+#: ../../../xent-kit/include/xtk/xtk_host.h:13
+msgid ""
+"`string` and `bytes` point at the host's stored copy, until that property"
+" changes or the host is destroyed."
+msgstr "`string` 与 `bytes` 指向宿主内部保存的副本，有效至该属性下次变更或宿主销毁为止。"
+
+#: ../../../xent-kit/include/xtk/xtk_event.h:56
+msgid "`string` and `query.text` are valid only for the duration of the callback."
+msgstr "`string` 与 `query.text` 仅在本次回调函数执行期间有效。"
+
+#: ../../../xent-kit/include/xtk/xtk_reconcile.h:105
+msgid "Must run on the thread that created `rt`."
+msgstr "在创建 `rt` 的同一线程上调用。"
+
+#: ../../../xent-kit/include/xtk/xtk_reconcile.h:107
+msgid ""
+"Must run on the thread that created `rt`. Copies `data`; the caller may "
+"free it. `len > 0` with NULL `data` is rejected."
+msgstr "在创建 `rt` 的同一线程上调用。拷贝 `data` ，调用方随后可释放；当 `len > 0` 且 `data` 为 NULL 时拒绝投递。"
