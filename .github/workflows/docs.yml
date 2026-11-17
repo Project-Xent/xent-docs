@@ -67,7 +67,10 @@ jobs:
           RTD_TOKEN: ${{ secrets.RTD_TOKEN }}
           RTD_PROJECTS: ${{ vars.RTD_PROJECTS }}
         run: |
+          token=$(printf %s "$RTD_TOKEN" | tr -d '\r\n\t ')
           for p in $RTD_PROJECTS; do
-            curl -fsS -X POST -H "Authorization: Token $RTD_TOKEN" \
-              "https://readthedocs.org/api/v3/projects/$p/versions/latest/builds/"
+            code=$(curl -sS -o resp.json -w '%{http_code}' -X POST -H "Authorization: Token $token" \
+              "https://app.readthedocs.org/api/v3/projects/$p/versions/latest/builds/")
+            echo "$p: $code"
+            case "$code" in 2*) ;; *) cat resp.json; exit 1 ;; esac
           done
