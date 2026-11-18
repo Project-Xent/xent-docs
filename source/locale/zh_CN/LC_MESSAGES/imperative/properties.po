@@ -1,0 +1,259 @@
+# Project Xent Imperative UI Guide — Properties & Layouts (zh_CN)
+# Copyright (C) 2026, Project Xent
+# This file is distributed under the same license as the Xent package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Xent 0.3.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-18 23:32+0800\n"
+"PO-Revision-Date: 2026-11-18 23:42+0800\n"
+"Last-Translator: Project Xent\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/imperative/properties.rst:2
+msgid "3. Typed Control Builders, Bitmasks, & Layouts"
+msgstr "3. 强类型构建器、属性位掩码与布局"
+
+#: ../../source/imperative/properties.rst:4
+msgid ""
+"``<xtk/xtk_controls.h>`` is generated directly from ``xent-"
+"kit/tools/catalog.lua`` and provides typed creation structs, property "
+"setters, and event subscription helpers for all 70+ controls."
+msgstr ""
+"``<xtk/xtk_controls.h>`` 直接由 ``xent-kit/tools/catalog.lua`` 生成，"
+"为全部 70 余种控件提供强类型创建结构体、单属性设置函数与事件订阅包装函数。"
+
+#: ../../source/imperative/properties.rst:9
+msgid "Naming Conventions in ``<xtk/xtk_controls.h>``"
+msgstr "``<xtk/xtk_controls.h>`` 命名规律"
+
+#: ../../source/imperative/properties.rst:11
+msgid ""
+"Every catalog control ``<ctrl>`` (such as ``container``, ``card``, "
+"``scroll``, ``text``, ``button``, ``checkbox``, ``slider``, ``textbox``, "
+"``combo``, ``list``, ``nav``, ``dialog``, ``commandbar``) follows the "
+"same generated pattern:"
+msgstr ""
+"目录中的每种控件 ``<ctrl>`` （如 ``container`` 、 ``card`` 、 ``scroll`` 、 ``text`` 、 ``button`` 、 "
+"``checkbox`` 、 ``slider`` 、 ``textbox`` 、 ``combo`` 、 ``list`` 、 ``nav`` 、 ``dialog`` 、 ``commandbar`` ）"
+"均遵循统一的生成命名规则："
+
+#: ../../source/imperative/properties.rst:16
+msgid ""
+"**Properties struct**: ``Xtk<Ctrl>Props`` (for example "
+"``XtkButtonProps``, ``XtkContainerProps``, ``XtkTextBoxProps``)."
+msgstr "**属性结构体** ： ``Xtk<Ctrl>Props`` （例如 ``XtkButtonProps`` 、 ``XtkContainerProps`` 、 ``XtkTextBoxProps`` ）。"
+
+#: ../../source/imperative/properties.rst:18
+msgid ""
+"**Bitmask constants**: ``XTK_<CTRL>_<PROP>_MASK`` (for example "
+"``XTK_BUTTON_TEXT_MASK``, ``XTK_BUTTON_STYLE_MASK``, "
+"``XTK_BUTTON_W_MASK``)."
+msgstr "**属性掩码常量** ： ``XTK_<CTRL>_<PROP>_MASK`` （例如 ``XTK_BUTTON_TEXT_MASK`` 、 ``XTK_BUTTON_STYLE_MASK`` 、 ``XTK_BUTTON_W_MASK`` ）。"
+
+#: ../../source/imperative/properties.rst:20
+msgid ""
+"**Transaction creator**: ``XtkLocalId xtk_<ctrl>_create(XtkTxn *txn, "
+"XtkNodeRef parent, Xtk<Ctrl>Props const *props);``"
+msgstr "**事务内创建函数** ： ``XtkLocalId xtk_<ctrl>_create(XtkTxn *txn, XtkNodeRef parent, Xtk<Ctrl>Props const *props);``"
+
+#: ../../source/imperative/properties.rst:22
+msgid ""
+"**Live property setters**: ``bool xtk_<ctrl>_set<prop>(XtkScene *scene, "
+"XtkCtrl control, <type> value, XtkChangeStamp change);``"
+msgstr "**运行期属性设置函数** ： ``bool xtk_<ctrl>_set<prop>(XtkScene *scene, XtkCtrl control, <type> value, XtkChangeStamp change);``"
+
+#: ../../source/imperative/properties.rst:24
+msgid ""
+"**Event subscribers**: ``XtkSubRef xtk_<ctrl>_on<event>(XtkTxn *txn, "
+"XtkNodeRef target, XtkEventFn fn, void *arg);``"
+msgstr "**事件订阅函数** ： ``XtkSubRef xtk_<ctrl>_on<event>(XtkTxn *txn, XtkNodeRef target, XtkEventFn fn, void *arg);``"
+
+#: ../../source/imperative/properties.rst:27
+msgid ""
+"Shared layout fields—``w``, ``h``, ``grow``, ``shrink``, ``self`` "
+"(``XentFlexAlign``), ``ml``, ``mt``, ``mr``, ``mb`` (margins), and "
+"``tip`` (tooltip string)—appear directly on every control's "
+"``Xtk<Ctrl>Props`` struct."
+msgstr ""
+"公共布局字段—— ``w`` 、 ``h`` 、 ``grow`` 、 ``shrink`` 、 ``self`` （ ``XentFlexAlign`` ）、 "
+"``ml`` / ``mt`` / ``mr`` / ``mb`` （外边距）以及 ``tip`` （工具提示文本）——直接内嵌在每种控件的 ``Xtk<Ctrl>Props`` 结构体中。"
+
+#: ../../source/imperative/properties.rst:32
+msgid "Working with ``.set`` Masks and Strings"
+msgstr "使用 ``.set`` 位掩码与字符串切片"
+
+#: ../../source/imperative/properties.rst:34
+msgid ""
+"In C compound literals, omitted struct fields default to ``0``—which is "
+"also a meaningful value for ``gap = 0.0f``, ``sel = 0``, or enum variant "
+"``0``. The ``.set`` bitmask tells the encoder exactly which fields you "
+"populated:"
+msgstr ""
+"在 C 复合字面量中，未填写的字段默认初始化为 ``0`` ——而 ``0`` 同时也是 ``gap = 0.0f`` 、 ``sel = 0`` 或首个枚举值的有效取值。"
+"因此通过 ``.set`` 位掩码明确告知编码器本次要设置哪些字段："
+
+#: ../../source/imperative/properties.rst:51
+msgid "String Length Rules"
+msgstr "字符串长度规则"
+
+#: ../../source/imperative/properties.rst:53
+msgid ""
+"Every string property on ``Xtk<Ctrl>Props`` has both a pointer field "
+"(such as ``.text``, ``.icon``, ``.placeholder``, ``.tip``) and a byte-"
+"length field (``.text_len``, ``.icon_len``, ``.placeholder_len``, "
+"``.tip_len``), and string setters take ``(char const *data, uint32_t "
+"len)``:"
+msgstr ""
+"``Xtk<Ctrl>Props`` 中的每个字符串属性都成对提供指针字段（如 ``.text`` 、 ``.icon`` 、 ``.placeholder`` 、 ``.tip`` ）"
+"与字节长度字段（ ``.text_len`` 、 ``.icon_len`` 、 ``.placeholder_len`` 、 ``.tip_len`` ），"
+"字符串 setter 函数同样接收 ``(char const *data, uint32_t len)`` ："
+
+#: ../../source/imperative/properties.rst:58
+msgid ""
+"**Null-terminated C strings**: Leaving ``.text_len = 0`` (or passing "
+"``len = 0`` to ``xtk_<ctrl>_set<prop>``) automatically measures "
+"``strlen(data)`` when ``data`` is non-NULL."
+msgstr "**以 NUL 结尾的普通 C 字符串** ：保持 ``.text_len = 0`` （或在 ``xtk_<ctrl>_set<prop>`` 中传 ``len = 0`` ）时，非空 ``data`` 会自动调用 ``strlen(data)`` 计算长度。"
+
+#: ../../source/imperative/properties.rst:61
+msgid ""
+"**Explicit byte slices & compile-time literals**: Passing a non-zero "
+"length skips ``strlen`` and supports non-null-terminated UTF-8 slices—for"
+" example ``#define LIT(s) .text = s, .text_len = sizeof(s) - 1`` for "
+"string literals or ``(uint32_t) snprintf(...)`` for formatted buffers."
+msgstr ""
+"**显式字节切片与编译期字面量** ：传入非零长度可直接跳过 ``strlen`` 并支持无结尾符的 UTF-8 切片——例如对字面量定义 "
+"``#define LIT(s) .text = s, .text_len = sizeof(s) - 1`` ，或传入 ``(uint32_t) snprintf(...)`` 的返回值。"
+
+#: ../../source/imperative/properties.rst:65
+msgid ""
+"The batch copies string bytes immediately during ``xtk_*_create`` and "
+"``xtk_*_set*``, so temporary stack buffers like ``char buf[64]`` are safe"
+" to reuse right after the call returns."
+msgstr "批次在调用 ``xtk_*_create`` 与 ``xtk_*_set*`` 时会立即拷贝字符串内容，因此局部栈数组 ``char buf[64]`` 在调用返回后即可安全复用。"
+
+#: ../../source/imperative/properties.rst:70
+msgid "Writing Reusable Flex Layout Helpers"
+msgstr "封装可复用的 Flex 布局辅助函数"
+
+#: ../../source/imperative/properties.rst:72
+msgid ""
+"Imperative code becomes as compact to read as declarative code once you "
+"wrap your common column, row, card, and label patterns into small helper "
+"functions (the exact technique used in "
+"``fluxent/examples/gallery_imp/helpers.c``):"
+msgstr ""
+"将常用的纵列、横排、卡片与标签封装成几行辅助函数后，命令式布局代码同样紧凑易读"
+"（ ``fluxent/examples/gallery_imp/helpers.c`` 即采用此方式）："
+
+#: ../../source/imperative/properties.rst:120
+msgid "Key ``XtkContainerProps`` layout flags:"
+msgstr "``XtkContainerProps`` 核心布局字段："
+
+#: ../../source/imperative/properties.rst:122
+msgid "``.dir``: ``XTK_STACK_COLUMN`` or ``XTK_STACK_ROW``."
+msgstr "``.dir`` ： ``XTK_STACK_COLUMN`` （纵向）或 ``XTK_STACK_ROW`` （横向）。"
+
+#: ../../source/imperative/properties.rst:123
+msgid ""
+"``.items`` and ``.justify``: Cross-axis ``XentFlexAlign`` and main-axis "
+"``XentFlexJustify``."
+msgstr "``.items`` 与 ``.justify`` ：交叉轴 ``XentFlexAlign`` 对齐与主轴 ``XentFlexJustify`` 分布。"
+
+#: ../../source/imperative/properties.rst:125
+msgid ""
+"``.pl``, ``.pt``, ``.pr``, ``.pb``: Inner padding on left, top, right, "
+"bottom."
+msgstr "``.pl`` 、 ``.pt`` 、 ``.pr`` 、 ``.pb`` ：左、上、右、下四边内边距。"
+
+#: ../../source/imperative/properties.rst:126
+msgid "``.fill``: Stretches the container along its parent's main/cross space."
+msgstr "``.fill`` ：使容器拉伸填满父容器可用空间。"
+
+#: ../../source/imperative/properties.rst:127
+msgid ""
+"``.fith`` / ``.fitw``: Sizes the container tightly to its children's "
+"measured height or width inside scrollable regions."
+msgstr "``.fith`` / ``.fitw`` ：在滚动区域内使容器高度或宽度紧贴子元素测量尺寸。"
+
+#: ../../source/imperative/properties.rst:131
+msgid "Generic Property Access & Composite Setters"
+msgstr "通用属性读写与复合数据源函数"
+
+#: ../../source/imperative/properties.rst:133
+msgid ""
+"Alongside the generated per-control wrappers, ``<xtk/xtk_scene.h>`` "
+"provides control-agnostic helpers:"
+msgstr "除按控件生成的包装函数外， ``<xtk/xtk_scene.h>`` 还提供与具体控件类型无关的通用操作："
+
+#: ../../source/imperative/properties.rst:136
+#, python-brace-format
+msgid ""
+"**Setting properties inside a multi-op transaction**: Call "
+"``xtk_txn_set(&txn, ref, XTK_PROP_WIDTH, (XtkValue) {.kind = "
+"XTK_VALUE_F32, .u.f32 = 240.0f}, (XtkChangeStamp) {0})`` to batch "
+"multiple property updates across many controls into a single commit."
+msgstr ""
+"**在多操作事务内批量修改属性** ：调用 ``xtk_txn_set(&txn, ref, XTK_PROP_WIDTH, (XtkValue) {.kind = XTK_VALUE_F32, .u.f32 = 240.0f}, (XtkChangeStamp) {0})`` "
+"可将跨多个控件的属性修改合并进同一次原子提交。"
+
+#: ../../source/imperative/properties.rst:139
+msgid ""
+"**Reading current property values**: Call ``xtk_ctrl_get(&scene, ctrl, "
+"XTK_PROP_TEXT, &view, &stamp)``. String and byte slices inside "
+"``XtkValueView`` point at the host's internal storage and stay valid "
+"until that property is modified again or the host is destroyed."
+msgstr ""
+"**读取当前属性值** ：调用 ``xtk_ctrl_get(&scene, ctrl, XTK_PROP_TEXT, &view, &stamp)`` 。"
+" ``XtkValueView`` 内的字符串与字节切片直接指向宿主内部存储，有效至该属性下次变更或宿主销毁为止。"
+
+#: ../../source/imperative/properties.rst:143
+msgid ""
+"**Populating composite item collections**: Controls that own structured "
+"child definitions have dedicated transaction helpers in "
+"``<xtk/xtk_scene.h>``:"
+msgstr "**填充复合子项集合** ：拥有结构化子项定义的控件在 ``<xtk/xtk_scene.h>`` 中配有专用事务设置函数："
+
+#: ../../source/imperative/properties.rst:146
+msgid ""
+"``xtk_txn_setitems(&txn, target, strings, count)`` (and live "
+"``xtk_ctrl_setitems``) — Populates ``ComboBox``, ``AutoSuggestBox``, "
+"``BreadcrumbBar``, or ``LoopingSelector`` item lists."
+msgstr ""
+"``xtk_txn_setitems(&txn, target, strings, count)`` （及运行期 ``xtk_ctrl_setitems`` ）——填充 "
+"``ComboBox`` 、 ``AutoSuggestBox`` 、 ``BreadcrumbBar`` 或 ``LoopingSelector`` 的字符串列表。"
+
+#: ../../source/imperative/properties.rst:149
+msgid ""
+"``xtk_txn_setselitems(&txn, target, selector_items, count)`` — Populates "
+"``SelectorBar`` items with icons and labels."
+msgstr "``xtk_txn_setselitems(&txn, target, selector_items, count)`` —— 填充带图标与文字的 ``SelectorBar`` 选项。"
+
+#: ../../source/imperative/properties.rst:151
+msgid ""
+"``xtk_txn_settabs(&txn, target, tab_descs, count)`` — Populates "
+"``TabView`` tab headers."
+msgstr "``xtk_txn_settabs(&txn, target, tab_descs, count)`` —— 填充 ``TabView`` 标签栏。"
+
+#: ../../source/imperative/properties.rst:153
+msgid ""
+"``xtk_txn_settree(&txn, target, &tree_desc)`` — Populates a ``TreeView`` "
+"hierarchy."
+msgstr "``xtk_txn_settree(&txn, target, &tree_desc)`` —— 填充 ``TreeView`` 层级树节点。"
+
+#: ../../source/imperative/properties.rst:155
+msgid ""
+"``xtk_txn_setnav(&txn, target, &nav_desc)`` — Populates "
+"``NavigationView`` menu items, headers, separators, footer items, and "
+"integrated window title bar settings."
+msgstr ""
+"``xtk_txn_setnav(&txn, target, &nav_desc)`` —— 填充 ``NavigationView`` 的导航项、"
+"分类头、分隔线、底部固定项以及一体化窗口标题栏配置。"

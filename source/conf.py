@@ -30,15 +30,25 @@ version = "0.3.3"
 
 extensions = ["hawkmoth"]
 primary_domain = "c"
-templates_path = []
+templates_path = ["_templates"]
 exclude_patterns = []
 locale_dirs = ["locale/"]
 gettext_compact = False
-html_theme = "alabaster"
+html_theme = "library"
 html_theme_options = {
     "description": "Native cross-platform UI in C23.",
-    "fixed_sidebar": True,
+    "show_version": True,
 }
+html_sidebars = {
+    "**": [
+        "about.html",
+        "searchbox.html",
+        "globaltoc.html",
+        "localtoc.html",
+        "readingmodes.html",
+    ]
+}
+html_static_path = ["_static"]
 
 hawkmoth_root = _workspace
 hawkmoth_compiler = _compiler()

@@ -1,0 +1,50 @@
+# Project Xent Theme UI Strings (zh_CN)
+# Copyright (C) 2026, Project Xent
+# This file is distributed under the same license as the Xent package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Xent 0.3.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-18 23:32+0800\n"
+"PO-Revision-Date: 2026-11-18 23:40+0800\n"
+"Last-Translator: Project Xent\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/_templates/globaltoc.html:1
+msgid "Contents"
+msgstr "目录"
+
+#: ../../source/_templates/localtoc.html:2
+msgid "Page Contents"
+msgstr "本页目录"
+
+#: ../../source/_templates/readingmodes.html:1
+msgid "Reading Mode"
+msgstr "阅读模式"
+
+#: ../../source/_templates/readingmodes.html:2
+msgid "Auto"
+msgstr "自动"
+
+#: ../../source/_templates/readingmodes.html:3
+msgid "Light"
+msgstr "浅色"
+
+#: ../../source/_templates/readingmodes.html:4
+msgid "Sepia"
+msgstr "护眼"
+
+#: ../../source/_templates/readingmodes.html:5
+msgid "Dark"
+msgstr "深色"
+
+#: ../../source/_templates/readingmodes.html:7
+msgid "JavaScript is required to toggle reading modes"
+msgstr "切换阅读模式需要启用 JavaScript"

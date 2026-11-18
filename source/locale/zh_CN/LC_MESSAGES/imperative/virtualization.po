@@ -1,0 +1,165 @@
+# Project Xent Imperative UI Guide — Virtualization (zh_CN)
+# Copyright (C) 2026, Project Xent
+# This file is distributed under the same license as the Xent package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Xent 0.3.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-18 23:32+0800\n"
+"PO-Revision-Date: 2026-11-18 23:42+0800\n"
+"Last-Translator: Project Xent\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/imperative/virtualization.rst:2
+msgid "5. Imperative Virtualized Lists & Grouping"
+msgstr "5. 命令式虚拟化列表与分组协议"
+
+#: ../../source/imperative/virtualization.rst:4
+msgid ""
+"In declarative mode, ``xtk_list`` accepts an ``item(ui, env, index)`` "
+"callback. In imperative mode (and across language bindings), "
+"virtualization is driven by a clean, control-neutral event contract: "
+"**the host tells you which visible index window is on screen via** "
+"``XTK_EVENT_REALIZE`` **, and you populate that slice inside an** "
+"``XtkTxn``."
+msgstr ""
+"声明式模式下 ``xtk_list`` 接收 ``item(ui, env, index)`` 回调；而在命令式模式（以及各语言绑定）中，"
+"虚拟化由一套与具体控件解耦的事件契约驱动：**宿主通过** ``XTK_EVENT_REALIZE`` **告知当前屏幕可见的下标窗口，"
+"应用在** ``XtkTxn`` **事务内填充这一小段可见项** 。"
+
+#: ../../source/imperative/virtualization.rst:11
+msgid "How ``XTK_EVENT_REALIZE`` Works"
+msgstr "``XTK_EVENT_REALIZE`` 工作机制"
+
+#: ../../source/imperative/virtualization.rst:13
+msgid ""
+"When you create a ``ListView``, ``ListBox``, ``GridView``, or "
+"``ItemsRepeater`` with ``.nitem = 100000``, zero row controls exist "
+"initially. Whenever layout measures the viewport or the user scrolls into"
+" a new row range, the host fires ``XTK_EVENT_REALIZE`` on the list "
+"control with ``event->payload.kind == XTK_EVENT_PAYLOAD_WINDOW``:"
+msgstr ""
+"以 ``.nitem = 100000`` 创建 ``ListView`` 、 ``ListBox`` 、 ``GridView`` 或 ``ItemsRepeater`` 时，"
+"初始状态下包含零个行子控件。每当布局引擎完成视口测量或用户滚动进入新的行区间时，宿主都会在列表控件上触发 "
+"``XTK_EVENT_REALIZE`` （ ``event->payload.kind == XTK_EVENT_PAYLOAD_WINDOW`` ）："
+
+#: ../../source/imperative/virtualization.rst:19
+msgid "``event->payload.u.window.first`` — First visible row index to realize."
+msgstr "``event->payload.u.window.first`` —— 需要实例化的首个可见行下标。"
+
+#: ../../source/imperative/virtualization.rst:20
+msgid ""
+"``event->payload.u.window.last`` — Last visible row index (inclusive) to "
+"realize."
+msgstr "``event->payload.u.window.last`` —— 需要实例化的最后一个可见行下标（闭区间）。"
+
+#: ../../source/imperative/virtualization.rst:22
+msgid ""
+"``event->payload.u.window.lanes`` — Column count per row (``1`` for "
+"vertical lists, ``>= 1`` for multi-column ``GridView``)."
+msgstr "``event->payload.u.window.lanes`` —— 每行包含的列槽数（纵向列表为 ``1`` ，多列 ``GridView`` 为 ``>= 1`` ）。"
+
+#: ../../source/imperative/virtualization.rst:25
+msgid ""
+"Inside your ``XTK_EVENT_REALIZE`` callback, open one ``XtkTxn`` and "
+"perform four steps:"
+msgstr "在 ``XTK_EVENT_REALIZE`` 回调内开启一个 ``XtkTxn`` 事务并依次完成四步："
+
+#: ../../source/imperative/virtualization.rst:28
+msgid ""
+"**Drop** previously realized ``XtkCtrl`` items whose indices fell outside"
+" ``[first, last]``."
+msgstr "**销毁（Drop）** 下标已滑出 ``[first, last]`` 区间外的旧 ``XtkCtrl`` 行控件。"
+
+#: ../../source/imperative/virtualization.rst:30
+msgid ""
+"**Keep** items that remain inside the overlapping window so scrolling "
+"reuses existing controls in place."
+msgstr "**保留（Keep）** 仍处于重叠可见窗口内的现有行控件，使滚动过程原地复用已有实例。"
+
+#: ../../source/imperative/virtualization.rst:32
+msgid ""
+"**Create** ``XTK_CTRL_LISTITEM`` children for newly visible indices "
+"(inserting before the first kept item when scrolling upward, or appending"
+" at the end when scrolling downward) and populate their interior "
+"controls."
+msgstr ""
+"**创建（Create）** 新进入视口的 ``XTK_CTRL_LISTITEM`` 子节点（向上滚动时插入到首个保留行之前，"
+"向下滚动时追加到末尾），并在其内部填充具体内容控件。"
+
+#: ../../source/imperative/virtualization.rst:35
+msgid ""
+"**Publish** ``XTK_PROP_REALIZED_FIRST = first`` on the list control and "
+"commit the transaction."
+msgstr "**发布（Publish）** 列表控件的 ``XTK_PROP_REALIZED_FIRST = first`` 属性并提交事务。"
+
+#: ../../source/imperative/virtualization.rst:39
+msgid "Complete 100,000-Row Imperative ``ListView`` Example"
+msgstr "完整的 10 万行命令式 ``ListView`` 示例"
+
+#: ../../source/imperative/virtualization.rst:41
+msgid ""
+"Remember to register ``&flux_ctrl_list``, ``&flux_ctrl_container``, and "
+"``&flux_ctrl_text`` (or call ``flux_controls_all()``):"
+msgstr "记得在启动时注册 ``&flux_ctrl_list`` 、 ``&flux_ctrl_container`` 与 ``&flux_ctrl_text`` （或调用 ``flux_controls_all()`` ）："
+
+#: ../../source/imperative/virtualization.rst:140
+msgid ""
+"Attach ``on_list_realize`` when creating the list inside your initial "
+"build transaction:"
+msgstr "在初始构建事务中创建列表时挂载 ``on_list_realize`` 回调："
+
+#: ../../source/imperative/virtualization.rst:161
+msgid "Grouped Lists & Sticky Headers (0.3.3)"
+msgstr "分组列表与吸顶组标题（0.3.3）"
+
+#: ../../source/imperative/virtualization.rst:163
+msgid ""
+"To group a ``ListView`` or ``GridView`` into sections with inline sticky "
+"headers:"
+msgstr "为 ``ListView`` 或 ``GridView`` 启用分段与内联吸顶组标题只需两步："
+
+#: ../../source/imperative/virtualization.rst:165
+msgid ""
+"Write the ``int32_t`` array of group sizes to ``XTK_PROP_GROUPS`` as an "
+"``XTK_VALUE_BYTES`` slice during list creation:"
+msgstr "创建列表时将各组元素个数的 ``int32_t`` 数组作为 ``XTK_VALUE_BYTES`` 字节切片写入 ``XTK_PROP_GROUPS`` ："
+
+#: ../../source/imperative/virtualization.rst:181
+msgid ""
+"In your ``XTK_EVENT_REALIZE`` handler, flat row indices interleave group "
+"headers and items. Call ``XtkListRow at = xtk_list_row(kGroupSizes, 3, "
+"row)`` from ``<xtk/xtk.h>``:"
+msgstr ""
+"在 ``XTK_EVENT_REALIZE`` 回调中，扁平行号由组标题与数据项交错组成。调用 ``<xtk/xtk.h>`` 中的 "
+"``XtkListRow at = xtk_list_row(kGroupSizes, 3, row)`` 进行映射："
+
+#: ../../source/imperative/virtualization.rst:185
+msgid ""
+"When ``at.item < 0``, ``row`` is the header for ``at.group``—instantiate "
+"``XTK_CTRL_GROUPHEADER`` via ``xtk_txn_create``."
+msgstr "当 ``at.item < 0`` 时，该 ``row`` 是第 ``at.group`` 组的标题行——通过 ``xtk_txn_create`` 创建 ``XTK_CTRL_GROUPHEADER`` 。"
+
+#: ../../source/imperative/virtualization.rst:187
+msgid ""
+"When ``at.item >= 0``, ``row`` is logical item ``at.item`` inside "
+"``at.group``—instantiate ``XTK_CTRL_LISTITEM``."
+msgstr "当 ``at.item >= 0`` 时，该 ``row`` 是第 ``at.group`` 组内的逻辑数据项 ``at.item`` ——创建 ``XTK_CTRL_LISTITEM`` 。"
+
+#: ../../source/imperative/virtualization.rst:189
+msgid ""
+"When ``window.first`` lands inside a group (``at.item >= 0``), also keep "
+"that group's header row realized right before ``first`` so the host can "
+"pin it as the sticky header at the top of the viewport. See "
+"``groups_realize`` in ``fluxent/examples/gallery_imp/app.c`` for a drop-"
+"in reference implementation."
+msgstr ""
+"当 ``window.first`` 落在某个分组内部（ ``at.item >= 0`` ）时，同时将该组对应的标题行实例化在 ``first`` 之前，"
+"以便宿主将其吸顶固定在视口顶端。可直接参考 ``fluxent/examples/gallery_imp/app.c`` 中的 ``groups_realize`` 完整实现。"

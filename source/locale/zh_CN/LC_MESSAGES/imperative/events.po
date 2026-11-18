@@ -1,0 +1,317 @@
+# Project Xent Imperative UI Guide — Events & Frame Sync (zh_CN)
+# Copyright (C) 2026, Project Xent
+# This file is distributed under the same license as the Xent package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Xent 0.3.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-18 23:32+0800\n"
+"PO-Revision-Date: 2026-11-18 23:42+0800\n"
+"Last-Translator: Project Xent\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/imperative/events.rst:2
+msgid "4. Event Routing, Frame Sync, & Change Stamps"
+msgstr "4. 事件路由、帧同步与变更戳"
+
+#: ../../source/imperative/events.rst:4
+msgid ""
+"Imperative Xent routes normalized UI events through capture, target, and "
+"bubble phases and gives you full control over how state changes coalesce "
+"into visual updates."
+msgstr "命令式 Xent 按捕获、目标、冒泡三阶段分发标准化 UI 事件，并让你完全掌控状态变更如何合并为界面更新。"
+
+#: ../../source/imperative/events.rst:9
+msgid "Three Ways to Subscribe to Events"
+msgstr "订阅事件的三种方式"
+
+#: ../../source/imperative/events.rst:11
+msgid ""
+"**Typed transaction helpers** (most common): Generated "
+"``xtk_<ctrl>_on<event>`` wrappers in ``<xtk/xtk_controls.h>`` subscribe "
+"on ``XTK_EVENT_PHASE_MASK_TARGET`` while building a transaction:"
+msgstr "**强类型事务订阅函数** （最常用）： ``<xtk/xtk_controls.h>`` 生成的 ``xtk_<ctrl>_on<event>`` 在事务构建期间默认监听 ``XTK_EVENT_PHASE_MASK_TARGET`` 阶段："
+
+#: ../../source/imperative/events.rst:21
+msgid ""
+"**Phase-aware transaction subscriptions**: ``xtk_txn_on`` lets you listen"
+" on any ``XtkEventId`` across ``XTK_EVENT_PHASE_MASK_CAPTURE`` (root down"
+" to parent), ``XTK_EVENT_PHASE_MASK_TARGET``, "
+"``XTK_EVENT_PHASE_MASK_BUBBLE`` (parent up to root), or "
+"``XTK_EVENT_PHASE_MASK_ALL``:"
+msgstr ""
+"**指定传播阶段的事务订阅** ： ``xtk_txn_on`` 支持对任意 ``XtkEventId`` 选择 ``XTK_EVENT_PHASE_MASK_CAPTURE`` "
+"（从根向父节点下传）、 ``XTK_EVENT_PHASE_MASK_TARGET`` 、 ``XTK_EVENT_PHASE_MASK_BUBBLE`` （从父节点向根冒泡）或 ``XTK_EVENT_PHASE_MASK_ALL`` ："
+
+#: ../../source/imperative/events.rst:34
+msgid ""
+"If you plan to unsubscribe dynamically later with ``xtk_txn_off(&txn, "
+"sub_id)``, map ``sub`` to its ``XtkSubId`` via ``result->subscriptions`` "
+"after commit."
+msgstr "若后续需要用 ``xtk_txn_off(&txn, sub_id)`` 动态取消订阅，可在提交后从 ``result->subscriptions`` 将 ``sub`` 映射为持久 ``XtkSubId`` 。"
+
+#: ../../source/imperative/events.rst:37
+msgid ""
+"**Direct host subscriptions**: ``flux_host_subscribe`` and "
+"``flux_host_unsubscribe`` attach or remove listeners directly on a "
+"committed ``XtkCtrl`` outside a transaction."
+msgstr "**宿主级直接订阅** ： ``flux_host_subscribe`` 与 ``flux_host_unsubscribe`` 可在事务外直接对已提交的 ``XtkCtrl`` 增删监听器。"
+
+#: ../../source/imperative/events.rst:43
+msgid ""
+"The host borrows your ``void *arg`` (``userdata``) pointer until the "
+"subscription is removed (via ``xtk_txn_off``, ``flux_host_unsubscribe``, "
+"or dropping the target control's subtree) or ``flux_host_destroy`` runs. "
+"Keep ``arg`` alive in your ``App`` struct or a page-scoped arena until "
+"after the control is dropped."
+msgstr ""
+"宿主会持续借用传入的 ``void *arg`` （ ``userdata`` ）指针，直至该订阅被移除（调用 ``xtk_txn_off`` 、 "
+"``flux_host_unsubscribe`` 或销毁目标控件所在子树）或 ``flux_host_destroy`` 执行完毕。"
+"请将 ``arg`` 保存在 ``App`` 结构体或页面级内存池中，在控件销毁提交后再释放。"
+
+#: ../../source/imperative/events.rst:50
+msgid "Decoding ``XtkEvent`` and ``XtkEventPayload``"
+msgstr "解析 ``XtkEvent`` 与 ``XtkEventPayload``"
+
+#: ../../source/imperative/events.rst:52
+msgid "Every ``XtkEventFn`` receives ``XtkEvent const *event``:"
+msgstr "每个 ``XtkEventFn`` 回调都会收到 ``XtkEvent const *event`` ："
+
+#: ../../source/imperative/events.rst:54
+msgid ""
+"``event->source`` / ``event->target`` / ``event->current_target`` — "
+"Identify which ``XtkCtrl`` originated the event and which ancestor "
+"listener is currently running."
+msgstr "``event->source`` / ``event->target`` / ``event->current_target`` —— 标识触发事件的源控件 ``XtkCtrl`` 以及当前正在执行回调的节点。"
+
+#: ../../source/imperative/events.rst:57
+msgid ""
+"``event->cause`` — Distinguishes ``XTK_EVENT_CAUSE_USER``, ``PROGRAM``, "
+"``BINDING``, and ``ACCESSIBILITY``."
+msgstr "``event->cause`` —— 区分事件触发来源： ``XTK_EVENT_CAUSE_USER`` 、 ``PROGRAM`` 、 ``BINDING`` 或 ``ACCESSIBILITY`` 。"
+
+#: ../../source/imperative/events.rst:59
+msgid "``event->payload`` — Tagged union matched via ``event->payload.kind``:"
+msgstr "``event->payload`` —— 带标签联合体，按 ``event->payload.kind`` 读取对应成员："
+
+#: ../../source/imperative/events.rst:65
+msgid "``event->payload.kind``"
+msgstr "``event->payload.kind``"
+
+#: ../../source/imperative/events.rst:66
+msgid "Union Member"
+msgstr "联合体成员"
+
+#: ../../source/imperative/events.rst:67
+msgid "Typical Events"
+msgstr "典型事件"
+
+#: ../../source/imperative/events.rst:68
+msgid "``XTK_EVENT_PAYLOAD_NONE``"
+msgstr "``XTK_EVENT_PAYLOAD_NONE``"
+
+#: ../../source/imperative/events.rst:69
+msgid "*(none)*"
+msgstr "*（无载荷）*"
+
+#: ../../source/imperative/events.rst:70
+msgid "``Button`` invoke, ``PullToRefresh`` trigger"
+msgstr "``Button`` 点击激活、 ``PullToRefresh`` 下拉刷新触发"
+
+#: ../../source/imperative/events.rst:71
+msgid "``XTK_EVENT_PAYLOAD_BOOL``"
+msgstr "``XTK_EVENT_PAYLOAD_BOOL``"
+
+#: ../../source/imperative/events.rst:72
+msgid "``u.b``"
+msgstr "``u.b``"
+
+#: ../../source/imperative/events.rst:73
+msgid "``CheckBox`` / ``ToggleSwitch`` toggle, drag hover"
+msgstr "``CheckBox`` / ``ToggleSwitch`` 切换、拖放悬停"
+
+#: ../../source/imperative/events.rst:74
+msgid "``XTK_EVENT_PAYLOAD_I32``"
+msgstr "``XTK_EVENT_PAYLOAD_I32``"
+
+#: ../../source/imperative/events.rst:75
+msgid "``u.i32``"
+msgstr "``u.i32``"
+
+#: ../../source/imperative/events.rst:76
+msgid ""
+"``ComboBox`` / ``ListView`` / ``TabView`` / ``NavigationView`` select, "
+"``ContentDialog`` close result"
+msgstr "``ComboBox`` / ``ListView`` / ``TabView`` / ``NavigationView`` 选中项、 ``ContentDialog`` 关闭结果"
+
+#: ../../source/imperative/events.rst:78
+msgid "``XTK_EVENT_PAYLOAD_F32``"
+msgstr "``XTK_EVENT_PAYLOAD_F32``"
+
+#: ../../source/imperative/events.rst:79
+msgid "``u.f32``"
+msgstr "``u.f32``"
+
+#: ../../source/imperative/events.rst:80
+msgid "``Slider`` change, ``ColumnHeader`` resize"
+msgstr "``Slider`` 数值变化、 ``ColumnHeader`` 列宽拖拽"
+
+#: ../../source/imperative/events.rst:81
+msgid "``XTK_EVENT_PAYLOAD_F64``"
+msgstr "``XTK_EVENT_PAYLOAD_F64``"
+
+#: ../../source/imperative/events.rst:82
+msgid "``u.f64``"
+msgstr "``u.f64``"
+
+#: ../../source/imperative/events.rst:83
+msgid "``NumberBox`` / ``ScrollBar`` change"
+msgstr "``NumberBox`` / ``ScrollBar`` 数值变化"
+
+#: ../../source/imperative/events.rst:84
+msgid "``XTK_EVENT_PAYLOAD_STRING``"
+msgstr "``XTK_EVENT_PAYLOAD_STRING``"
+
+#: ../../source/imperative/events.rst:85
+#, python-brace-format
+msgid "``u.string.{data, len}``"
+msgstr "``u.string.{data, len}``"
+
+#: ../../source/imperative/events.rst:86
+msgid ""
+"``TextBox`` / ``PasswordBox`` edit, dropped files/text (**borrowed only "
+"during callback**—copy immediately!)"
+msgstr "``TextBox`` / ``PasswordBox`` 编辑、拖入文件或文本（ **仅在回调执行期间有效** ——需保存时立即拷贝）"
+
+#: ../../source/imperative/events.rst:88
+msgid "``XTK_EVENT_PAYLOAD_QUERY``"
+msgstr "``XTK_EVENT_PAYLOAD_QUERY``"
+
+#: ../../source/imperative/events.rst:89
+#, python-brace-format
+msgid "``u.query.{text, len, index}``"
+msgstr "``u.query.{text, len, index}``"
+
+#: ../../source/imperative/events.rst:90
+msgid "``AutoSuggestBox`` query/choose (**copy** ``text`` **during callback**)"
+msgstr "``AutoSuggestBox`` 提交查询/选择建议项（ **在回调内拷贝** ``text`` ）"
+
+#: ../../source/imperative/events.rst:91
+msgid "``XTK_EVENT_PAYLOAD_INDEX_BOOL``"
+msgstr "``XTK_EVENT_PAYLOAD_INDEX_BOOL``"
+
+#: ../../source/imperative/events.rst:92
+#, python-brace-format
+msgid "``u.index_bool.{index, value}``"
+msgstr "``u.index_bool.{index, value}``"
+
+#: ../../source/imperative/events.rst:93
+msgid "``TreeView`` expand, ``CalendarView`` date toggle"
+msgstr "``TreeView`` 节点展开/折叠、 ``CalendarView`` 日期点选"
+
+#: ../../source/imperative/events.rst:94
+msgid "``XTK_EVENT_PAYLOAD_RANGE``"
+msgstr "``XTK_EVENT_PAYLOAD_RANGE``"
+
+#: ../../source/imperative/events.rst:95
+#, python-brace-format
+msgid "``u.range.{start, end}``"
+msgstr "``u.range.{start, end}``"
+
+#: ../../source/imperative/events.rst:96
+msgid "Range ``Slider`` change"
+msgstr "双滑块范围 ``Slider`` 变更"
+
+#: ../../source/imperative/events.rst:97
+msgid "``XTK_EVENT_PAYLOAD_WINDOW``"
+msgstr "``XTK_EVENT_PAYLOAD_WINDOW``"
+
+#: ../../source/imperative/events.rst:98
+#, python-brace-format
+msgid "``u.window.{first, last, lanes}``"
+msgstr "``u.window.{first, last, lanes}``"
+
+#: ../../source/imperative/events.rst:99
+msgid "``XTK_EVENT_REALIZE`` on virtualized lists/grids"
+msgstr "虚拟化列表/网格上的 ``XTK_EVENT_REALIZE`` 视口范围事件"
+
+#: ../../source/imperative/events.rst:100
+msgid "``XTK_EVENT_PAYLOAD_SCROLL``"
+msgstr "``XTK_EVENT_PAYLOAD_SCROLL``"
+
+#: ../../source/imperative/events.rst:101
+#, python-brace-format
+msgid "``u.scroll.{x, y, max_x, max_y}``"
+msgstr "``u.scroll.{x, y, max_x, max_y}``"
+
+#: ../../source/imperative/events.rst:102
+msgid "``ScrollViewer`` viewport scroll"
+msgstr "``ScrollViewer`` 视口滚动"
+
+#: ../../source/imperative/events.rst:104
+msgid ""
+"Return ``XTK_EVENT_HANDLED`` when your callback handles the event, "
+"combine ``XTK_EVENT_STOP_PROPAGATION`` or ``XTK_EVENT_STOP_IMMEDIATE`` to"
+" halt bubbling, or return ``XTK_EVENT_CONTINUE`` (``0``) to let routing "
+"proceed."
+msgstr ""
+"事件处理完毕返回 ``XTK_EVENT_HANDLED`` ；如需停止向祖先节点冒泡可按位或上 ``XTK_EVENT_STOP_PROPAGATION`` "
+"或 ``XTK_EVENT_STOP_IMMEDIATE`` ；返回 ``XTK_EVENT_CONTINUE`` （ ``0`` ）则继续常规路由。"
+
+#: ../../source/imperative/events.rst:109
+msgid "Frame-Coalesced UI Synchronization"
+msgstr "按帧合并的 UI 同步模式"
+
+#: ../../source/imperative/events.rst:111
+msgid ""
+"Decoupling state updates from scene mutations with ``flux_app_onframe`` "
+"coalesces multiple input events within a single vsync interval into one "
+"clean UI update:"
+msgstr "通过 ``flux_app_onframe`` 将业务状态更新与场景属性写入解耦，可以把单个垂直同步周期内的多次输入事件合并为一次干净的界面更新："
+
+#: ../../source/imperative/events.rst:148
+msgid "Controlled Inputs & ``XtkChangeStamp``"
+msgstr "受控输入与 ``XtkChangeStamp`` 变更戳"
+
+#: ../../source/imperative/events.rst:150
+#, python-brace-format
+msgid ""
+"Every property write takes an ``XtkChangeStamp { XtkSourceId source; "
+"uint64_t revision; }``:"
+msgstr "所有属性写入函数都接收一个 ``XtkChangeStamp { XtkSourceId source; uint64_t revision; }`` 参数："
+
+#: ../../source/imperative/events.rst:152
+#, python-brace-format
+msgid ""
+"**Programmatic writes to outputs or external resets**: Pass "
+"``(XtkChangeStamp) {0}`` (where ``source == 0`` and ``revision == 0``). "
+"This authoritatively sets the control's property—use it when updating "
+"output labels, toggling buttons, or clearing a ``TextBox`` from a "
+"\"Reset\" button."
+msgstr ""
+"**对输出控件的程序写入或外部重置** ：传入 ``(XtkChangeStamp) {0}`` （即 ``source == 0`` 且 ``revision == 0`` ）。"
+"这会直接覆盖控件属性值——适用于更新输出文本标签、切换按钮状态，或点击“重置”按钮清空 ``TextBox`` 。"
+
+#: ../../source/imperative/events.rst:156
+msgid ""
+"**Controlled two-way echo**: When a user types into a ``TextBox``, the "
+"emitted ``XtkEvent`` carries a non-zero ``event->change`` stamp generated"
+" by the control. If your architecture echoes every model value back to "
+"the input control on ``on_frame``, forwarding that ``event->change`` "
+"stamp tells the host which edit revision your echo corresponds to—so "
+"newer keystrokes or active IME composition in flight on the control are "
+"preserved cleanly. In imperative code, updating the ``TextBox`` solely on"
+" external actions (such as a \"Reset\" button) keeps ``on_name_change`` "
+"even simpler because the control already displays the user's live edits."
+msgstr ""
+"**受控双向回显** ：用户在 ``TextBox`` 中输入时，触发的 ``XtkEvent`` 带有该控件生成的非零 ``event->change`` 变更戳。"
+"若架构在 ``on_frame`` 中把模型值统一回写给输入框，原样转发该 ``event->change`` 即可告知宿主本次回显对应的编辑版本，"
+"从而完好保留控件上更新的按键输入与正在进行的输入法组字。在纯命令式代码中，仅在外部动作（如“重置”按钮）时修改 ``TextBox`` "
+"会让 ``on_name_change`` 更加直接，因为控件本身已经实时展示了用户的输入。"

@@ -1,0 +1,146 @@
+# Project Xent Imperative UI Guide — Shell & Windowing (zh_CN)
+# Copyright (C) 2026, Project Xent
+# This file is distributed under the same license as the Xent package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Xent 0.3.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-18 23:32+0800\n"
+"PO-Revision-Date: 2026-11-18 23:42+0800\n"
+"Last-Translator: Project Xent\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/imperative/shell.rst:2
+msgid "6. Dialogs, Drag-and-Drop, Clipboard, & Windowing"
+msgstr "6. 对话框、拖放、剪贴板与窗口集成"
+
+#: ../../source/imperative/shell.rst:4
+msgid ""
+"Imperative applications have direct access to ``FluxApp *``, ``FluxWindow"
+" *``, and ``FluxTheme *`` from the moment ``WinMain`` starts, making "
+"modal dialogs, file pickers, OLE drag-and-drop, clipboard transfers, and "
+"cross-thread UI updates straightforward."
+msgstr ""
+"命令式应用从 ``WinMain`` 启动起便直接持有 ``FluxApp *`` 、 ``FluxWindow *`` 与 ``FluxTheme *`` ，"
+"可直接操控模态对话框、原生文件选择器、OLE 拖放、剪贴板传输与跨线程界面更新。"
+
+#: ../../source/imperative/shell.rst:10
+msgid "Modal ``ContentDialog``"
+msgstr "模态 ``ContentDialog`` 对话框"
+
+#: ../../source/imperative/shell.rst:12
+msgid ""
+"Create a ``ContentDialog`` (register ``&flux_ctrl_dialog``) once inside "
+"your scene transaction with ``.open = false``, save its ``XtkCtrl`` "
+"handle, and open it on demand via ``xtk_dialog_setopen``:"
+msgstr ""
+"在场景事务中以 ``.open = false`` 创建一次 ``ContentDialog`` （需注册 ``&flux_ctrl_dialog`` ），"
+"保存其 ``XtkCtrl`` 句柄，并在需要时通过 ``xtk_dialog_setopen`` 弹出："
+
+#: ../../source/imperative/shell.rst:57
+msgid "Native File & Folder Dialogs"
+msgstr "原生文件与文件夹对话框"
+
+#: ../../source/imperative/shell.rst:59
+msgid ""
+"Include ``<fluxent/flux_filedialog.h>`` and call ``flux_filedialog_show``"
+" from a UI button callback to display the native Windows Open, Save, or "
+"Folder picker:"
+msgstr "引入 ``<fluxent/flux_filedialog.h>`` ，在按钮回调中调用 ``flux_filedialog_show`` 即可弹出原生 Windows 打开、保存或选择文件夹对话框："
+
+#: ../../source/imperative/shell.rst:85
+msgid "OLE Drag-and-Drop on Containers & Cards"
+msgstr "容器与卡片上的 OLE 拖放"
+
+#: ../../source/imperative/shell.rst:87
+msgid ""
+"Every ``container`` and ``card`` control in ``<xtk/xtk_controls.h>`` "
+"carries built-in OLE drag-and-drop properties and events:"
+msgstr "``<xtk/xtk_controls.h>`` 中的所有 ``container`` 与 ``card`` 控件均内置 OLE 拖放属性与事件："
+
+#: ../../source/imperative/shell.rst:106
+msgid ""
+"``on_drag_hover`` receives ``e->payload.u.b`` (``true`` on enter, "
+"``false`` on leave)."
+msgstr "``on_drag_hover`` 在 ``e->payload.u.b`` 中接收悬停状态（拖入时为 ``true`` ，离开时为 ``false`` ）。"
+
+#: ../../source/imperative/shell.rst:108
+#, python-brace-format
+msgid ""
+"``on_drop_files`` and ``on_drop_text`` receive a borrowed UTF-8 slice in "
+"``e->payload.u.string.{data, len}`` (newline-delimited file paths for "
+"files). While a drag or drop callback is executing, you can also inspect "
+"custom or bitmap formats on the active OLE data object via "
+"``flux_drag_data()`` from ``<fluxent/flux_data.h>``."
+msgstr ""
+"``on_drop_files`` 与 ``on_drop_text`` 在 ``e->payload.u.string.{data, len}`` 中接收借用的 UTF-8 切片"
+"（多文件路径以换行符分隔）。在拖放回调执行期间，还可通过 ``<fluxent/flux_data.h>`` 中的 ``flux_drag_data()`` "
+"读取当前 OLE 数据对象中的位图或自定义格式。"
+
+#: ../../source/imperative/shell.rst:113
+msgid ""
+"To make a container or card a **drag source**, set "
+"``XTK_CONTAINER_DRAGTEXT_MASK`` (``.dragtext``) or "
+"``XTK_CONTAINER_DRAGFILES_MASK`` (``.dragfiles``) and subscribe with "
+"``xtk_container_ondragcompleted``."
+msgstr ""
+"若要将容器或卡片设为 **拖拽源** ，设置 ``XTK_CONTAINER_DRAGTEXT_MASK`` （ ``.dragtext`` ）或 "
+"``XTK_CONTAINER_DRAGFILES_MASK`` （ ``.dragfiles`` ）并通过 ``xtk_container_ondragcompleted`` 订阅拖拽完成事件。"
+
+#: ../../source/imperative/shell.rst:118
+msgid "Clipboard Data (``FluxData``)"
+msgstr "剪贴板数据（ ``FluxData`` ）"
+
+#: ../../source/imperative/shell.rst:120
+msgid ""
+"``<fluxent/flux_data.h>`` provides text shortcuts as well as multi-format"
+" ``FluxData`` containers:"
+msgstr "``<fluxent/flux_data.h>`` 同时提供纯文本便捷接口与多格式 ``FluxData`` 数据容器："
+
+#: ../../source/imperative/shell.rst:138
+msgid "Window Chrome, Themes, & Background Threads"
+msgstr "窗口外观、主题与后台线程调度"
+
+#: ../../source/imperative/shell.rst:140
+msgid ""
+"**Themes & Backdrops**: Access ``FluxTheme *`` with "
+"``flux_app_theme(app)`` (``flux_theme_setmode`` for Light/Dark/System; "
+"``flux_theme_colors`` to read active Fluent palette brushes) and "
+"``FluxWindow *`` with ``flux_app_window(app)`` "
+"(``flux_window_setbackdrop``, ``flux_window_settitle``, "
+"``flux_window_size``, ``flux_window_dpi``, ``flux_window_close``)."
+msgstr ""
+"**主题与背景材质** ：通过 ``flux_app_theme(app)`` 获取 ``FluxTheme *`` （用 ``flux_theme_setmode`` "
+"切换浅色/深色/跟随系统，用 ``flux_theme_colors`` 读取当前 Fluent 调色板），并通过 ``flux_app_window(app)`` "
+"获取 ``FluxWindow *`` （调用 ``flux_window_setbackdrop`` 、 ``flux_window_settitle`` 、 "
+"``flux_window_size`` 、 ``flux_window_dpi`` 、 ``flux_window_close`` ）。"
+
+#: ../../source/imperative/shell.rst:145
+msgid ""
+"**Custom title bar**: Either instantiate ``xtk_titlebar_create`` with "
+"``XTK_TITLEBAR_INTEGRATE_MASK`` (``.integrate = true``), or call "
+"``flux_window_extendtitlebar`` and ``flux_window_settitlebar`` directly "
+"to define custom caption drag and interactive passthrough rectangles."
+msgstr ""
+"**自定义标题栏** ：既可以使用 ``XTK_TITLEBAR_INTEGRATE_MASK`` （ ``.integrate = true`` ）创建 ``xtk_titlebar_create`` 控件，"
+"也可以直接调用 ``flux_window_extendtitlebar`` 与 ``flux_window_settitlebar`` 自定义窗口拖拽区与交互穿透矩形。"
+
+#: ../../source/imperative/shell.rst:149
+msgid ""
+"**Cross-thread UI dispatch**: Worker threads marshal results onto the "
+"window thread via ``flux_app_invoke(app, apply_worker_result, "
+"result_ctx)``. Note that ``flux_app_invoke`` borrows ``result_ctx`` until"
+" ``apply_worker_result`` executes on the UI thread, where you can safely "
+"open an ``XtkTxn`` or call ``xtk_<ctrl>_set*`` and then free "
+"``result_ctx``."
+msgstr ""
+"**跨线程 UI 调度** ：后台工作线程通过 ``flux_app_invoke(app, apply_worker_result, result_ctx)`` "
+"将结果切回窗口线程。 ``flux_app_invoke`` 会借用 ``result_ctx`` 直至 ``apply_worker_result`` 在 UI 线程执行——"
+"在该回调内即可安全开启 ``XtkTxn`` 或调用 ``xtk_<ctrl>_set*`` ，随后释放 ``result_ctx`` 。"

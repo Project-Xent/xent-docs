@@ -1,0 +1,244 @@
+# Project Xent Declarative UI Guide — Collections (zh_CN)
+# Copyright (C) 2026, Project Xent
+# This file is distributed under the same license as the Xent package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Xent 0.3.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-18 23:32+0800\n"
+"PO-Revision-Date: 2026-11-18 23:40+0800\n"
+"Last-Translator: Project Xent\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/declarative/collections.rst:2
+msgid "4. Virtualized Lists, Grids, Trees, & Caching"
+msgstr "4. 虚拟化列表、网格、树视图与子树缓存"
+
+#: ../../source/declarative/collections.rst:4
+msgid ""
+"Xent virtualizes collection controls out of the box: whether your dataset"
+" holds 50 items or 100,000 items, the host only instantiates controls for"
+" the visible viewport window and recycles slots smoothly as the user "
+"scrolls."
+msgstr ""
+"Xent 的集合控件开箱支持视口虚拟化：无论数据集包含 50 条还是 10 万条记录，"
+"宿主始终只为当前可见窗口实例化控件，并在滚动时平滑复用行槽位。"
+
+#: ../../source/declarative/collections.rst:9
+msgid "Virtualized ``ListView``, ``ListBox``, & ``GridView``"
+msgstr "虚拟化 ``ListView`` 、 ``ListBox`` 与 ``GridView``"
+
+#: ../../source/declarative/collections.rst:11
+msgid ""
+"``xtk_list`` (``&flux_ctrl_list``), ``xtk_listbox``, ``xtk_gridview``, "
+"and ``xtk_repeater`` share ``XtkListDesc``. You supply ``.nitem`` and an "
+"``item(ui, env, index)`` builder callback, and the host builds rows for "
+"the visible viewport on demand:"
+msgstr ""
+"``xtk_list`` （ ``&flux_ctrl_list`` ）、 ``xtk_listbox`` 、 ``xtk_gridview`` 与 ``xtk_repeater`` "
+"共用 ``XtkListDesc`` 描述结构。只需提供总条数 ``.nitem`` 与按需构建函数 ``item(ui, env, index)`` ，"
+"宿主便会自动构建可见视口内的行："
+
+#: ../../source/declarative/collections.rst:46
+msgid "Fixed vs. Variable-Height Rows"
+msgstr "固定行高与可变行高测量"
+
+#: ../../source/declarative/collections.rst:48
+msgid ""
+"**Uniform fixed height**: Set ``.itemh = 40.0f`` (or your desired pixel "
+"row height) for ``O(1)`` exact scroll-thumb math."
+msgstr "**统一固定行高** ：将 ``.itemh`` 设为 ``40.0f`` （或所需像素高度），可实现 ``O(1)`` 精确滚动条定位。"
+
+#: ../../source/declarative/collections.rst:50
+msgid ""
+"**Measured variable height (0.3.3 default)**: Leave ``.itemh = 0`` when "
+"rows contain multi-line wrapped notes or varying content. Fluxent "
+"measures realized rows dynamically and estimates off-screen extent from a"
+" rolling average."
+msgstr ""
+"**动态测量可变行高（0.3.3 默认行为）** ：当各行包含多行折行文本或不等高内容时，保持 ``.itemh = 0`` ，"
+"Fluxent 会自动测量已实例化行的真实高度，并根据滑动平均值估算视口外总高度。"
+
+#: ../../source/declarative/collections.rst:55
+msgid "Selection Modes & Rubber-Band Marquee Selection"
+msgstr "选择模式与矩形框选（Rubber-Band）"
+
+#: ../../source/declarative/collections.rst:57
+msgid "Configure ``.sel_mode`` with:"
+msgstr "通过 ``.sel_mode`` 选择交互模式："
+
+#: ../../source/declarative/collections.rst:59
+msgid ""
+"``XTK_LIST_SELECT_SINGLE`` — Single row selection tracked via ``.sel`` "
+"and ``msg.i``."
+msgstr "``XTK_LIST_SELECT_SINGLE`` —— 单选模式，通过 ``.sel`` 与 ``msg.i`` 同步选中下标。"
+
+#: ../../source/declarative/collections.rst:61
+msgid "``XTK_LIST_SELECT_NONE`` — Display-only or click-to-invoke list."
+msgstr "``XTK_LIST_SELECT_NONE`` —— 纯展示或仅响应行激活（invoke）的列表。"
+
+#: ../../source/declarative/collections.rst:62
+msgid ""
+"``XTK_LIST_SELECT_MULTIPLE`` — Clicking toggles checkboxes on individual "
+"rows."
+msgstr "``XTK_LIST_SELECT_MULTIPLE`` —— 多选复选框模式，点击逐行切换勾选。"
+
+#: ../../source/declarative/collections.rst:63
+msgid ""
+"``XTK_LIST_SELECT_EXTENDED`` — Desktop explorer selection supporting "
+"``Ctrl+Click``, ``Shift+Click`` ranges, and ``Ctrl+A``. Set "
+"``.rect_select = true`` in **0.3.3** to enable pointer drag rubber-band "
+"(marquee) box selection."
+msgstr ""
+"``XTK_LIST_SELECT_EXTENDED`` —— 资源管理器式扩展多选，支持 ``Ctrl+单击`` 、 ``Shift+单击`` 连续区间与 ``Ctrl+A`` 全选；"
+"在 **0.3.3** 中设置 ``.rect_select = true`` 可进一步启用鼠标拖拽橡皮筋矩形框选。"
+
+#: ../../source/declarative/collections.rst:69
+msgid "Grid Layouts & ``ItemsView``"
+msgstr "网格布局与 ``ItemsView``"
+
+#: ../../source/declarative/collections.rst:71
+msgid ""
+"For multi-column tile grids, use ``xtk_gridview`` with ``.itemw`` and "
+"``.itemh`` (plus optional ``.ncol``; leave ``.ncol = 0`` to flow columns "
+"automatically to the available width), or ``xtk_itemsview`` "
+"(``&flux_ctrl_itemsview``) with ``XTK_ITEMS_LAYOUT_UNIFORM_GRID`` / "
+"``XTK_ITEMS_LAYOUT_FLOW``."
+msgstr ""
+"多列磁贴网格可使用 ``xtk_gridview`` 配合 ``.itemw`` 与 ``.itemh`` （ ``.ncol = 0`` 时按容器宽度自动计算列数），"
+"或使用 ``xtk_itemsview`` （ ``&flux_ctrl_itemsview`` ）配合 ``XTK_ITEMS_LAYOUT_UNIFORM_GRID`` / ``XTK_ITEMS_LAYOUT_FLOW`` 。"
+
+#: ../../source/declarative/collections.rst:77
+msgid "Grouped Lists with Sticky Headers (0.3.3)"
+msgstr "带吸顶标题的分组列表（0.3.3）"
+
+#: ../../source/declarative/collections.rst:79
+msgid ""
+"Both ``xtk_list`` and ``xtk_gridview`` support sectioned data with WinUI-"
+"style inline sticky group headers. Pass an ``int32_t`` array of per-group"
+" item counts in ``.groups``, the group count in ``.ngroup``, and a "
+"``.group_header`` builder:"
+msgstr ""
+"``xtk_list`` 与 ``xtk_gridview`` 均支持分段数据与 WinUI 风格的内联吸顶组标题。"
+"在 ``.groups`` 中传入各组元素个数的 ``int32_t`` 数组、在 ``.ngroup`` 中指定组数，并提供 ``.group_header`` 构建函数："
+
+#: ../../source/declarative/collections.rst:106
+#, python-brace-format
+msgid ""
+"Notice that ``item(ui, env, index)`` still receives the logical item "
+"index ``0 .. nitem - 1``, while ``group_header`` receives ``0 .. ngroup -"
+" 1``. If you need to map a flat realized row slot (headers and items "
+"interleaved) back to ``{group, item}``, call ``xtk_list_row(groups, "
+"ngroup, flat_row)``."
+msgstr ""
+"注意 ``item(ui, env, index)`` 接收的依然是 ``0 .. nitem - 1`` 的逻辑数据下标，而 ``group_header`` 接收 "
+"``0 .. ngroup - 1`` 的组下标。如需将组头与数据项交错排列的扁平行号映射回 ``{group, item}`` ，可调用 "
+"``xtk_list_row(groups, ngroup, flat_row)`` 。"
+
+#: ../../source/declarative/collections.rst:112
+msgid "Details Table View with ``ColumnHeader`` (0.3.3)"
+msgstr "带 ``ColumnHeader`` 表头的明细列表（0.3.3）"
+
+#: ../../source/declarative/collections.rst:114
+msgid ""
+"Attach ``xtk_colheader`` (register ``&flux_ctrl_colheader`` and "
+"``&flux_ctrl_colitem``) to ``XtkListDesc.header`` to build a file-"
+"explorer details table supporting click-to-sort arrows, drag column "
+"resizing, double-click divider auto-fit, and drag column reordering:"
+msgstr ""
+"将 ``xtk_colheader`` （需注册 ``&flux_ctrl_colheader`` 与 ``&flux_ctrl_colitem`` ）挂载到 "
+"``XtkListDesc.header`` 上，即可构建支持点击排序箭头、拖拽调整列宽、双击分隔线自适应列宽以及拖拽重排列顺序的明细表格："
+
+#: ../../source/declarative/collections.rst:141
+msgid ""
+"In ``update()``, ``.resize`` writes the new column width to ``msg.f`` "
+"(with your column index in ``msg.i``), and ``.reorder`` provides the "
+"target slot in ``msg.i`` and source column in ``(int) msg.d``."
+msgstr ""
+"在 ``update()`` 中， ``.resize`` 将调整后的列宽写入 ``msg.f`` （列下标在 ``msg.i`` 中），"
+" ``.reorder`` 将目标位置放入 ``msg.i`` 、被拖动的原列放入 ``(int) msg.d`` 。"
+
+#: ../../source/declarative/collections.rst:146
+msgid "Hierarchical ``TreeView``"
+msgstr "层级树视图 ``TreeView``"
+
+#: ../../source/declarative/collections.rst:148
+msgid ""
+"``xtk_tree`` (``&flux_ctrl_tree``) flattens visible nodes from a "
+"hierarchy of ``XtkTreeNodeDesc`` structs into a virtualized list with "
+"expand/collapse chevrons:"
+msgstr "``xtk_tree`` （ ``&flux_ctrl_tree`` ）将 ``XtkTreeNodeDesc`` 层级树中的可见节点展平为带展开/折叠箭头的虚拟化列表："
+
+#: ../../source/declarative/collections.rst:183
+msgid ""
+"``.select``, ``.expand``, and ``.invoke`` report the **flat visible row "
+"index** in ``msg.i``; ``.expand`` also reports the new expanded boolean "
+"in ``msg.b``."
+msgstr "``.select`` 、 ``.expand`` 与 ``.invoke`` 均在 ``msg.i`` 中报告 **当前可见行的扁平下标** ； ``.expand`` 同时在 ``msg.b`` 中给出新的展开布尔值。"
+
+#: ../../source/declarative/collections.rst:187
+msgid "Reconciler Keys & Memoized Regions"
+msgstr "协调器节点键（Key）与缓存区域"
+
+#: ../../source/declarative/collections.rst:190
+msgid "Preserving Identity with ``xtk_keyed_u64`` and ``xtk_keyed``"
+msgstr "使用 ``xtk_keyed_u64`` 与 ``xtk_keyed`` 保持节点身份"
+
+#: ../../source/declarative/collections.rst:192
+msgid ""
+"By default, sibling elements inside a container match by position. "
+"Whenever children can reorder, insert/delete in the middle, or swap "
+"between distinct pages inside one parent slot, assign stable keys so "
+"retained state (scroll offset, focus, active animations, text cursor) "
+"follows the logical item:"
+msgstr ""
+"容器内的同级元素默认按位置匹配。当子元素会发生排序变化、中间增删，或在同一个父槽位下切换不同页面时，"
+"为其指定稳定键值即可让保留状态（滚动偏移、焦点、过渡动画、输入光标）始终跟随对应的逻辑条目："
+
+#: ../../source/declarative/collections.rst:197
+msgid ""
+"``xtk_keyed_u64(el, item_id)`` — Zero-allocation 64-bit integer key "
+"(preferred for database IDs, enum page IDs, and tab IDs)."
+msgstr "``xtk_keyed_u64(el, item_id)`` —— 零内存分配的 64 位整数键（推荐用于记录 ID、页面枚举 ID 与标签页 ID）。"
+
+#: ../../source/declarative/collections.rst:199
+#, python-format
+msgid ""
+"``xtk_keyed(ui, xtk_fmt(ui, \"card-%s\", slug), el)`` — String key (handy"
+" for named routes and diagnostics)."
+msgstr "``xtk_keyed(ui, xtk_fmt(ui, \"card-%s\", slug), el)`` —— 字符串键（便于命名路由与调试诊断）。"
+
+#: ../../source/declarative/collections.rst:203
+msgid "Skipping Unchanged Subtrees with Static & Memo Regions"
+msgstr "利用静态与记忆化区域跳过未变子树"
+
+#: ../../source/declarative/collections.rst:205
+msgid ""
+"When a screen combines a frequently ticking status indicator with a "
+"complex sidebar or form that rarely changes, skip rebuilding and diffing "
+"the unchanged region altogether:"
+msgstr "当界面中既有高频刷新的状态指示器，又有很少改动的复杂侧边栏或大型表单时，可通过区域缓存直接跳过未变子树的构建与比对："
+
+#: ../../source/declarative/collections.rst:209
+msgid ""
+"``xtk_static_region(ui, 0x1001u, build_footer, NULL)`` — Calls "
+"``build_footer`` on the first frame and reuses the retained subtree on "
+"every subsequent frame."
+msgstr "``xtk_static_region(ui, 0x1001u, build_footer, NULL)`` —— 首帧调用一次 ``build_footer`` ，后续所有帧直接复用保留子树。"
+
+#: ../../source/declarative/collections.rst:211
+msgid ""
+"``xtk_memo_region(ui, 0x1002u, m->sidebar_rev, build_sidebar, (void *) "
+"m)`` — Rebuilds the subtree only when ``m->sidebar_rev`` changes; "
+"increment ``m->sidebar_rev`` inside ``update()`` solely in handlers that "
+"affect sidebar data."
+msgstr ""
+"``xtk_memo_region(ui, 0x1002u, m->sidebar_rev, build_sidebar, (void *) m)`` —— 仅当 ``m->sidebar_rev`` 变化时重建该子树；"
+"只需在 ``update()`` 中真正修改侧边栏数据的分支里递增 ``m->sidebar_rev`` 。"

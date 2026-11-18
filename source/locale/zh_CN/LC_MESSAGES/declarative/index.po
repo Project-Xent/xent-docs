@@ -1,0 +1,95 @@
+# Project Xent Declarative UI Guide Index (zh_CN)
+# Copyright (C) 2026, Project Xent
+# This file is distributed under the same license as the Xent package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Xent 0.3.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-18 23:32+0800\n"
+"PO-Revision-Date: 2026-11-18 23:40+0800\n"
+"Last-Translator: Project Xent\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/declarative/index.rst:2
+msgid "Declarative UI Guide"
+msgstr "声明式开发指南"
+
+#: ../../source/declarative/index.rst:4
+msgid ""
+"The **declarative track** (``fluxent.decl``) builds native Windows "
+"applications around ``flux_run`` and the element builders in "
+"``<xtk/xtk.h>``. Your code keeps application state in a C ``struct``, "
+"processes integer-tagged messages in ``update()``, and describes the "
+"current interface in ``view()`` while the reconciler updates retained "
+"controls incrementally."
+msgstr ""
+"**声明式路线** （ ``fluxent.decl`` ）围绕 ``flux_run`` 与 ``<xtk/xtk.h>`` 中的元素构建器开发原生 "
+"Windows 应用。代码将应用状态存放在普通 C ``struct`` 中，在 ``update()`` 中处理带整数标签的消息，"
+"在 ``view()`` 中描述当前界面结构，并由协调器对底层保留式控件执行增量更新。"
+
+#: ../../source/declarative/index.rst:10
+msgid ""
+"Read the chapters in order when starting from scratch, or jump directly "
+"to the control family your screen needs:"
+msgstr "从零上手建议按章节顺序阅读，也可按页面需求直接查阅对应控件分类："
+
+#: ../../source/declarative/index.rst:13
+msgid ""
+":doc:`mvu` — Master the Elm Model–View–Update cycle, dissect the "
+"``fluxent.decl`` template, organize large message tables, register "
+"control modules, and manage per-frame scratch strings."
+msgstr ""
+":doc:`mvu` —— 理解 Elm Model–View–Update 循环，逐行拆解 ``fluxent.decl`` 模板，组织大型消息分发表、"
+"注册控件模块并管理帧内存池动态字符串。"
+
+#: ../../source/declarative/index.rst:16
+msgid ""
+":doc:`layout` — Arrange interfaces with Flex stacks, cards, modifiers, "
+"controlled ``ScrollViewer`` viewports, inherited typography, and async "
+"WIC images."
+msgstr ""
+":doc:`layout` —— 使用 Flex 堆栈容器、卡片、布局修饰器、受控 ``ScrollViewer`` 视口、"
+"可继承文本样式与异步 WIC 图像编排界面。"
+
+#: ../../source/declarative/index.rst:19
+msgid ""
+":doc:`inputs` — Handle buttons, toggles, sliders, localized "
+"``NumberBox``, controlled ``TextBox`` / ``AutoSuggestBox`` edits, and "
+"date, time, calendar, and color pickers."
+msgstr ""
+":doc:`inputs` —— 处理按钮、开关、滑块、本地化 ``NumberBox`` 、受控 ``TextBox`` / ``AutoSuggestBox`` "
+"文本编辑，以及日期、时间、日历与颜色选择器。"
+
+#: ../../source/declarative/index.rst:22
+msgid ""
+":doc:`collections` — Render 100,000-row virtualized ``ListView`` and "
+"``GridView`` collections, sticky group headers, sortable column headers, "
+"``TreeView`` hierarchies, keys, and memoized subtrees."
+msgstr ""
+":doc:`collections` —— 渲染 10 万行级虚拟化 ``ListView`` 与 ``GridView`` 、吸顶分组标题、"
+"可排序拖拽列头、层级 ``TreeView`` 、节点键（Key）与缓存区域。"
+
+#: ../../source/declarative/index.rst:25
+msgid ""
+":doc:`navigation` — Structure multi-page shells with ``NavigationView``, "
+"``TabView``, ``SplitView``, custom ``TitleBar``, ``CommandBar`` overflow "
+"menus, modal ``ContentDialog``, ``TeachingTip``, and status bars."
+msgstr ""
+":doc:`navigation` —— 使用 ``NavigationView`` 、 ``TabView`` 、 ``SplitView`` 、自定义 ``TitleBar`` 、"
+" ``CommandBar`` 溢出工具栏、模态 ``ContentDialog`` 、 ``TeachingTip`` 与状态栏搭建多页应用外壳。"
+
+#: ../../source/declarative/index.rst:28
+msgid ""
+":doc:`host` — Access ``FluxApp *`` for native file dialogs, OLE drag-and-"
+"drop, clipboard data, live theme/backdrop switching, and background "
+"worker threads."
+msgstr ""
+":doc:`host` —— 获取 ``FluxApp *`` 调用原生文件对话框、OLE 拖放、剪贴板读写、"
+"实时主题与背景材质切换以及后台工作线程通信。"

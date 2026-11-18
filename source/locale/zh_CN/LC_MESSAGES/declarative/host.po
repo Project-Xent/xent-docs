@@ -1,0 +1,178 @@
+# Project Xent Declarative UI Guide — Host & Shell Integration (zh_CN)
+# Copyright (C) 2026, Project Xent
+# This file is distributed under the same license as the Xent package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Xent 0.3.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-18 23:32+0800\n"
+"PO-Revision-Date: 2026-11-18 23:40+0800\n"
+"Last-Translator: Project Xent\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/declarative/host.rst:2
+msgid "6. File Dialogs, Drag-and-Drop, Theme, & Worker Threads"
+msgstr "6. 文件对话框、拖放、主题切换与后台线程"
+
+#: ../../source/declarative/host.rst:4
+msgid ""
+"Desktop applications frequently interact with the OS shell—opening native"
+" file pickers, accepting dropped files from Explorer, reading the "
+"clipboard, switching themes, and running long tasks off the UI thread. "
+"Here is how all four integrate cleanly into the declarative MVU loop."
+msgstr ""
+"桌面应用经常需要与操作系统外壳协作——打开原生文件选择器、接收资源管理器拖入的文件、读写剪贴板、"
+"切换深浅色主题，以及在后台线程运行耗时任务。本章介绍如何将这些能力自然融入声明式 MVU 循环。"
+
+#: ../../source/declarative/host.rst:10
+msgid "Capturing ``FluxApp *`` via ``on_start`` and ``on_stop``"
+msgstr "通过 ``on_start`` 与 ``on_stop`` 获取 ``FluxApp *``"
+
+#: ../../source/declarative/host.rst:12
+msgid ""
+"``flux_run`` creates and owns the ``FluxApp *`` instance for you. "
+"Populate ``on_start``, ``on_stop``, and ``user`` on ``FluxAppCfg`` to "
+"store the ``FluxApp *`` pointer inside ``Model`` for the lifetime of the "
+"window:"
+msgstr ""
+"``flux_run`` 会自动创建并管理 ``FluxApp *`` 实例。在 ``FluxAppCfg`` 上配置 ``on_start`` 、 "
+"``on_stop`` 与 ``user`` ，即可在窗口生命周期内将 ``FluxApp *`` 指针保存在 ``Model`` 中："
+
+#: ../../source/declarative/host.rst:54
+msgid "Native File & Folder Pickers"
+msgstr "原生文件与文件夹选择对话框"
+
+#: ../../source/declarative/host.rst:56
+msgid ""
+"Include ``<fluxent/flux_filedialog.h>`` and call ``flux_filedialog_post``"
+" inside ``update()`` when the user clicks a \"Browse…\" button. It opens "
+"the Windows Common Item Dialog without tangling your ``view()`` code and "
+"posts the result back as an ``XtkMsg``:"
+msgstr ""
+"引入 ``<fluxent/flux_filedialog.h>`` ，在用户点击“浏览…”按钮时于 ``update()`` 内调用 "
+"``flux_filedialog_post`` ，即可弹出原生 Windows 文件对话框并将选择结果作为 ``XtkMsg`` 投递回 ``update()`` ："
+
+#: ../../source/declarative/host.rst:89
+msgid "OLE Drag-and-Drop & Clipboard"
+msgstr "OLE 拖放与剪贴板"
+
+#: ../../source/declarative/host.rst:92
+msgid "Drop Targets & Drag Sources (``xtk_dragdrop``)"
+msgstr "放置目标与拖拽源（ ``xtk_dragdrop`` ）"
+
+#: ../../source/declarative/host.rst:94
+msgid ""
+"Wrap any container or card in ``xtk_dragdrop(ui, desc, child)`` to accept"
+" files or text dragged from Windows Explorer and other apps, or to turn "
+"an element into a drag source:"
+msgstr ""
+"使用 ``xtk_dragdrop(ui, desc, child)`` 包裹任意容器或卡片，即可接收从资源管理器及其他程序拖入的文件或文本，"
+"或将该元素设为可向外拖出的拖拽源："
+
+#: ../../source/declarative/host.rst:125
+msgid ""
+"As with ``TextBox``, duplicate ``(char const *) msg.ptr`` with ``strdup``"
+" inside ``update()`` when handling ``MSG_DROP_FILES`` or "
+"``MSG_DROP_TEXT``."
+msgstr "与 ``TextBox`` 相同，处理 ``MSG_DROP_FILES`` 或 ``MSG_DROP_TEXT`` 时请在 ``update()`` 内用 ``strdup`` 拷贝 ``(char const *) msg.ptr`` 。"
+
+#: ../../source/declarative/host.rst:129
+msgid "Clipboard Read & Write"
+msgstr "剪贴板读写"
+
+#: ../../source/declarative/host.rst:131
+msgid ""
+"Include ``<fluxent/flux_data.h>`` inside ``update()`` to read or write "
+"the Windows clipboard:"
+msgstr "在 ``update()`` 中引入 ``<fluxent/flux_data.h>`` 即可读写系统剪贴板："
+
+#: ../../source/declarative/host.rst:146
+msgid ""
+"For multi-format clipboard payloads (files, raw RGBA ``FluxBitmap`` "
+"images, or custom MIME/clipboard formats), construct a ``FluxData *`` via"
+" ``flux_data_create()`` and pass it to ``flux_clipboard_set``."
+msgstr ""
+"如需写入多格式剪贴板数据（文件列表、RGBA ``FluxBitmap`` 位图或自定义剪贴板格式），"
+"可通过 ``flux_data_create()`` 构造 ``FluxData *`` 并传给 ``flux_clipboard_set`` 。"
+
+#: ../../source/declarative/host.rst:151
+msgid "Switching Theme, Backdrop, & Window State"
+msgstr "切换主题、窗口材质与窗口状态"
+
+#: ../../source/declarative/host.rst:153
+msgid ""
+"With ``m->app`` stored from ``on_start``, ``update()`` can adjust live "
+"window chrome in response to settings controls:"
+msgstr "借助 ``on_start`` 保存的 ``m->app`` ，可在 ``update()`` 中响应设置变更并实时调整窗口外观："
+
+#: ../../source/declarative/host.rst:156
+msgid ""
+"**Theme mode**: ``flux_theme_setmode(flux_app_theme(m->app), "
+"FLUX_THEME_DARK);`` (accepts ``FLUX_THEME_SYSTEM``, ``FLUX_THEME_LIGHT``,"
+" or ``FLUX_THEME_DARK``)."
+msgstr ""
+"**深浅色主题** ： ``flux_theme_setmode(flux_app_theme(m->app), FLUX_THEME_DARK);`` "
+"（可选 ``FLUX_THEME_SYSTEM`` 、 ``FLUX_THEME_LIGHT`` 或 ``FLUX_THEME_DARK`` ）。"
+
+#: ../../source/declarative/host.rst:158
+msgid ""
+"**Window backdrop**: ``flux_window_setbackdrop(flux_app_window(m->app), "
+"FLUX_BACKDROP_MICA_ALT);`` (accepts ``FLUX_BACKDROP_NONE``, ``MICA``, "
+"``MICA_ALT``, or ``ACRYLIC``)."
+msgstr ""
+"**窗口背景材质** ： ``flux_window_setbackdrop(flux_app_window(m->app), FLUX_BACKDROP_MICA_ALT);`` "
+"（可选 ``FLUX_BACKDROP_NONE`` 、 ``MICA`` 、 ``MICA_ALT`` 或 ``ACRYLIC`` ）。"
+
+#: ../../source/declarative/host.rst:161
+msgid ""
+"**Dynamic window title & close**: "
+"``flux_window_settitle(flux_app_window(m->app), L\"Unsaved *\");`` and "
+"``flux_window_close(flux_app_window(m->app));`` (for example after "
+"confirming an exit ``ContentDialog``)."
+msgstr ""
+"**动态窗口标题与关闭窗口** ： ``flux_window_settitle(flux_app_window(m->app), L\"Unsaved *\");`` 与 "
+"``flux_window_close(flux_app_window(m->app));`` （例如在确认退出 ``ContentDialog`` 后主动关闭窗口）。"
+
+#: ../../source/declarative/host.rst:167
+msgid "Background Worker Threads"
+msgstr "后台工作线程通信"
+
+#: ../../source/declarative/host.rst:169
+msgid ""
+"Keep ``update()`` fast and non-blocking by offloading network calls, "
+"archive extraction, or heavy indexing to a worker thread. Pass ``FluxApp "
+"*`` into your worker context and report progress back via thread-safe "
+"message posting:"
+msgstr ""
+"将网络请求、解压缩或重度索引任务放到后台工作线程中执行，使 ``update()`` 始终保持轻量响应。"
+"将 ``FluxApp *`` 传入工作线程上下文，即可通过线程安全的消息投递函数实时回报进度："
+
+#: ../../source/declarative/host.rst:187
+msgid ""
+"``flux_app_post`` enqueues scalar ``XtkMsg`` values from any thread and "
+"wakes the UI loop."
+msgstr "``flux_app_post`` 可从任意线程将标量 ``XtkMsg`` 消息入队并唤醒 UI 循环。"
+
+#: ../../source/declarative/host.rst:189
+msgid ""
+"``flux_app_poststring`` copies the UTF-8 string safely onto the queue and"
+" delivers it as ``(char const *) msg.ptr`` inside ``update()`` on the UI "
+"thread."
+msgstr "``flux_app_poststring`` 安全拷贝 UTF-8 字符串并在 UI 线程的 ``update()`` 中作为 ``(char const *) msg.ptr`` 送达。"
+
+#: ../../source/declarative/host.rst:192
+msgid ""
+"Always join active worker threads inside ``FluxAppCfg.on_stop`` before "
+"the process destroys ``FluxApp``. See "
+"``fluxent/examples/installer_wizard/`` for a complete multi-page setup "
+"wizard with pause, cancel, and worker synchronization."
+msgstr ""
+"请在 ``FluxAppCfg.on_stop`` 中等待活动工作线程汇合退出后再结束 ``FluxApp`` 。"
+"完整的多页安装向导（含暂停、取消与后台线程同步）可参考 ``fluxent/examples/installer_wizard/`` 。"

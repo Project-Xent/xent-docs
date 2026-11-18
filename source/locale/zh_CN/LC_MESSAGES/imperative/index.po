@@ -1,0 +1,102 @@
+# Project Xent Imperative UI Guide Index (zh_CN)
+# Copyright (C) 2026, Project Xent
+# This file is distributed under the same license as the Xent package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Xent 0.3.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-18 23:32+0800\n"
+"PO-Revision-Date: 2026-11-18 23:42+0800\n"
+"Last-Translator: Project Xent\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/imperative/index.rst:2
+msgid "Imperative UI Guide"
+msgstr "命令式开发指南"
+
+#: ../../source/imperative/index.rst:4
+msgid ""
+"The **imperative track** (``fluxent.imp``) gives your C23 program direct "
+"ownership over a retained ``XtkScene``, atomic ``XtkTxn`` transactions, "
+"generated typed control wrappers in ``<xtk/xtk_controls.h>``, and routed "
+"``XtkEventFn`` callbacks."
+msgstr ""
+"**命令式路线** （ ``fluxent.imp`` ）赋予 C23 程序对保留式 ``XtkScene`` 、原子化 ``XtkTxn`` 事务、"
+" ``<xtk/xtk_controls.h>`` 自动生成的强类型控件包装函数以及 ``XtkEventFn`` 路由事件回调的直接控制权。"
+
+#: ../../source/imperative/index.rst:9
+msgid ""
+"The imperative API is also Xent's stable C ABI surface: ``oxent`` (Rust),"
+" ``zxent`` (Zig), ``xenthon`` (Python), and ``hsxent`` (Haskell) all "
+"compile down to these functions."
+msgstr ""
+"命令式 API 同时也是 Xent 的稳定 C ABI 边界： ``oxent`` （Rust）、 ``zxent`` （Zig）、 "
+"``xenthon`` （Python）与 ``hsxent`` （Haskell）均直接调用这组底层函数。"
+
+#: ../../source/imperative/index.rst:13
+msgid ""
+"Read the six chapters in sequence to go from basic window startup to "
+"100,000-row virtualized collections and OS shell integration:"
+msgstr "按顺序阅读以下六章，即可从基础窗口启动一路掌握 10 万行虚拟化集合与系统外壳集成："
+
+#: ../../source/imperative/index.rst:16
+msgid ""
+":doc:`lifecycle` — Initialize control modules, ``FluxApp``, ``XtkHost``, "
+"and ``XtkScene``, dissect the ``fluxent.imp`` template, and shut down "
+"cleanly."
+msgstr ""
+":doc:`lifecycle` —— 初始化控件模块、 ``FluxApp`` 、 ``XtkHost`` 与 ``XtkScene`` ，"
+"拆解 ``fluxent.imp`` 模板并按规范顺序释放资源。"
+
+#: ../../source/imperative/index.rst:18
+msgid ""
+":doc:`transactions` — Build, reparent, reorder, and swap dynamic page "
+"subtrees atomically with ``XtkTxn``, ``XtkNodeRef``, ``XtkBatchResult``, "
+"and ``XtkBatchDiag``."
+msgstr ""
+":doc:`transactions` —— 使用 ``XtkTxn`` 、 ``XtkNodeRef`` 、 ``XtkBatchResult`` 与 "
+"``XtkBatchDiag`` 原子化构建、重排、重挂载并切换动态页面子树。"
+
+#: ../../source/imperative/index.rst:21
+msgid ""
+":doc:`properties` — Master ``<xtk/xtk_controls.h>`` ``.set`` bitmasks, "
+"string length conventions, reusable Flex layout helpers, generic property"
+" queries, and composite data setters."
+msgstr ""
+":doc:`properties` —— 掌握 ``<xtk/xtk_controls.h>`` 的 ``.set`` 属性位掩码、字符串长度约定、"
+"可复用的 Flex 布局辅助函数、通用属性读取与复合数据设置函数。"
+
+#: ../../source/imperative/index.rst:24
+msgid ""
+":doc:`events` — Subscribe to capture/target/bubble event phases, decode "
+"``XtkEventPayload`` variants, coalesce per-frame UI syncs with "
+"``flux_app_onframe``, and coordinate controlled inputs with "
+"``XtkChangeStamp``."
+msgstr ""
+":doc:`events` —— 订阅捕获/目标/冒泡阶段事件，解析各类 ``XtkEventPayload`` 载荷，"
+"通过 ``flux_app_onframe`` 合并帧内属性同步，并用 ``XtkChangeStamp`` 协调受控输入。"
+
+#: ../../source/imperative/index.rst:28
+msgid ""
+":doc:`virtualization` — Drive 100,000-row ``ListView`` and ``GridView`` "
+"controls imperatively via ``XTK_EVENT_REALIZE``, slot recycling, and "
+"sticky group headers."
+msgstr ""
+":doc:`virtualization` —— 基于 ``XTK_EVENT_REALIZE`` 视口范围事件、行槽位复用与吸顶组标题，"
+"以命令式方式驱动 10 万行 ``ListView`` 与 ``GridView`` 。"
+
+#: ../../source/imperative/index.rst:31
+msgid ""
+":doc:`shell` — Control modal ``ContentDialog`` instances, open native "
+"file dialogs, handle ``FluxData`` clipboard and drag-and-drop payloads, "
+"customize window chrome, and marshal worker-thread callbacks."
+msgstr ""
+":doc:`shell` —— 控制模态 ``ContentDialog`` 、调用原生文件对话框、处理 ``FluxData`` "
+"剪贴板与 OLE 拖放数据、定制窗口外观并从工作线程回调 UI 线程。"

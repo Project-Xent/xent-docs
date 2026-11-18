@@ -1,0 +1,308 @@
+# Project Xent Declarative UI Guide — Inputs (zh_CN)
+# Copyright (C) 2026, Project Xent
+# This file is distributed under the same license as the Xent package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Xent 0.3.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-18 23:32+0800\n"
+"PO-Revision-Date: 2026-11-18 23:40+0800\n"
+"Last-Translator: Project Xent\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/declarative/inputs.rst:2
+msgid "3. Forms, Pickers, & Controlled Inputs"
+msgstr "3. 表单输入、选择器与受控状态"
+
+#: ../../source/declarative/inputs.rst:4
+msgid ""
+"In declarative Xent, form controls receive their current value from "
+"``Model`` in ``view()`` and emit user changes back to ``update()`` via "
+"``XtkMsg`` payloads."
+msgstr "在声明式 Xent 中，表单控件在 ``view()`` 里从 ``Model`` 读取当前值，并通过 ``XtkMsg`` 载荷将用户的修改传回 ``update()`` 。"
+
+#: ../../source/declarative/inputs.rst:8
+msgid "``XtkMsg`` Payload Reference"
+msgstr "``XtkMsg`` 载荷字段速查表"
+
+#: ../../source/declarative/inputs.rst:10
+msgid ""
+"Each interactive control populates specific fields of ``XtkMsg`` "
+"alongside your message ``tag``:"
+msgstr "每种交互控件在投递自定义消息 ``tag`` 时，会将新值写入 ``XtkMsg`` 的对应载荷字段："
+
+#: ../../source/declarative/inputs.rst:17
+msgid "Control Builder"
+msgstr "控件构建函数"
+
+#: ../../source/declarative/inputs.rst:18
+msgid "Descriptor Field"
+msgstr "描述结构体字段"
+
+#: ../../source/declarative/inputs.rst:19
+msgid "Payload Field Read in ``update()``"
+msgstr "``update()`` 中读取的载荷字段"
+
+#: ../../source/declarative/inputs.rst:20
+msgid "``xtk_button`` / ``xtk_repeat`` / ``xtk_link``"
+msgstr "``xtk_button`` / ``xtk_repeat`` / ``xtk_link``"
+
+#: ../../source/declarative/inputs.rst:21
+msgid "``.click``"
+msgstr "``.click``"
+
+#: ../../source/declarative/inputs.rst:22
+msgid "``msg.tag`` (and ``msg.i`` when bound via ``xtk_msg_i``)"
+msgstr "``msg.tag`` （用 ``xtk_msg_i`` 构造时可同时读取 ``msg.i`` ）"
+
+#: ../../source/declarative/inputs.rst:23
+msgid "``xtk_checkbox`` / ``xtk_switch`` / ``xtk_radio``"
+msgstr "``xtk_checkbox`` / ``xtk_switch`` / ``xtk_radio``"
+
+#: ../../source/declarative/inputs.rst:24
+#: ../../source/declarative/inputs.rst:34
+#: ../../source/declarative/inputs.rst:52
+#: ../../source/declarative/inputs.rst:55
+msgid "``.change``"
+msgstr "``.change``"
+
+#: ../../source/declarative/inputs.rst:25
+msgid "``msg.b`` (``bool`` checked state)"
+msgstr "``msg.b`` （ ``bool`` 选中状态）"
+
+#: ../../source/declarative/inputs.rst:26
+msgid "``xtk_checkbox`` (three-state)"
+msgstr "``xtk_checkbox`` （三态复选框）"
+
+#: ../../source/declarative/inputs.rst:27
+msgid "``.change_state``"
+msgstr "``.change_state``"
+
+#: ../../source/declarative/inputs.rst:28
+msgid "``msg.i`` (``0`` unchecked, ``1`` checked, ``2`` indeterminate)"
+msgstr "``msg.i`` （ ``0`` 未选、 ``1`` 选中、 ``2`` 半选）"
+
+#: ../../source/declarative/inputs.rst:29
+msgid "``xtk_slider``"
+msgstr "``xtk_slider``"
+
+#: ../../source/declarative/inputs.rst:30
+msgid "``.change`` / ``.change_range``"
+msgstr "``.change`` / ``.change_range``"
+
+#: ../../source/declarative/inputs.rst:31
+msgid ""
+"``msg.f`` for single value; ``msg.f`` (start) and ``(float) msg.d`` (end)"
+" for range sliders"
+msgstr "单值滑块读取 ``msg.f`` ；范围滑块从 ``msg.f`` 读取起点、从 ``(float) msg.d`` 读取终点"
+
+#: ../../source/declarative/inputs.rst:33
+msgid "``xtk_number`` / ``xtk_rating`` / ``xtk_scroll_bar``"
+msgstr "``xtk_number`` / ``xtk_rating`` / ``xtk_scroll_bar``"
+
+#: ../../source/declarative/inputs.rst:35
+msgid "``msg.d`` (``double`` value)"
+msgstr "``msg.d`` （ ``double`` 数值）"
+
+#: ../../source/declarative/inputs.rst:36
+msgid "``xtk_combo`` / ``xtk_radiogroup`` / ``xtk_looping_selector``"
+msgstr "``xtk_combo`` / ``xtk_radiogroup`` / ``xtk_looping_selector``"
+
+#: ../../source/declarative/inputs.rst:37
+msgid "``.select``"
+msgstr "``.select``"
+
+#: ../../source/declarative/inputs.rst:38
+msgid "``msg.i`` (``int32_t`` selected index)"
+msgstr "``msg.i`` （ ``int32_t`` 选中项下标）"
+
+#: ../../source/declarative/inputs.rst:39
+msgid "``xtk_textbox`` / ``xtk_password`` / ``xtk_combo`` (``.submit``)"
+msgstr "``xtk_textbox`` / ``xtk_password`` / ``xtk_combo`` （ ``.submit`` ）"
+
+#: ../../source/declarative/inputs.rst:40
+msgid "``.change`` / ``.submit``"
+msgstr "``.change`` / ``.submit``"
+
+#: ../../source/declarative/inputs.rst:41
+msgid ""
+"``(char const *) msg.ptr`` (borrowed UTF-8 string; duplicate with "
+"``strdup`` inside ``update()``)"
+msgstr "``(char const *) msg.ptr`` （借用的 UTF-8 字符串，在 ``update()`` 内用 ``strdup`` 拷贝保存）"
+
+#: ../../source/declarative/inputs.rst:43
+msgid "``xtk_suggest``"
+msgstr "``xtk_suggest``"
+
+#: ../../source/declarative/inputs.rst:44
+msgid "``.on_text`` / ``.query`` / ``.on_chosen``"
+msgstr "``.on_text`` / ``.query`` / ``.on_chosen``"
+
+#: ../../source/declarative/inputs.rst:45
+msgid ""
+"``msg.ptr`` (UTF-8 text) for ``.on_text`` and ``.query``; ``msg.i`` "
+"(suggestion index) for ``.on_chosen``"
+msgstr "``.on_text`` 与 ``.query`` 读取 ``msg.ptr`` （UTF-8 文本）； ``.on_chosen`` 读取 ``msg.i`` （建议项下标）"
+
+#: ../../source/declarative/inputs.rst:47
+msgid "``xtk_date_picker`` / ``xtk_calendar_view``"
+msgstr "``xtk_date_picker`` / ``xtk_calendar_view``"
+
+#: ../../source/declarative/inputs.rst:48
+msgid "``.change`` / ``.select``"
+msgstr "``.change`` / ``.select``"
+
+#: ../../source/declarative/inputs.rst:49
+msgid ""
+"``msg.i`` encoded as ``YYYYMMDD`` (see ``xtk_date``); calendar also sets "
+"``msg.b`` (selected vs. deselected)"
+msgstr "``msg.i`` 为 ``YYYYMMDD`` 编码日期（见 ``xtk_date`` ）；日历控件同时通过 ``msg.b`` 表示选中或取消选中"
+
+#: ../../source/declarative/inputs.rst:51
+msgid "``xtk_time_picker``"
+msgstr "``xtk_time_picker``"
+
+#: ../../source/declarative/inputs.rst:53
+msgid "``msg.i`` (minutes from midnight, ``0``–``1439``)"
+msgstr "``msg.i`` （自零点起的分钟数， ``0`` – ``1439`` ）"
+
+#: ../../source/declarative/inputs.rst:54
+msgid "``xtk_color_picker``"
+msgstr "``xtk_color_picker``"
+
+#: ../../source/declarative/inputs.rst:56
+msgid "``(uint32_t) msg.i`` packed ARGB color"
+msgstr "``(uint32_t) msg.i`` 打包的 ARGB 颜色值"
+
+#: ../../source/declarative/inputs.rst:59
+msgid "Buttons, Links, and Menu Variants"
+msgstr "按钮、超链接与下拉菜单按钮"
+
+#: ../../source/declarative/inputs.rst:61
+msgid ""
+"**Standard & styled buttons** (``&flux_ctrl_button``): ``xtk_button`` "
+"supports ``XTK_BUTTON_STANDARD`` (``0``), ``XTK_BUTTON_ACCENT``, "
+"``XTK_BUTTON_SUBTLE``, and ``XTK_BUTTON_TEXT``, plus named Fluent icons "
+"in ``.icon`` (such as ``\"Save\"``, ``\"Share\"``, ``\"Delete\"``, "
+"``\"Settings\"``; pass ``NULL`` as the label for an icon-only button)."
+msgstr ""
+"**标准与样式按钮** （ ``&flux_ctrl_button`` ）： ``xtk_button`` 支持 ``XTK_BUTTON_STANDARD`` （ ``0`` ）、 "
+"``XTK_BUTTON_ACCENT`` 、 ``XTK_BUTTON_SUBTLE`` 与 ``XTK_BUTTON_TEXT`` 四种样式，并可在 ``.icon`` 中填写 "
+"Fluent 图标名（如 ``\"Save\"`` 、 ``\"Share\"`` 、 ``\"Delete\"`` 、 ``\"Settings\"`` ；将标签设为 ``NULL`` 即为纯图标按钮）。"
+
+#: ../../source/declarative/inputs.rst:66
+msgid ""
+"**Repeat button & Hyperlink**: ``xtk_repeat`` (``&flux_ctrl_repeat``) "
+"fires ``.click`` repeatedly while held down; ``xtk_link`` "
+"(``&flux_ctrl_link``) opens ``.url`` or posts ``.click``."
+msgstr ""
+"**连发按钮与超链接** ： ``xtk_repeat`` （ ``&flux_ctrl_repeat`` ）在按住期间连续触发 ``.click`` ； "
+"``xtk_link`` （ ``&flux_ctrl_link`` ）可打开 ``.url`` 链接或发送 ``.click`` 消息。"
+
+#: ../../source/declarative/inputs.rst:69
+msgid ""
+"**Dropdown, Split, & ToggleSplit buttons** (``&flux_ctrl_dropdown``, "
+"``&flux_ctrl_split``, ``&flux_ctrl_togglesplit``): Attach a popup menu "
+"array of ``XtkMenuItemDesc`` items:"
+msgstr ""
+"**下拉、拆分与切换拆分按钮** （ ``&flux_ctrl_dropdown`` 、 ``&flux_ctrl_split`` 、 "
+"``&flux_ctrl_togglesplit`` ）：通过 ``XtkMenuItemDesc`` 数组挂载弹出菜单："
+
+#: ../../source/declarative/inputs.rst:88
+msgid "Toggles, Radio Groups, and Numeric Controls"
+msgstr "开关、单选按钮组与数值控件"
+
+#: ../../source/declarative/inputs.rst:131
+msgid ""
+"Remember to register each corresponding module (``&flux_ctrl_checkbox``, "
+"``&flux_ctrl_switch``, ``&flux_ctrl_radiogroup``, ``&flux_ctrl_number``, "
+"``&flux_ctrl_slider``) or call ``flux_controls_all()``."
+msgstr ""
+"记得注册对应的控件模块（ ``&flux_ctrl_checkbox`` 、 ``&flux_ctrl_switch`` 、 ``&flux_ctrl_radiogroup`` 、 "
+"``&flux_ctrl_number`` 、 ``&flux_ctrl_slider`` ），或直接调用 ``flux_controls_all()`` 。"
+
+#: ../../source/declarative/inputs.rst:136
+msgid "Controlled Text Editing & ``AutoSuggestBox``"
+msgstr "受控文本编辑与 ``AutoSuggestBox``"
+
+#: ../../source/declarative/inputs.rst:138
+msgid ""
+"``xtk_textbox`` (``&flux_ctrl_textbox``) and ``xtk_password`` "
+"(``&flux_ctrl_password``) support full DirectWrite grapheme navigation, "
+"undo/redo, clipboard shortcuts, and CJK IME composition."
+msgstr ""
+"``xtk_textbox`` （ ``&flux_ctrl_textbox`` ）与 ``xtk_password`` （ ``&flux_ctrl_password`` ）"
+"内置完整的 DirectWrite 字素光标移动、撤销/重做、剪贴板快捷键与中日韩输入法（IME）组字支持。"
+
+#: ../../source/declarative/inputs.rst:142
+msgid ""
+"Because ``msg.ptr`` is borrowed only until ``update()`` returns, copy the"
+" UTF-8 string into heap or fixed buffer storage owned by ``Model``:"
+msgstr "``msg.ptr`` 仅在 ``update()`` 执行期间借用有效，请将其拷贝到由 ``Model`` 持有的堆内存或固定缓冲区中："
+
+#: ../../source/declarative/inputs.rst:177
+msgid ""
+"The Fluxent host tracks per-source ``XtkChangeStamp`` revisions "
+"automatically: passing ``m->query`` back through ``.content`` updates the"
+" control cleanly on external resets while preserving active IME "
+"composition and cursor selection during live typing."
+msgstr ""
+"Fluxent 宿主会自动追踪各变更源的 ``XtkChangeStamp`` 版本戳：把 ``m->query`` 传回 ``.content`` "
+"既能让外部重置立即生效，又能在用户连续打字时完好保留正在进行的输入法组字状态与光标选区。"
+
+#: ../../source/declarative/inputs.rst:182
+msgid ""
+"For multi-line editors or read-only text views, set ``.multiline = true``"
+" and/or ``.readonly = true`` on ``XtkTextBoxDesc``."
+msgstr "需要多行文本编辑或只读文本框时，在 ``XtkTextBoxDesc`` 上设置 ``.multiline = true`` 或 ``.readonly = true`` 。"
+
+#: ../../source/declarative/inputs.rst:186
+msgid "ComboBox, Date, Time, Calendar, & Color Pickers"
+msgstr "下拉框、日期、时间、日历与颜色选择器"
+
+#: ../../source/declarative/inputs.rst:188
+msgid ""
+"**ComboBox** (``xtk_combo``, ``&flux_ctrl_combo``): Pass ``char const "
+"*const *`` strings in ``.items``, ``.nitem``, and ``.sel``. Set "
+"``.editable = true`` with ``.submit = xtk_msg(MSG_CUSTOM_VALUE)`` to "
+"allow free-form text entry in addition to preset choices."
+msgstr ""
+"**ComboBox 下拉框** （ ``xtk_combo`` ， ``&flux_ctrl_combo`` ）：通过 ``.items`` 、 ``.nitem`` 与 ``.sel`` "
+"传入选项列表和当前索引；设置 ``.editable = true`` 并绑定 ``.submit = xtk_msg(MSG_CUSTOM_VALUE)`` 可同时支持自由输入文本。"
+
+#: ../../source/declarative/inputs.rst:192
+msgid ""
+"**Date & Calendar** (``xtk_date_picker`` / ``xtk_calendar_view``): Dates "
+"are encoded as ``int32_t`` values via ``xtk_date(year, month, day)`` "
+"(``year * 10000 + month * 100 + day``, such as ``20261118``). Decode in "
+"``update()`` with ``year = d / 10000``, ``month = (d / 100) % 100``, "
+"``day = d % 100``."
+msgstr ""
+"**日期与日历** （ ``xtk_date_picker`` / ``xtk_calendar_view`` ）：日期使用 ``xtk_date(year, month, day)`` "
+"编码为 ``int32_t`` 整数（ ``year * 10000 + month * 100 + day`` ，例如 ``20261118`` ）；"
+"在 ``update()`` 中通过 ``year = d / 10000`` 、 ``month = (d / 100) % 100`` 、 ``day = d % 100`` 解码。"
+
+#: ../../source/declarative/inputs.rst:197
+msgid ""
+"**TimePicker** (``xtk_time_picker``): ``.minutes`` stores minutes since "
+"``00:00`` (``hours * 60 + mins``), with ``.has_time = true`` and ``.clock"
+" = XTK_CLOCK_24H`` or ``XTK_CLOCK_12H``."
+msgstr ""
+"**时间选择器** （ ``xtk_time_picker`` ）： ``.minutes`` 保存自 ``00:00`` 起的分钟数（ ``hours * 60 + mins`` ），"
+"配合 ``.has_time = true`` 与 ``.clock = XTK_CLOCK_24H`` 或 ``XTK_CLOCK_12H`` 使用。"
+
+#: ../../source/declarative/inputs.rst:200
+msgid ""
+"**ColorPicker** (``xtk_color_picker``): Takes an ``XtkColor`` in "
+"``.color``, optional ``.alpha = true`` channel slider, and ``.spectrum`` "
+"layout, posting packed 32-bit ARGB integers to ``msg.i``."
+msgstr ""
+"**颜色选择器** （ ``xtk_color_picker`` ）：通过 ``.color`` 传入 ``XtkColor`` ，支持 ``.alpha = true`` "
+"透明通道滑块与 ``.spectrum`` 色谱形状，并在变更时将 32 位 ARGB 整数写入 ``msg.i`` 。"

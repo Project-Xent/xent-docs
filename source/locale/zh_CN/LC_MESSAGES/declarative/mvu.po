@@ -1,0 +1,211 @@
+# Project Xent Declarative UI Guide — MVU (zh_CN)
+# Copyright (C) 2026, Project Xent
+# This file is distributed under the same license as the Xent package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Xent 0.3.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-18 23:32+0800\n"
+"PO-Revision-Date: 2026-11-18 23:40+0800\n"
+"Last-Translator: Project Xent\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/declarative/mvu.rst:2
+msgid "1. The Elm MVU Loop & App Anatomy"
+msgstr "1. Elm MVU 循环与应用结构"
+
+#: ../../source/declarative/mvu.rst:4
+msgid ""
+"Every declarative Xent program follows the **Model–View–Update (MVU)** "
+"architecture introduced by Elm. Understanding how data, messages, and "
+"arena memory flow through one frame makes every control in "
+"``<xtk/xtk.h>`` predictable."
+msgstr ""
+"每一个 Xent 声明式程序都遵循源于 Elm 的 **Model–View–Update（MVU）** 架构。"
+"理清一帧之内数据、消息与帧内存池的流向，就能以一致的方式驾驭 ``<xtk/xtk.h>`` 中的所有控件。"
+
+#: ../../source/declarative/mvu.rst:10
+msgid "The Unidirectional Frame Loop"
+msgstr "单向帧循环"
+
+#: ../../source/declarative/mvu.rst:26
+msgid ""
+"**Model**: A plain C ``struct`` that stores your entire application state"
+" in one place—current page index, form text, selection indices, dialog "
+"flags, and loaded data."
+msgstr ""
+"**Model（状态模型）** ：一个普通的 C ``struct`` ，集中保存应用的全部状态——当前页面索引、"
+"表单文本、选中项下标、对话框开关标志以及已加载的业务数据。"
+
+#: ../../source/declarative/mvu.rst:29
+msgid ""
+"**View** (``XtkEl *view(XtkUi *ui, void *model)``): A pure description "
+"function that reads ``Model`` and returns a lightweight tree of ``XtkEl "
+"*`` descriptors allocated in ``ui``'s per-frame arena. Interactive "
+"controls carry ``XtkMsg`` values describing *what happened* when "
+"triggered."
+msgstr ""
+"**View（视图函数** ``XtkEl *view(XtkUi *ui, void *model)`` **）** ：读取 ``Model`` 并返回在 "
+"``ui`` 帧内存池中分配的轻量 ``XtkEl *`` 描述树。交互控件携带 ``XtkMsg`` 消息值，用于表达触发时发生了什么动作。"
+
+#: ../../source/declarative/mvu.rst:33
+msgid ""
+"**Update** (``void update(void *model, XtkMsg msg)``): When the user "
+"clicks a button, edits text, or scrolls a list, the host enqueues the "
+"control's ``XtkMsg``. Before the next frame builds, the runtime drains "
+"all queued messages through ``update()``, which inspects ``msg.tag`` and "
+"mutates ``Model`` in place."
+msgstr ""
+"**Update（更新函数** ``void update(void *model, XtkMsg msg)`` **）** ：当用户点击按钮、编辑文本或滚动列表时，"
+"宿主会将该控件绑定的 ``XtkMsg`` 放入队列。在构建下一帧前，运行时依次将队列中的消息交给 ``update()`` 处理，"
+"根据 ``msg.tag`` 就地修改 ``Model`` 。"
+
+#: ../../source/declarative/mvu.rst:38
+msgid ""
+"**Reconcile & Commit**: Once the message queue drains, ``flux_run`` "
+"resets the ``XtkUi`` scratch arena, calls ``view()`` once, diffs the new "
+"element tree against the previous composition, and commits the minimal "
+"``XtkBatch`` mutations to the live Windows controls."
+msgstr ""
+"**协调与提交（Reconcile & Commit）** ：消息队列清空后， ``flux_run`` 重置 ``XtkUi`` 帧内存池，"
+"调用一次 ``view()`` ，将新生成的元素树与上一帧结构比对，并向现有的 Windows 原生控件原子提交最小 ``XtkBatch`` 变更。"
+
+#: ../../source/declarative/mvu.rst:44
+msgid "Dissecting the ``fluxent.decl`` Counter"
+msgstr "拆解 ``fluxent.decl`` 计数器模板"
+
+#: ../../source/declarative/mvu.rst:46
+msgid ""
+"Scaffolding a project with ``xmake create -l c -t fluxent.decl hello`` "
+"generates this complete application in ``src/main.c``:"
+msgstr "执行 ``xmake create -l c -t fluxent.decl hello`` 会在 ``src/main.c`` 中生成如下完整程序："
+
+#: ../../source/declarative/mvu.rst:112
+msgid "Designing ``Model`` and ``XtkMsg``"
+msgstr "设计 ``Model`` 与 ``XtkMsg``"
+
+#: ../../source/declarative/mvu.rst:115
+msgid "Numbering Message Tags and Carrying Parameters"
+msgstr "消息标签编号与附加参数"
+
+#: ../../source/declarative/mvu.rst:117
+msgid "``XtkMsg`` is a plain value struct defined in ``<xtk/xtk_msg.h>``:"
+msgstr "``XtkMsg`` 是定义在 ``<xtk/xtk_msg.h>`` 中的普通值结构体："
+
+#: ../../source/declarative/mvu.rst:130
+#, python-brace-format
+msgid ""
+"**Start your enum at** ``1``: Zero-initialized descriptor fields (such as"
+" an omitted ``.click`` in ``(XtkButtonDesc) {.style = "
+"XTK_BUTTON_SUBTLE}``) have ``tag == 0``, which tells the runtime to leave"
+" that event unbound."
+msgstr ""
+"**枚举从** ``1`` **开始编号** ：零初始化的描述结构体字段（例如 ``(XtkButtonDesc) {.style = XTK_BUTTON_SUBTLE}`` "
+"中未指定的 ``.click`` ）默认 ``tag == 0`` ，表示该事件保持未绑定状态。"
+
+#: ../../source/declarative/mvu.rst:133
+msgid ""
+"**Attach item indices with** ``xtk_msg_i``: When several buttons share "
+"one action (such as toolbar commands or dynamically generated rows), bind"
+" ``xtk_msg_i(MSG_REMOVE_ITEM, row_index)`` so ``update()`` receives both "
+"``msg.tag`` and ``msg.i``."
+msgstr ""
+"**用** ``xtk_msg_i`` **附带条目下标** ：当多个按钮共用同一类动作（如工具栏命令或动态生成的行按钮）时，"
+"绑定 ``xtk_msg_i(MSG_REMOVE_ITEM, row_index)`` 即可让 ``update()`` 同时收到 ``msg.tag`` 与 ``msg.i`` 。"
+
+#: ../../source/declarative/mvu.rst:139
+msgid "Scaling ``update()`` with a Dispatch Table"
+msgstr "用函数分发表扩展大型 ``update()``"
+
+#: ../../source/declarative/mvu.rst:141
+msgid ""
+"Once an application grows past a dozen messages, split handlers into "
+"focused functions indexed by a dispatch array (the pattern used by "
+"Fluxent's Gallery and Installer Wizard):"
+msgstr ""
+"当应用的消息种类超过十余个时，可将各分支拆分为独立的小函数，并通过数组分发表索引（Fluxent 官方画廊与安装向导示例均采用这一结构）："
+
+#: ../../source/declarative/mvu.rst:167
+msgid "Computing Derived Values in ``view()``"
+msgstr "在 ``view()`` 中即时计算派生显示值"
+
+#: ../../source/declarative/mvu.rst:169
+msgid ""
+"Keep ``Model`` normalized—store raw state (such as ``file_done`` and "
+"``file_count``) and compute formatted labels, percentages, and "
+"enabled/disabled flags on the fly inside ``view()``. Because ``view()`` "
+"runs every time ``Model`` changes, derived UI properties stay consistent "
+"automatically."
+msgstr ""
+"保持 ``Model`` 字段精简规范——只存储原始业务状态（如 ``file_done`` 与 ``file_count`` ），"
+"而在 ``view()`` 中即时计算格式化文本、进度百分比和按钮禁用条件。由于每次 ``Model`` 变化后都会运行 ``view()`` ，"
+"所有派生界面属性都会自动保持同步。"
+
+#: ../../source/declarative/mvu.rst:175
+msgid "Registering Control Modules"
+msgstr "注册控件模块"
+
+#: ../../source/declarative/mvu.rst:177
+msgid ""
+"In **Fluxent 0.3.3**, controls link on demand through "
+"``<fluxent/flux_controls.h>``:"
+msgstr "在 **Fluxent 0.3.3** 中，各控件通过 ``<fluxent/flux_controls.h>`` 按需链接："
+
+#: ../../source/declarative/mvu.rst:179
+msgid ""
+"**Production builds**: Call ``flux_controls_use(&flux_ctrl_<name>)`` for "
+"each control module your views instantiate (for example "
+"``&flux_ctrl_container`` for ``xtk_column`` / ``xtk_row``, "
+"``&flux_ctrl_text``, ``&flux_ctrl_button``). Unreferenced controls are "
+"stripped by the linker."
+msgstr ""
+"**正式发布构建** ：对视图用到的每类控件调用 ``flux_controls_use(&flux_ctrl_<name>)`` "
+"（例如 ``xtk_column`` / ``xtk_row`` 对应 ``&flux_ctrl_container`` ，以及 ``&flux_ctrl_text`` 、 "
+"``&flux_ctrl_button`` ），未引用的控件实现会被链接器自动裁剪。"
+
+#: ../../source/declarative/mvu.rst:183
+msgid ""
+"**Prototyping**: Call ``flux_controls_all()`` once at startup to register"
+" the entire 70+ control catalog while iterating on UI layout."
+msgstr "**快速原型阶段** ：启动时调用一次 ``flux_controls_all()`` 即可注册全部 70 余种内置控件，方便随时调整界面。"
+
+#: ../../source/declarative/mvu.rst:186
+msgid "Register modules before calling ``flux_run``."
+msgstr "请在调用 ``flux_run`` 之前完成控件模块注册。"
+
+#: ../../source/declarative/mvu.rst:189
+msgid "Scratch Arena Memory Lifetimes"
+msgstr "帧内存池（Scratch Arena）生命周期"
+
+#: ../../source/declarative/mvu.rst:191
+msgid ""
+"``XtkUi *`` owns a fast bump-pointer scratch arena that resets at the "
+"beginning of every ``view()`` pass and stays alive until the frame's "
+"``XtkBatch`` commits:"
+msgstr ""
+"``XtkUi *`` 内置高速线性帧内存池，在每次 ``view()`` 开始时重置，并持续有效至当帧 ``XtkBatch`` 提交完成："
+
+#: ../../source/declarative/mvu.rst:194
+#, python-format
+msgid ""
+"**Dynamic text**: Allocate formatted strings with ``xtk_fmt(ui, \"Count: "
+"%d\", m->n)`` or copy transient buffers with ``xtk_strdup(ui, temp)``. "
+"String literals (``\"Reset\"``) and heap/static strings stored inside "
+"``Model`` outlive the frame and can be passed directly."
+msgstr ""
+"**动态文本** ：通过 ``xtk_fmt(ui, \"Count: %d\", m->n)`` 格式化字符串，或用 ``xtk_strdup(ui, temp)`` "
+"拷贝临时缓冲区。字符串字面量（ ``\"Reset\"`` ）以及 ``Model`` 内部持有的持久字符串生命周期跨帧，可直接传入。"
+
+#: ../../source/declarative/mvu.rst:198
+msgid ""
+"**Dynamic child arrays**: When building a variable number of children "
+"from a loop, allocate the child pointer array from the same arena and "
+"terminate it with ``XTK_END``:"
+msgstr "**动态子元素数组** ：在循环中生成可变数量的子元素时，从同一个帧内存池分配指针数组并以 ``XTK_END`` 结尾："

@@ -1,0 +1,108 @@
+# Project Xent Imperative UI Guide — Lifecycle (zh_CN)
+# Copyright (C) 2026, Project Xent
+# This file is distributed under the same license as the Xent package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Xent 0.3.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-18 23:32+0800\n"
+"PO-Revision-Date: 2026-11-18 23:42+0800\n"
+"Last-Translator: Project Xent\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/imperative/lifecycle.rst:2
+msgid "1. App, Host, & Scene Lifecycle"
+msgstr "1. 应用、宿主与场景生命周期"
+
+#: ../../source/imperative/lifecycle.rst:4
+msgid ""
+"An imperative Fluxent program wires together three objects—``FluxApp`` "
+"(window and GPU pipeline), ``XtkHost`` (retained control store and batch "
+"validator), and ``XtkScene`` (the ergonomic handle passed to transactions"
+" and property setters)."
+msgstr ""
+"命令式 Fluxent 程序由三个核心对象串联而成—— ``FluxApp`` （原生窗口与 GPU 渲染管线）、 "
+"``XtkHost`` （保留式控件仓库与批次校验器）以及 ``XtkScene`` （传给事务与属性设置函数的轻量场景句柄）。"
+
+#: ../../source/imperative/lifecycle.rst:9
+msgid "Complete ``fluxent.imp`` Counter Walkthrough"
+msgstr "完整 ``fluxent.imp`` 计数器模板解析"
+
+#: ../../source/imperative/lifecycle.rst:11
+msgid ""
+"Running ``xmake create -l c -t fluxent.imp hello`` generates this "
+"complete single-file application in ``src/main.c``:"
+msgstr "执行 ``xmake create -l c -t fluxent.imp hello`` 会在 ``src/main.c`` 中生成如下完整的单文件应用："
+
+#: ../../source/imperative/lifecycle.rst:148
+msgid "Startup & Teardown Order"
+msgstr "启动与逆序清理流程"
+
+#: ../../source/imperative/lifecycle.rst:150
+msgid "Follow this exact five-step lifecycle in every imperative application:"
+msgstr "所有命令式应用都遵循以下五步生命周期："
+
+#: ../../source/imperative/lifecycle.rst:152
+msgid ""
+"**Register control modules**: Call "
+"``flux_controls_use(&flux_ctrl_<name>)`` for each control your "
+"transactions instantiate, or ``flux_controls_all()`` to register the "
+"entire catalog. Module names in ``<fluxent/flux_controls.h>`` match the "
+"lowercase ``XTK_CTRL_<NAME>`` catalog suffix (for example "
+"``flux_ctrl_container``, ``flux_ctrl_card``, ``flux_ctrl_scroll``, "
+"``flux_ctrl_nav``, ``flux_ctrl_list``, ``flux_ctrl_dialog``)."
+msgstr ""
+"**注册控件模块** ：对事务中创建的每一种控件调用 ``flux_controls_use(&flux_ctrl_<name>)`` ，"
+"或调用 ``flux_controls_all()`` 全量注册。 ``<fluxent/flux_controls.h>`` 中的模块符号名对应小写的 "
+"``XTK_CTRL_<NAME>`` 目录后缀（如 ``flux_ctrl_container`` 、 ``flux_ctrl_card`` 、 "
+"``flux_ctrl_scroll`` 、 ``flux_ctrl_nav`` 、 ``flux_ctrl_list`` 、 ``flux_ctrl_dialog`` ）。"
+
+#: ../../source/imperative/lifecycle.rst:158
+msgid ""
+"**Create** ``FluxApp *``: ``flux_app_create(&cfg)`` creates the native "
+"Win32 window, Direct2D/DirectWrite/DirectComposition renderer, theme "
+"tracker, IME bridge, and UI Automation provider. Initialize persistent "
+"``XtkCtrl`` fields in your state struct to ``XTK_CTRL_INVALID``."
+msgstr ""
+"**创建** ``FluxApp *`` ： ``flux_app_create(&cfg)`` 创建原生 Win32 窗口、"
+"Direct2D/DirectWrite/DirectComposition 渲染引擎、主题监听器、输入法桥接与 UI Automation 无障碍提供程序。"
+"状态结构体中的持久 ``XtkCtrl`` 字段初始值设为 ``XTK_CTRL_INVALID`` 。"
+
+#: ../../source/imperative/lifecycle.rst:162
+msgid ""
+"**Attach** ``XtkHost *`` **and wrap** ``XtkScene``: "
+"``flux_app_attachhost(app)`` allocates a retained ``XtkHost`` bound to "
+"the window's layout root and rendering store. "
+"``xtk_scene_fromhost(host)`` returns a copyable ``XtkScene`` value struct"
+" whose root control handle is queried via ``xtk_scene_root(&scene)``."
+msgstr ""
+"**挂载** ``XtkHost *`` **并包装** ``XtkScene`` ： ``flux_app_attachhost(app)`` 创建绑定到窗口布局根节点的保留式 "
+"``XtkHost`` ； ``xtk_scene_fromhost(host)`` 返回按值传递的 ``XtkScene`` 包装结构，"
+"其根控件句柄通过 ``xtk_scene_root(&scene)`` 获取。"
+
+#: ../../source/imperative/lifecycle.rst:167
+msgid ""
+"**Commit initial UI and run the message loop**: Populate your initial "
+"scene inside an ``XtkTxn``, register an optional ``flux_app_onframe`` "
+"hook, and enter the blocking Win32 loop with ``flux_app_run(app)``."
+msgstr ""
+"**提交初始界面并进入消息循环** ：在 ``XtkTxn`` 事务中构建初始控件树，按需注册 ``flux_app_onframe`` 帧回调，"
+"随后调用 ``flux_app_run(app)`` 进入阻塞式 Win32 消息循环。"
+
+#: ../../source/imperative/lifecycle.rst:170
+msgid ""
+"**Tear down in reverse order**: After ``flux_app_run`` returns, detach "
+"the frame callback with ``flux_app_onframe(app, NULL, NULL)``, destroy "
+"the host with ``flux_host_destroy(host)``, destroy the app with "
+"``flux_app_destroy(app)``, and free any application-owned heap "
+"allocations that were borrowed by event subscriptions."
+msgstr ""
+"**按逆序释放资源** ： ``flux_app_run`` 返回后，依次调用 ``flux_app_onframe(app, NULL, NULL)`` 解除帧回调、"
+" ``flux_host_destroy(host)`` 销毁宿主、 ``flux_app_destroy(app)`` 销毁应用实例，最后释放曾被事件监听借用的业务堆内存。"

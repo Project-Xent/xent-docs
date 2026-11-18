@@ -1,0 +1,254 @@
+# Project Xent Imperative UI Guide — Transactions (zh_CN)
+# Copyright (C) 2026, Project Xent
+# This file is distributed under the same license as the Xent package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Xent 0.3.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-18 23:32+0800\n"
+"PO-Revision-Date: 2026-11-18 23:42+0800\n"
+"Last-Translator: Project Xent\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/imperative/transactions.rst:2
+msgid "2. Atomic Transactions & Dynamic Subtrees"
+msgstr "2. 原子事务与动态子树管理"
+
+#: ../../source/imperative/transactions.rst:4
+msgid ""
+"All structural changes to a retained ``XtkScene``—creating controls, "
+"dropping subtrees, inserting, reordering, reparenting, and binding event "
+"listeners—happen inside an ``XtkTxn`` transaction declared in "
+"``<xtk/xtk_scene.h>``."
+msgstr ""
+"保留式 ``XtkScene`` 的所有结构性变更——创建控件、销毁子树、插入、同级重排、跨父节点重挂载以及绑定事件监听——"
+"都在 ``<xtk/xtk_scene.h>`` 声明的 ``XtkTxn`` 事务中完成。"
+
+#: ../../source/imperative/transactions.rst:9
+msgid "All-or-Nothing Commit Guarantee"
+msgstr "全有或全无的原子提交保证"
+
+#: ../../source/imperative/transactions.rst:11
+msgid ""
+"When you call ``xtk_txn_commit(&txn, &diag)``, the host executes four "
+"stages (``VALIDATE``, ``PREFLIGHT``, ``PREPARE``, ``COMMIT``):"
+msgstr "调用 ``xtk_txn_commit(&txn, &diag)`` 时，宿主按四个阶段执行（ ``VALIDATE`` 、 ``PREFLIGHT`` 、 ``PREPARE`` 、 ``COMMIT`` ）："
+
+#: ../../source/imperative/transactions.rst:14
+msgid ""
+"Every handle generation, parent-child cycle rule, registered control "
+"type, property type, and memory allocation is verified before the live "
+"tree is mutated."
+msgstr "在触碰活动树之前，预先校验全部句柄代次、父子无环约束、已注册控件类型、属性类型及所需内存分配。"
+
+#: ../../source/imperative/transactions.rst:17
+msgid ""
+"When validation and preparation succeed, all operations take effect "
+"together and ``xtk_scene_revision(&scene)`` advances."
+msgstr "校验与准备全部通过后，批次内的所有变更一次性生效，并推进 ``xtk_scene_revision(&scene)`` 版本号。"
+
+#: ../../source/imperative/transactions.rst:19
+msgid ""
+"When any operation fails, ``xtk_txn_commit`` returns ``NULL``, fills the "
+"optional ``XtkBatchDiag`` struct, and leaves the live ``XtkScene`` "
+"untouched."
+msgstr "若任意一步失败， ``xtk_txn_commit`` 返回 ``NULL`` 、填入可选的 ``XtkBatchDiag`` 诊断结构，并保持原有 ``XtkScene`` 完好不变。"
+
+#: ../../source/imperative/transactions.rst:23
+msgid "Transaction Operations Overview"
+msgstr "事务操作函数一览"
+
+#: ../../source/imperative/transactions.rst:29
+msgid "Function"
+msgstr "函数"
+
+#: ../../source/imperative/transactions.rst:30
+msgid "Purpose"
+msgstr "用途"
+
+#: ../../source/imperative/transactions.rst:31
+msgid "``xtk_txn_begin(&scene, &txn)``"
+msgstr "``xtk_txn_begin(&scene, &txn)``"
+
+#: ../../source/imperative/transactions.rst:32
+msgid "Opens a fresh transaction backed by a new ``XtkBatch``."
+msgstr "开启一个由新 ``XtkBatch`` 承载的事务。"
+
+#: ../../source/imperative/transactions.rst:33
+msgid "``xtk_<ctrl>_create(&txn, parent, &props)``"
+msgstr "``xtk_<ctrl>_create(&txn, parent, &props)``"
+
+#: ../../source/imperative/transactions.rst:34
+msgid ""
+"Typed control creation from ``<xtk/xtk_controls.h>``; appends the new "
+"control to ``parent`` and returns an ``XtkLocalId``."
+msgstr "``<xtk/xtk_controls.h>`` 中的强类型创建函数；将新控件追加到 ``parent`` 末尾并返回 ``XtkLocalId`` 。"
+
+#: ../../source/imperative/transactions.rst:36
+msgid "``xtk_txn_create(&txn, type, parent, before, patches, count)``"
+msgstr "``xtk_txn_create(&txn, type, parent, before, patches, count)``"
+
+#: ../../source/imperative/transactions.rst:37
+msgid ""
+"Low-level creation for any ``XtkCtrlId`` (such as ``XTK_CTRL_LISTITEM`` "
+"or ``XTK_CTRL_GROUPHEADER``) with explicit ``before`` positioning."
+msgstr "面向任意 ``XtkCtrlId`` （如 ``XTK_CTRL_LISTITEM`` 或 ``XTK_CTRL_GROUPHEADER`` ）的底层创建函数，支持指定 ``before`` 插入位置。"
+
+#: ../../source/imperative/transactions.rst:39
+msgid "``xtk_txn_insert(&txn, parent, child, before)``"
+msgstr "``xtk_txn_insert(&txn, parent, child, before)``"
+
+#: ../../source/imperative/transactions.rst:40
+msgid ""
+"Inserts an unparented node before ``before`` (or at the end when "
+"``before`` is ``xtk_ref_none()``)."
+msgstr "将尚无父节点的控件插入到 ``before`` 之前（ ``before`` 为 ``xtk_ref_none()`` 时追加到末尾）。"
+
+#: ../../source/imperative/transactions.rst:42
+msgid "``xtk_txn_move(&txn, parent, child, before)``"
+msgstr "``xtk_txn_move(&txn, parent, child, before)``"
+
+#: ../../source/imperative/transactions.rst:43
+msgid "Reorders ``child`` among siblings under its current ``parent``."
+msgstr "在当前同一个 ``parent`` 下调整 ``child`` 的同级排列顺序。"
+
+#: ../../source/imperative/transactions.rst:44
+msgid "``xtk_txn_reparent(&txn, child, new_parent, before)``"
+msgstr "``xtk_txn_reparent(&txn, child, new_parent, before)``"
+
+#: ../../source/imperative/transactions.rst:45
+msgid "Moves ``child`` from its existing parent into ``new_parent``."
+msgstr "将已有父节点的 ``child`` 迁移至新的父节点 ``new_parent`` 下。"
+
+#: ../../source/imperative/transactions.rst:46
+msgid "``xtk_txn_drop(&txn, target)``"
+msgstr "``xtk_txn_drop(&txn, target)``"
+
+#: ../../source/imperative/transactions.rst:47
+msgid ""
+"Destroys ``target`` and its entire descendant subtree, automatically "
+"removing its event subscriptions and invalidating old ``XtkCtrl`` "
+"generations."
+msgstr "销毁 ``target`` 及其全部后代子树，自动解除其上的事件订阅并使旧 ``XtkCtrl`` 代次失效。"
+
+#: ../../source/imperative/transactions.rst:50
+msgid "``xtk_txn_commit(&txn, &diag)``"
+msgstr "``xtk_txn_commit(&txn, &diag)``"
+
+#: ../../source/imperative/transactions.rst:51
+msgid ""
+"Atomically commits the batch and returns a heap-allocated "
+"``XtkBatchResult *`` (or ``NULL`` on error)."
+msgstr "原子提交整个批次并返回堆分配的 ``XtkBatchResult *`` （出错时返回 ``NULL`` ）。"
+
+#: ../../source/imperative/transactions.rst:53
+msgid "``xtk_txn_abort(&txn)``"
+msgstr "``xtk_txn_abort(&txn)``"
+
+#: ../../source/imperative/transactions.rst:54
+msgid "Discards an uncommitted transaction and frees its internal batch buffer."
+msgstr "放弃尚未提交的事务并释放其内部批次缓冲区。"
+
+#: ../../source/imperative/transactions.rst:57
+msgid "Addressing Nodes with ``XtkNodeRef``"
+msgstr "使用 ``XtkNodeRef`` 统一寻址节点"
+
+#: ../../source/imperative/transactions.rst:59
+msgid ""
+"Inside an open ``XtkTxn``, you frequently mix existing committed controls"
+" (like ``xtk_scene_root(&scene)``) with controls that were just created "
+"two lines above and only have a batch-local ``XtkLocalId``. "
+"``XtkNodeRef`` unifies both:"
+msgstr ""
+"在未提交的 ``XtkTxn`` 中，往往需要同时引用先前已提交的持久控件（如 ``xtk_scene_root(&scene)`` ）"
+"和前两行刚创建、仅有批次局部编号 ``XtkLocalId`` 的新控件。 ``XtkNodeRef`` 统一表示这三类引用："
+
+#: ../../source/imperative/transactions.rst:63
+msgid ""
+"``xtk_ref_existing(ctrl)`` — Wraps a live, generation-checked ``XtkCtrl``"
+" from an earlier commit."
+msgstr "``xtk_ref_existing(ctrl)`` —— 包装先前批次已提交的带代次校验 ``XtkCtrl`` 句柄。"
+
+#: ../../source/imperative/transactions.rst:65
+msgid ""
+"``xtk_ref_local(local_id)`` — Wraps an ``XtkLocalId`` created earlier in "
+"the **current** ``XtkTxn``."
+msgstr "``xtk_ref_local(local_id)`` —— 包装 **当前** ``XtkTxn`` 中刚创建的 ``XtkLocalId`` 。"
+
+#: ../../source/imperative/transactions.rst:67
+msgid ""
+"``xtk_ref_none()`` — Represents \"no node\" (used as ``before`` to append"
+" at the end of a child list)."
+msgstr "``xtk_ref_none()`` —— 空节点引用（作为 ``before`` 参数时表示追加到子列表末尾）。"
+
+#: ../../source/imperative/transactions.rst:71
+msgid "Resolving ``XtkLocalId`` to ``XtkCtrl`` After Commit"
+msgstr "提交后将 ``XtkLocalId`` 解析为持久 ``XtkCtrl``"
+
+#: ../../source/imperative/transactions.rst:73
+msgid ""
+"Static labels, containers, and dividers rarely need to be touched again "
+"after creation—you can ignore their ``XtkLocalId`` once their children "
+"are attached. For controls whose properties you will update later, "
+"extract their persistent ``XtkCtrl`` handle from ``XtkBatchResult``:"
+msgstr ""
+"静态标题、布局容器与分隔线在挂载完子节点后通常无需再次修改，其 ``XtkLocalId`` 用完即可忽略。"
+"对于后续需要动态更新属性的控件，可从 ``XtkBatchResult`` 中提取持久 ``XtkCtrl`` 句柄："
+
+#: ../../source/imperative/transactions.rst:90
+msgid ""
+"Always release a non-NULL ``XtkBatchResult *`` with "
+"``xtk_batchresult_destroy(result)`` once you finish reading "
+"``result->controls`` and ``result->subscriptions``."
+msgstr "读取完 ``result->controls`` 与 ``result->subscriptions`` 后，调用 ``xtk_batchresult_destroy(result)`` 释放非空的 ``XtkBatchResult *`` 。"
+
+#: ../../source/imperative/transactions.rst:95
+msgid "Diagnosing Rejected Batches with ``XtkBatchDiag``"
+msgstr "使用 ``XtkBatchDiag`` 排查批次失败原因"
+
+#: ../../source/imperative/transactions.rst:97
+msgid ""
+"During development, pass an ``XtkBatchDiag`` to ``xtk_txn_commit`` so any"
+" rejected batch immediately tells you which operation failed and why:"
+msgstr "开发阶段向 ``xtk_txn_commit`` 传入 ``XtkBatchDiag`` ，可在批次被拒绝时直接定位失败的操作序号与错误码："
+
+#: ../../source/imperative/transactions.rst:110
+msgid "Common ``diag.error`` causes:"
+msgstr "常见 ``diag.error`` 原因："
+
+#: ../../source/imperative/transactions.rst:112
+msgid ""
+"``XTK_BATCH_ERR_BACKEND`` — A control's ``FluxControlModule`` was omitted"
+" from ``flux_controls_use`` at startup."
+msgstr "``XTK_BATCH_ERR_BACKEND`` —— 启动时漏掉了该控件对应的 ``flux_controls_use`` 模块注册。"
+
+#: ../../source/imperative/transactions.rst:114
+msgid ""
+"``XTK_BATCH_ERR_UNKNOWN_CONTROL`` / ``STALE_HANDLE`` — An ``XtkCtrl`` "
+"handle belongs to a subtree that was already dropped in a prior batch."
+msgstr "``XTK_BATCH_ERR_UNKNOWN_CONTROL`` / ``STALE_HANDLE`` —— 传入的 ``XtkCtrl`` 句柄所属子树已在之前的批次中被销毁。"
+
+#: ../../source/imperative/transactions.rst:118
+msgid "Atomic Page Switching Pattern"
+msgstr "无闪烁原子切页模式"
+
+#: ../../source/imperative/transactions.rst:120
+msgid ""
+"To switch pages in a multi-view imperative app (such as responding to "
+"``NavigationView`` or ``TabView`` selection), drop the old page root and "
+"build the new page subtree inside **one** ``XtkTxn``:"
+msgstr "在多视图命令式应用中切换页面（如响应 ``NavigationView`` 或 ``TabView`` 选择事件）时，在 **同一个** ``XtkTxn`` 内销毁旧页面根节点并构建新页面子树："
+
+#: ../../source/imperative/transactions.rst:153
+msgid ""
+"Freeing any heap-allocated ``userdata`` structures associated with the "
+"old page *after* the drop transaction commits guarantees no dangling "
+"pointers while the old controls were still live."
+msgstr "在包含 ``xtk_txn_drop`` 的事务成功提交 **之后** 再释放旧页面事件回调所借用的 ``userdata`` 内存，可确保控件存活期间所有借用指针始终有效。"

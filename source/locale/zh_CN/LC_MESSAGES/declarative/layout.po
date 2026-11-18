@@ -1,0 +1,317 @@
+# Project Xent Declarative UI Guide — Layout, Typography, & Media (zh_CN)
+# Copyright (C) 2026, Project Xent
+# This file is distributed under the same license as the Xent package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Xent 0.3.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-18 23:32+0800\n"
+"PO-Revision-Date: 2026-11-18 23:40+0800\n"
+"Last-Translator: Project Xent\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/declarative/layout.rst:2
+msgid "2. Layout, Typography, & Media"
+msgstr "2. 布局容器、文本排版与图像媒体"
+
+#: ../../source/declarative/layout.rst:4
+msgid ""
+"Declarative Xent layouts compose Flex containers, layout modifiers, "
+"scrollable viewports, inherited typography, and asynchronous WIC images."
+msgstr "Xent 声明式布局由 Flex 堆栈容器、布局修饰器、可滚动视口、继承式文本排版与异步 WIC 图像组合而成。"
+
+#: ../../source/declarative/layout.rst:8
+msgid "Flex Stacks, Cards, and ``xtk_kids``"
+msgstr "Flex 堆栈容器、卡片与 ``xtk_kids``"
+
+#: ../../source/declarative/layout.rst:10
+msgid "Four primary container builders arrange child elements:"
+msgstr "四类常用构建器用于组织子元素与间隔："
+
+#: ../../source/declarative/layout.rst:12
+msgid ""
+"``xtk_column(ui, desc, children)`` — Stacks children vertically (main "
+"axis: top to bottom; cross axis: horizontal)."
+msgstr "``xtk_column(ui, desc, children)`` —— 纵向排列子元素（主轴自上而下，交叉轴水平）。"
+
+#: ../../source/declarative/layout.rst:14
+msgid ""
+"``xtk_row(ui, desc, children)`` — Stacks children horizontally (main "
+"axis: left to right; cross axis: vertical)."
+msgstr "``xtk_row(ui, desc, children)`` —— 横向排列子元素（主轴自左向右，交叉轴垂直）。"
+
+#: ../../source/declarative/layout.rst:16
+msgid ""
+"``xtk_card(ui, desc, children)`` — Vertical Fluent card container with "
+"themed background fill, rounded corners, and stroke border."
+msgstr "``xtk_card(ui, desc, children)`` —— 带主题背景色、圆角与描边边框的纵向 Fluent 卡片容器。"
+
+#: ../../source/declarative/layout.rst:18
+msgid ""
+"``xtk_divider(ui)`` and ``xtk_spacer(ui)`` — Visual separator line and "
+"flexible empty space inside stacks."
+msgstr "``xtk_divider(ui)`` 与 ``xtk_spacer(ui)`` —— 堆栈内的视觉分隔线与弹性空白占位项。"
+
+#: ../../source/declarative/layout.rst:21
+msgid ""
+"Wrap inline child elements with ``xtk_kids(...)``, which builds a "
+"compound literal array terminated by the ``XTK_END`` sentinel:"
+msgstr "使用 ``xtk_kids(...)`` 包裹内联子元素列表，它会自动构造以 ``XTK_END`` 哨兵结尾的复合字面量数组："
+
+#: ../../source/declarative/layout.rst:48
+msgid "``XtkStackDesc`` Reference"
+msgstr "``XtkStackDesc`` 字段说明"
+
+#: ../../source/declarative/layout.rst:54
+msgid "Field"
+msgstr "字段"
+
+#: ../../source/declarative/layout.rst:55
+msgid "Behavior"
+msgstr "作用"
+
+#: ../../source/declarative/layout.rst:56
+msgid "``.gap``"
+msgstr "``.gap``"
+
+#: ../../source/declarative/layout.rst:57
+msgid "Logical pixel spacing inserted between adjacent visible children."
+msgstr "相邻可见子元素之间的逻辑像素间距。"
+
+#: ../../source/declarative/layout.rst:58
+msgid "``.padding``"
+msgstr "``.padding``"
+
+#: ../../source/declarative/layout.rst:59
+#, python-brace-format
+msgid "``XentInsets`` inner padding in ``{left, top, right, bottom}`` order."
+msgstr "按 ``{left, top, right, bottom}``（左、上、右、下）顺序排列的 ``XentInsets`` 内边距。"
+
+#: ../../source/declarative/layout.rst:60
+msgid "``.align``"
+msgstr "``.align``"
+
+#: ../../source/declarative/layout.rst:61
+msgid ""
+"Cross-axis alignment: ``XENT_FLEX_ALIGN_START``, ``CENTER``, ``END``, or "
+"``STRETCH``."
+msgstr "交叉轴对齐方式： ``XENT_FLEX_ALIGN_START`` 、 ``CENTER`` 、 ``END`` 或 ``STRETCH`` 。"
+
+#: ../../source/declarative/layout.rst:63
+msgid "``.justify``"
+msgstr "``.justify``"
+
+#: ../../source/declarative/layout.rst:64
+msgid ""
+"Main-axis distribution: ``XENT_FLEX_JUSTIFY_START``, ``CENTER``, ``END``,"
+" ``SPACE_BETWEEN``, ``SPACE_AROUND``, or ``SPACE_EVENLY``."
+msgstr ""
+"主轴空间分布： ``XENT_FLEX_JUSTIFY_START`` 、 ``CENTER`` 、 ``END`` 、 ``SPACE_BETWEEN`` 、 "
+"``SPACE_AROUND`` 或 ``SPACE_EVENLY`` 。"
+
+#: ../../source/declarative/layout.rst:66
+msgid "``.wrap``"
+msgstr "``.wrap``"
+
+#: ../../source/declarative/layout.rst:67
+msgid ""
+"``XENT_FLEX_NO_WRAP`` (default) or ``XENT_FLEX_WRAP`` for multi-line "
+"flowing rows (such as tag chips or button toolbars)."
+msgstr "默认 ``XENT_FLEX_NO_WRAP`` ；设为 ``XENT_FLEX_WRAP`` 时支持多行自动折行（如标签组或流式工具栏）。"
+
+#: ../../source/declarative/layout.rst:69
+msgid "``.fill``"
+msgstr "``.fill``"
+
+#: ../../source/declarative/layout.rst:70
+msgid "Expands the stack to fill available space in its parent container."
+msgstr "使容器扩展以填满父容器的可用空间。"
+
+#: ../../source/declarative/layout.rst:73
+msgid "Sizing and Layout Modifiers"
+msgstr "尺寸与布局修饰器"
+
+#: ../../source/declarative/layout.rst:75
+msgid ""
+"Modifier functions wrap an ``XtkEl *`` and return the same element with "
+"layout constraints attached:"
+msgstr "修饰器函数接收一个 ``XtkEl *`` 并为其附加布局约束："
+
+#: ../../source/declarative/layout.rst:78
+msgid ""
+"``xtk_sized(el, width, height)`` — Constrains width, height, or both in "
+"logical pixels. Include ``<math.h>`` and pass ``NAN`` for any dimension "
+"that should measure from content (for example ``xtk_sized(btn, 120.0f, "
+"NAN)``)."
+msgstr ""
+"``xtk_sized(el, width, height)`` —— 按逻辑像素指定宽度、高度或同时指定两者；引入 ``<math.h>`` 后对按内容自适应的轴传入 "
+"``NAN`` （例如 ``xtk_sized(btn, 120.0f, NAN)`` ）。"
+
+#: ../../source/declarative/layout.rst:81
+msgid ""
+"``xtk_grow(el, factor)`` — Assigns Flex grow weight along the parent "
+"stack's main axis. Wrapping your root container or main content pane in "
+"``xtk_grow(..., 1.0f)`` stretches it to fill the window."
+msgstr ""
+"``xtk_grow(el, factor)`` —— 设置沿父堆栈主轴的 Flex 伸展权重。使用 ``xtk_grow(..., 1.0f)`` "
+"包裹根容器或主内容区即可让它铺满窗口。"
+
+#: ../../source/declarative/layout.rst:84
+msgid ""
+"``xtk_align(el, XENT_FLEX_ALIGN_...)`` — Overrides the parent stack's "
+"``.align`` for one specific child (such as right-aligning a footer button"
+" in a left-aligned column via ``XENT_FLEX_ALIGN_END``)."
+msgstr ""
+"``xtk_align(el, XENT_FLEX_ALIGN_...)`` —— 单独覆盖某个子元素的交叉轴对齐（例如在左对齐纵列中用 "
+"``XENT_FLEX_ALIGN_END`` 让底部按钮靠右对齐）。"
+
+#: ../../source/declarative/layout.rst:87
+#, python-brace-format
+msgid ""
+"``xtk_margin(el, (XentInsets) {left, top, right, bottom})`` — Adds outer "
+"spacing around an element."
+msgstr "``xtk_margin(el, (XentInsets) {left, top, right, bottom})`` —— 为元素四周添加外边距。"
+
+#: ../../source/declarative/layout.rst:89
+msgid ""
+"``xtk_tooltip(ui, el, \"Save Ctrl+S\")`` — Attaches a themed tooltip "
+"shown on pointer hover and keyboard focus (register "
+"``&flux_ctrl_tooltip``)."
+msgstr "``xtk_tooltip(ui, el, \"Save Ctrl+S\")`` —— 附加鼠标悬停与键盘焦点提示框（需注册 ``&flux_ctrl_tooltip`` ）。"
+
+#: ../../source/declarative/layout.rst:93
+msgid "Scrollable Viewports & Controlled Scrolling"
+msgstr "可滚动视口与受控滚动"
+
+#: ../../source/declarative/layout.rst:95
+msgid ""
+"Wrap tall content in ``xtk_scroll`` (register ``&flux_ctrl_scroll``) to "
+"gain DirectManipulation touch/trackpad inertia and themed scrollbars:"
+msgstr "使用 ``xtk_scroll`` （需注册 ``&flux_ctrl_scroll`` ）包裹长页面内容，即可获得 DirectManipulation 触控板惯性滚动与主题滚动条："
+
+#: ../../source/declarative/layout.rst:114
+msgid "Auto-Following Log Viewports"
+msgstr "自动跟随底部的日志视口"
+
+#: ../../source/declarative/layout.rst:116
+msgid ""
+"``XtkScrollDesc`` also supports model-driven offsets for streaming logs "
+"or chat panes:"
+msgstr "``XtkScrollDesc`` 支持由 ``Model`` 驱动滚动偏移，非常适合实时构建日志或聊天消息面板："
+
+#: ../../source/declarative/layout.rst:119
+msgid ""
+"Pass ``NAN`` on an axis to leave scroll position under pure user control,"
+" a pixel offset to drive it from ``Model``, or ``INFINITY`` on ``.y`` to "
+"pin the viewport to the bottom as new lines arrive."
+msgstr ""
+"某个轴向传入 ``NAN`` 时完全交由用户滚动；传入具体像素偏移时由 ``Model`` 受控驱动；在 ``.y`` 上传入 ``INFINITY`` 时会在新行追加时自动吸附到底部。"
+
+#: ../../source/declarative/layout.rst:122
+msgid ""
+"Bind ``.scroll = xtk_msg(MSG_LOG_SCROLL)``: inside ``update()``, "
+"``msg.f`` reports the vertical offset and ``msg.b`` is ``true`` whenever "
+"the viewport is at the bottom, letting you pause auto-follow when the "
+"user scrolls up and resume automatically when they scroll back to the "
+"end:"
+msgstr ""
+"绑定 ``.scroll = xtk_msg(MSG_LOG_SCROLL)`` 后， ``update()`` 中的 ``msg.f`` 会收到当前纵向滚动位置，"
+"而当视口贴底时 ``msg.b`` 为 ``true`` ——用户向上翻阅时自动暂停跟随，滚回底部后自动恢复跟随："
+
+#: ../../source/declarative/layout.rst:143
+msgid "Typography & Inherited Text Styles"
+msgstr "文本排版与样式继承"
+
+#: ../../source/declarative/layout.rst:145
+msgid "``xtk_text(ui, content, desc)`` renders DirectWrite-shaped Unicode text:"
+msgstr "``xtk_text(ui, content, desc)`` 使用 DirectWrite 渲染排版完整的 Unicode 文本："
+
+#: ../../source/declarative/layout.rst:147
+msgid ""
+"**Font inheritance (0.3.3)**: Leaving ``.size = 0`` or ``.weight = "
+"XTK_FONT_INHERIT`` inherits font size and weight from the nearest "
+"ancestor (defaulting to ``14.0f`` and ``XTK_FONT_REGULAR`` at the root). "
+"Set explicit values such as ``.size = 28, .weight = XTK_FONT_SEMI_BOLD`` "
+"for titles and section headers."
+msgstr ""
+"**字号与字重继承（0.3.3）** ：保持 ``.size = 0`` 或 ``.weight = XTK_FONT_INHERIT`` 时，"
+"会自动继承最近祖先节点的字号与字重（根节点默认为 ``14.0f`` 与 ``XTK_FONT_REGULAR`` ）。标题与小节头可显式指定如 "
+"``.size = 28, .weight = XTK_FONT_SEMI_BOLD`` 。"
+
+#: ../../source/declarative/layout.rst:152
+msgid ""
+"**Wrapping, truncation, and ellipsis**: Text wraps to container width by "
+"default. Set ``.nowrap = true`` or ``.max_lines = 2`` together with "
+"``.trim = XTK_TRIM_CHAR_ELLIPSIS``, ``XTK_TRIM_WORD_ELLIPSIS``, or "
+"``XTK_TRIM_PATH_ELLIPSIS`` (ideal for long file paths)."
+msgstr ""
+"**自动换行、行数限制与省略号** ：文本默认按容器宽度自动折行。设置 ``.nowrap = true`` 或 ``.max_lines = 2`` "
+"并配合 ``.trim = XTK_TRIM_CHAR_ELLIPSIS`` 、 ``XTK_TRIM_WORD_ELLIPSIS`` 或 ``XTK_TRIM_PATH_ELLIPSIS`` "
+"（适合长文件路径中间/路径级省略）可控制截断方式。"
+
+#: ../../source/declarative/layout.rst:156
+msgid ""
+"**Selectable labels**: Set ``.selectable = true`` on read-only output, "
+"error details, or log panes so users can drag-select text and copy it "
+"with ``Ctrl+C``."
+msgstr ""
+"**可选中文本** ：在只读输出、错误详情或日志区域上设置 ``.selectable = true`` ，用户即可拖拽框选文本并按 ``Ctrl+C`` 复制。"
+
+#: ../../source/declarative/layout.rst:159
+msgid ""
+"**Colors**: Pass an ``XtkColor`` in ``.color`` (leave zero-initialized to"
+" use the active Light/Dark theme's primary text brush automatically)."
+msgstr "**文本颜色** ：在 ``.color`` 中传入 ``XtkColor`` （保持零初始化则自动使用当前深浅色主题的主文本画刷）。"
+
+#: ../../source/declarative/layout.rst:163
+msgid "Images, SVG, Animated Media, & Nine-Grid"
+msgstr "图像、SVG、动图与九宫格拉伸"
+
+#: ../../source/declarative/layout.rst:165
+msgid ""
+"``xtk_image`` (register ``&flux_ctrl_image``) decodes raster images, "
+"animated GIF, APNG, and vector SVG off the UI thread on the background "
+"thread pool:"
+msgstr "``xtk_image`` （需注册 ``&flux_ctrl_image`` ）在后台线程池上异步解码位图、GIF 动图、APNG 与矢量 SVG："
+
+#: ../../source/declarative/layout.rst:182
+msgid ""
+"``flux_image_respath(path)`` interns the UTF-8 file path and returns a "
+"process-lifetime ``XtkResource`` handle."
+msgstr "``flux_image_respath(path)`` 对 UTF-8 文件路径做驻留并返回进程生命周期内有效的 ``XtkResource`` 资源句柄。"
+
+#: ../../source/declarative/layout.rst:184
+msgid ""
+"**Stretch modes**: ``XTK_IMAGE_UNIFORM`` (preserve aspect ratio inside "
+"bounds), ``XTK_IMAGE_FILL`` (stretch to both dimensions), "
+"``XTK_IMAGE_UNIFORM_TO_FILL`` (fill bounds and clip overflow), or "
+"``XTK_IMAGE_NONE``. Omitting ``xtk_sized`` lets the image measure to its "
+"natural pixel dimensions once its header decodes."
+msgstr ""
+"**缩放模式** ：支持 ``XTK_IMAGE_UNIFORM`` （保持宽高比适应边界）、 ``XTK_IMAGE_FILL`` （双向拉伸填满）、 "
+"``XTK_IMAGE_UNIFORM_TO_FILL`` （等比填满并裁剪溢出部分）与 ``XTK_IMAGE_NONE`` 。省略 ``xtk_sized`` 时，"
+"图像在头部异步解析完成后按其自然像素尺寸参与排版。"
+
+#: ../../source/declarative/layout.rst:189
+#, python-brace-format
+msgid ""
+"**Nine-grid slicing**: Populate ``.nine = {left, top, right, bottom}`` "
+"with ``XTK_IMAGE_FILL`` to keep border corners unscaled while stretching "
+"edges and the center."
+msgstr "**九宫格切片** ：配合 ``XTK_IMAGE_FILL`` 设置 ``.nine = {left, top, right, bottom}`` 可保持四角原尺寸并拉伸四边与中心区域。"
+
+#: ../../source/declarative/layout.rst:192
+msgid ""
+"**Avatars**: ``xtk_avatar`` (register ``&flux_ctrl_avatar``) renders a "
+"circular ``PersonPicture`` from ``.image``, ``.initials``, or "
+"``.display_name`` with optional status badges."
+msgstr ""
+"**头像控件** ： ``xtk_avatar`` （需注册 ``&flux_ctrl_avatar`` ）可根据 ``.image`` 、 ``.initials`` 或 "
+"``.display_name`` 渲染圆形 ``PersonPicture`` 头像及状态角标。"

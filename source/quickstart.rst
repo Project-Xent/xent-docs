@@ -166,11 +166,11 @@ Next Steps
 
 Continue with the guide for your track:
 
-- :doc:`declarative` — Learn the Elm MVU loop, walk through the
-  ``fluxent.decl`` template, and work with layout containers, ``xtk_fmt``,
-  inputs, and virtualized lists.
-- :doc:`imperative` — Walk through the ``fluxent.imp`` template, ``XtkScene``,
-  atomic ``XtkTxn`` transactions, ``.set`` property bitmasks, and event
-  callbacks.
+- :doc:`declarative/index` — Learn the Elm MVU loop, walk through the
+  ``fluxent.decl`` template, and master layout containers, form inputs,
+  virtualized collections, multi-page navigation, and OS integration.
+- :doc:`imperative/index` — Master the ``fluxent.imp`` lifecycle, atomic
+  ``XtkTxn`` transactions, ``.set`` property bitmasks, event routing,
+  ``XTK_EVENT_REALIZE`` list virtualization, and desktop shell APIs.
 - :doc:`concepts` — Understand how ``xent-core``, ``xent-kit``, and ``fluxent``
   fit together, and how ``flux_controls_use`` keeps executables small.

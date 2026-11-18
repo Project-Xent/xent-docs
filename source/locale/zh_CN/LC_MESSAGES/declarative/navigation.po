@@ -1,0 +1,166 @@
+# Project Xent Declarative UI Guide — Navigation, Toolbars, & Overlays (zh_CN)
+# Copyright (C) 2026, Project Xent
+# This file is distributed under the same license as the Xent package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Xent 0.3.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-18 23:32+0800\n"
+"PO-Revision-Date: 2026-11-18 23:40+0800\n"
+"Last-Translator: Project Xent\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/declarative/navigation.rst:2
+msgid "5. Navigation, Toolbars, & Modal Overlays"
+msgstr "5. 多页导航、工具栏与模态弹层"
+
+#: ../../source/declarative/navigation.rst:4
+msgid ""
+"Real desktop applications combine multi-page navigation shells, document "
+"tabs, command toolbars, and modal confirmation dialogs—all driven "
+"declaratively from ``Model`` fields."
+msgstr "完整的桌面应用通常包含多页侧边导航外壳、多文档标签页、命令工具栏与模态确认对话框——在声明式模式下，它们全部直接由 ``Model`` 字段驱动。"
+
+#: ../../source/declarative/navigation.rst:9
+msgid "Multi-Page App Shell with ``NavigationView``"
+msgstr "使用 ``NavigationView`` 搭建多页应用外壳"
+
+#: ../../source/declarative/navigation.rst:11
+msgid ""
+"``xtk_nav`` (register ``&flux_ctrl_nav``) provides a full WinUI "
+"``NavigationView`` with collapsible sidebar pane, headers, separators, "
+"footer items, and optional custom window title bar integration:"
+msgstr ""
+"``xtk_nav`` （需注册 ``&flux_ctrl_nav`` ）提供完整的 WinUI ``NavigationView`` ，包含可折叠侧边栏、"
+"分类标题、分隔线、底部固定项以及可选的一体化自定义窗口标题栏："
+
+#: ../../source/declarative/navigation.rst:73
+msgid ""
+"Wrapping the scrollable page container in ``xtk_keyed_u64(..., m->page)``"
+" gives each route its own scroll viewport so every page starts cleanly at"
+" its own offset."
+msgstr "使用 ``xtk_keyed_u64(..., m->page)`` 包裹页面滚动容器可为每个路由赋予独立的滚动视口，切换页面时各自保持干净的初始滚动位置。"
+
+#: ../../source/declarative/navigation.rst:78
+msgid "``SplitView`` and Custom ``TitleBar``"
+msgstr "``SplitView`` 分栏与自定义 ``TitleBar``"
+
+#: ../../source/declarative/navigation.rst:80
+msgid ""
+"When you want a custom collapsible side drawer or custom window chrome "
+"without a ``NavigationView``:"
+msgstr "如需单独定制可折叠侧边抽屉或自定义无边框窗口标题栏，可使用："
+
+#: ../../source/declarative/navigation.rst:83
+msgid ""
+"``xtk_splitview(ui, desc, pane_el, content_el)`` "
+"(``&flux_ctrl_splitview``) — Supports ``XTK_SPLITVIEW_INLINE``, "
+"``COMPACT_INLINE``, ``OVERLAY``, and ``COMPACT_OVERLAY`` modes on either "
+"``XTK_SPLITVIEW_LEFT`` or ``RIGHT``."
+msgstr ""
+"``xtk_splitview(ui, desc, pane_el, content_el)`` （ ``&flux_ctrl_splitview`` ）——支持左侧（ ``XTK_SPLITVIEW_LEFT`` ）"
+"或右侧（ ``RIGHT`` ）面板，提供 ``XTK_SPLITVIEW_INLINE`` 、 ``COMPACT_INLINE`` 、 ``OVERLAY`` 与 ``COMPACT_OVERLAY`` 四种展示模式。"
+
+#: ../../source/declarative/navigation.rst:86
+msgid ""
+"``xtk_titlebar(ui, \"App Title\", desc)`` (``&flux_ctrl_titlebar``) — "
+"Setting ``.integrate_window = true`` removes the standard Win32 title "
+"bar, draws themed caption buttons (Minimize / Maximize / Close) with Snap"
+" Layouts support, marks the bar draggable, and posts ``.on_back`` and "
+"``.on_pane_toggle`` messages."
+msgstr ""
+"``xtk_titlebar(ui, \"App Title\", desc)`` （ ``&flux_ctrl_titlebar`` ）——设置 ``.integrate_window = true`` "
+"即可接管原生 Win32 标题栏，绘制支持 Windows 贴靠布局（Snap Layouts）的最小化/最大化/关闭按钮、处理窗口拖拽区域，"
+"并投递 ``.on_back`` 与 ``.on_pane_toggle`` 消息。"
+
+#: ../../source/declarative/navigation.rst:93
+msgid "Document ``TabView``, ``SelectorBar``, & ``Expander``"
+msgstr "多文档 ``TabView`` 、 ``SelectorBar`` 与 ``Expander``"
+
+#: ../../source/declarative/navigation.rst:95
+msgid ""
+"**Closable & addable tabs** (``xtk_tabs``, ``&flux_ctrl_tab``): Keep your"
+" open document list and active index in ``Model``. Build a stack or arena"
+" array of ``XtkTabDesc`` headers and render the active tab's body as the "
+"child:"
+msgstr ""
+"**可新建与关闭的标签页** （ ``xtk_tabs`` ， ``&flux_ctrl_tab`` ）：将打开的文档列表与当前激活下标保存在 ``Model`` 中，"
+"构造 ``XtkTabDesc`` 标题数组并将当前激活文档的视图作为子元素传入："
+
+#: ../../source/declarative/navigation.rst:119
+msgid ""
+"**Pivot & path bars**: ``xtk_selector`` (lightweight horizontal view "
+"switcher), ``xtk_breadcrumb`` (clickable path hierarchy posting segment "
+"index in ``msg.i``), ``xtk_expander`` (collapsible disclosure card "
+"controlled by ``.expanded`` and ``.toggle``), and ``xtk_flip`` / "
+"``xtk_pips`` / ``xtk_pager`` for paged media carousels."
+msgstr ""
+"**分段切换、面包屑与折叠面板** ： ``xtk_selector`` 用于轻量横向视图切换； ``xtk_breadcrumb`` 渲染可点击路径层级"
+"（在 ``msg.i`` 中返回点击段下标）； ``xtk_expander`` 提供由 ``.expanded`` 与 ``.toggle`` 控制的可折叠卡片；"
+" ``xtk_flip`` / ``xtk_pips`` / ``xtk_pager`` 用于分页轮播与页码切换。"
+
+#: ../../source/declarative/navigation.rst:126
+msgid "``MenuBar`` and ``CommandBar`` (0.3.3)"
+msgstr "``MenuBar`` 菜单栏与 ``CommandBar`` 命令栏（0.3.3）"
+
+#: ../../source/declarative/navigation.rst:128
+msgid ""
+"**Desktop MenuBar** (``xtk_menubar``, ``&flux_ctrl_menubar``): Takes an "
+"array of ``XtkMenuDesc`` top-level menus (``File``, ``Edit``, ``View``), "
+"each pointing to an array of ``XtkMenuItemDesc`` items with ``.click`` "
+"messages."
+msgstr ""
+"**桌面菜单栏** （ ``xtk_menubar`` ， ``&flux_ctrl_menubar`` ）：接收 ``XtkMenuDesc`` 顶层菜单数组"
+"（如 ``File`` 、 ``Edit`` 、 ``View`` ），每个菜单包含一组带 ``.click`` 消息的 ``XtkMenuItemDesc`` 条目。"
+
+#: ../../source/declarative/navigation.rst:131
+msgid ""
+"**Fluent CommandBar** (``xtk_commandbar``, ``&flux_ctrl_commandbar``, "
+"``&flux_ctrl_appbarbutton``, ``&flux_ctrl_appbartoggle``, "
+"``&flux_ctrl_appbarsep``): Places primary icon/label commands on a "
+"toolbar, moves ``.secondary = true`` commands into the ``...`` overflow "
+"menu, and automatically overflows primary commands as the window narrows "
+"when ``.dynamic = true``:"
+msgstr ""
+"**Fluent 命令栏** （ ``xtk_commandbar`` ，需注册 ``&flux_ctrl_commandbar`` 、 ``&flux_ctrl_appbarbutton`` 、 "
+"``&flux_ctrl_appbartoggle`` 、 ``&flux_ctrl_appbarsep`` ）：在工具栏上展示主操作按钮，将 ``.secondary = true`` "
+"的次级命令收入 ``...`` 溢出菜单，并在开启 ``.dynamic = true`` 时随窗口变窄自动将主命令折叠进溢出菜单："
+
+#: ../../source/declarative/navigation.rst:153
+msgid "Modal ``ContentDialog``, ``TeachingTip``, & Status Controls"
+msgstr "模态 ``ContentDialog`` 、 ``TeachingTip`` 与状态反馈控件"
+
+#: ../../source/declarative/navigation.rst:155
+msgid ""
+"Overlays in declarative Xent are controlled by boolean flags in "
+"``Model``—place the ``xtk_dialog`` or ``xtk_teachtip`` element in your "
+"``view()`` tree and toggle ``.open``:"
+msgstr "声明式 Xent 中的弹出层直接由 ``Model`` 中的布尔标志控制——将 ``xtk_dialog`` 或 ``xtk_teachtip`` 放入 ``view()`` 树并切换 ``.open`` ："
+
+#: ../../source/declarative/navigation.rst:189
+msgid ""
+"**TeachingTip** (``xtk_teachtip``, ``&flux_ctrl_teachtip``): Non-modal "
+"callout with ``.subtitle``, ``.action_text``, ``.on_action``, "
+"``.light_dismiss = true``, and ``.close`` message."
+msgstr ""
+"**教学提示气泡** （ ``xtk_teachtip`` ， ``&flux_ctrl_teachtip`` ）：支持 ``.subtitle`` 、 ``.action_text`` 、 "
+"``.on_action`` 、 ``.light_dismiss = true`` 轻点外部关闭以及 ``.close`` 消息的非模态浮层。"
+
+#: ../../source/declarative/navigation.rst:192
+msgid ""
+"**Status & feedback**: ``xtk_infobar`` (``XTK_INFOBAR_INFORMATIONAL``, "
+"``SUCCESS``, ``WARNING``, ``ERROR`` banner with optional ``.closable`` "
+"button), ``xtk_progress`` (determinate or ``.indeterminate = true`` bar "
+"with ``XTK_PROGRESS_NORMAL`` / ``PAUSED`` / ``ERROR`` states), "
+"``xtk_progressring``, and ``xtk_badge``."
+msgstr ""
+"**状态与进度反馈** ： ``xtk_infobar`` 提供 ``XTK_INFOBAR_INFORMATIONAL`` 、 ``SUCCESS`` 、 ``WARNING`` 、 "
+"``ERROR`` 四种级别的消息横幅（支持 ``.closable`` 关闭按钮）； ``xtk_progress`` 提供确定进度或 ``.indeterminate = true`` "
+"进度条（支持 ``XTK_PROGRESS_NORMAL`` / ``PAUSED`` / ``ERROR`` 状态色）；以及 ``xtk_progressring`` 进度环和 ``xtk_badge`` 角标。"

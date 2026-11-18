@@ -46,7 +46,7 @@ with ``xent-kit`` and the target platform host (``fluxent`` on Windows):
    :caption: Manual
 
    quickstart
-   declarative
-   imperative
+   declarative/index
+   imperative/index
    concepts
    api/index
