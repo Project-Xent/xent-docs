@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>6. 对话框、拖放、剪贴板与窗口集成 &#8212; Xent 0.3.3 文档</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=c03c27c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/library/library.css?v=fa49c7df" />
+    <script src="../_static/documentation_options.js?v=0538d007"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/translations.js?v=540d3cec"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="架构与核心概念" href="../concepts.html" />
+    <link rel="prev" title="5. 命令式虚拟化列表与分组协议" href="virtualization.html" />
+ 
+
+<link rel="stylesheet" id="sphinx-library-type" href="../_static/library/type-book.css" type="text/css" />
+<link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+<meta name="viewport" content="width=device-width, initial-scale=0.9" />
+<script>
+  mobile_menu_content = "";
+  function toggleMenu() {
+    var div = document.getElementsByClassName("document").item(0);
+    var btn = document.getElementById("menu-toggler");
+    if(div.classList.contains("mobile-show")) {
+      div.classList.remove("mobile-show");
+      btn.innerHTML = mobile_menu_content;
+    }
+    else {
+      div.classList.add("mobile-show");
+      mobile_menu_content = btn.innerHTML;
+      btn.innerHTML = btn.getAttribute("data-open");
+    }
+  }
+</script>
+  </head>
+<body class="sepia">
+<script>
+  (function () {
+    var key = "sphinx-library-mode";
+    var dark = window.matchMedia("(prefers-color-scheme: dark)");
+    function stored() {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function apply() {
+      document.body.className = stored() || (dark.matches ? "dark" : "sepia");
+    }
+    window.toggleMode = function (theme) {
+      try {
+        if (theme) localStorage.setItem(key, theme);
+        else localStorage.removeItem(key);
+      } catch (e) {}
+      apply();
+    };
+    dark.addEventListener("change", apply);
+    apply();
+  })();
+</script>
+<div class="document">
+
+  
+  <nav class="mobile-menu" role="navigation">
+    
+  <button type="button" id="menu-toggler" onclick="toggleMenu();"
+    data-open="× Close">≡ Menu</button>
+  <a href="../index.html">Xent</a>
+  <noscript>
+    <div>
+      JavaScript is required to open/close mobile menu.
+    </div>
+  </noscript>
+  </nav>
+  
+
+  
+  <nav class="sphinxsidebar" role="navigation" aria-label="main navigation">
+    
+
+
+<h1 class="logo ">
+  <a href="../index.html">Xent</a>
+</h1>
+
+
+
+<p class="description">Native cross-platform UI in C23.</p>
+
+
+
+<p class="description">Version 0.3.3</p>
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="提交" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>目录</h3>
+<p class="caption" role="heading"><span class="caption-text">使用手册</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../declarative/index.html">声明式开发指南</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">命令式开发指南</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lifecycle.html">1. 应用、宿主与场景生命周期</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transactions.html">2. 原子事务与动态子树管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="properties.html">3. 强类型构建器、属性位掩码与布局</a></li>
+<li class="toctree-l2"><a class="reference internal" href="events.html">4. 事件路由、帧同步与变更戳</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualization.html">5. 命令式虚拟化列表与分组协议</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">6. 对话框、拖放、剪贴板与窗口集成</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts.html">架构与核心概念</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API 参考</a></li>
+</ul>
+
+<h3>本页目录</h3>
+<div class="localtoc"><ul>
+<li><a class="reference internal" href="#">6. 对话框、拖放、剪贴板与窗口集成</a><ul>
+<li><a class="reference internal" href="#modal-contentdialog">模态 <code class="docutils literal notranslate"><span class="pre">ContentDialog</span></code> 对话框</a></li>
+<li><a class="reference internal" href="#native-file-folder-dialogs">原生文件与文件夹对话框</a></li>
+<li><a class="reference internal" href="#ole-drag-and-drop-on-containers-cards">容器与卡片上的 OLE 拖放</a></li>
+<li><a class="reference internal" href="#clipboard-data-fluxdata">剪贴板数据（ <code class="docutils literal notranslate"><span class="pre">FluxData</span></code> ）</a></li>
+<li><a class="reference internal" href="#window-chrome-themes-background-threads">窗口外观、主题与后台线程调度</a></li>
+</ul>
+</li>
+</ul>
+</div><h3>阅读模式</h3>
+<button type="button" onclick="toggleMode(null);">自动</button>
+<button type="button" onclick="toggleMode('light');">浅色</button>
+<button type="button" onclick="toggleMode('sepia');">护眼</button>
+<button type="button" onclick="toggleMode('dark');">深色</button>
+<noscript>
+  <div>切换阅读模式需要启用 JavaScript.</div>
+</noscript>
+  </nav>
+  <div class="documentwrapper">
+    
+
+    <main class="body" role="main" id="main">
+      
+  <section id="dialogs-drag-and-drop-clipboard-windowing">
+<h1>6. 对话框、拖放、剪贴板与窗口集成<a class="headerlink" href="#dialogs-drag-and-drop-clipboard-windowing" title="链接到此标题。">¶</a></h1>
+<p>命令式应用从 <code class="docutils literal notranslate"><span class="pre">WinMain</span></code> 启动起便直接持有 <code class="docutils literal notranslate"><span class="pre">FluxApp</span> <span class="pre">*</span></code> 、 <code class="docutils literal notranslate"><span class="pre">FluxWindow</span> <span class="pre">*</span></code> 与 <code class="docutils literal notranslate"><span class="pre">FluxTheme</span> <span class="pre">*</span></code> ，可直接操控模态对话框、原生文件选择器、OLE 拖放、剪贴板传输与跨线程界面更新。</p>
+<section id="modal-contentdialog">
+<h2>模态 <code class="docutils literal notranslate"><span class="pre">ContentDialog</span></code> 对话框<a class="headerlink" href="#modal-contentdialog" title="链接到此标题。">¶</a></h2>
+<p>在场景事务中以 <code class="docutils literal notranslate"><span class="pre">.open</span> <span class="pre">=</span> <span class="pre">false</span></code> 创建一次 <code class="docutils literal notranslate"><span class="pre">ContentDialog</span></code> （需注册 <code class="docutils literal notranslate"><span class="pre">&amp;flux_ctrl_dialog</span></code> ），保存其 <code class="docutils literal notranslate"><span class="pre">XtkCtrl</span></code> 句柄，并在需要时通过 <code class="docutils literal notranslate"><span class="pre">xtk_dialog_setopen</span></code> 弹出：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// 1. Inside your build XtkTxn:</span>
+<span class="n">XtkLocalId</span><span class="w"> </span><span class="n">dlg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_dialog_create</span><span class="p">(</span>
+<span class="w">    </span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">parent</span><span class="p">,</span>
+<span class="w">    </span><span class="o">&amp;</span><span class="p">(</span><span class="n">XtkDialogProps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">set</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_DIALOG_W_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_DIALOG_CONTENTH_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_DIALOG_TEXT_MASK</span>
+<span class="w">                  </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_DIALOG_PRIMARY_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_DIALOG_CLOSE_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_DIALOG_OPEN_MASK</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">w</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="mf">400.0f</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">contenth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">56.0f</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">text</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s">"Discard unsaved changes?"</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">primary</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">"Discard"</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">close</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s">"Cancel"</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">open</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">);</span>
+<span class="n">xtk_text_create</span><span class="p">(</span>
+<span class="w">    </span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_ref_local</span><span class="p">(</span><span class="n">dlg</span><span class="p">),</span>
+<span class="w">    </span><span class="o">&amp;</span><span class="p">(</span><span class="n">XtkTextProps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">set</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_TEXT_TEXT_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_TEXT_FONTSIZE_MASK</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">text</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s">"Your current edits will be lost."</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">fontsize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">14.0f</span><span class="p">,</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">);</span>
+<span class="n">xtk_dialog_onclose</span><span class="p">(</span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_ref_local</span><span class="p">(</span><span class="n">dlg</span><span class="p">),</span><span class="w"> </span><span class="n">on_dialog_closed</span><span class="p">,</span><span class="w"> </span><span class="n">app</span><span class="p">);</span>
+
+<span class="c1">// 2. Show the dialog from any button callback:</span>
+<span class="n">xtk_dialog_setopen</span><span class="p">(</span><span class="o">&amp;</span><span class="n">app</span><span class="o">-&gt;</span><span class="n">scene</span><span class="p">,</span><span class="w"> </span><span class="n">app</span><span class="o">-&gt;</span><span class="n">confirm_dlg</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkChangeStamp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">});</span>
+
+<span class="c1">// 3. Handle the user's choice in on_dialog_closed:</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="nf">on_dialog_closed</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">arg</span><span class="p">,</span><span class="w"> </span><span class="n">XtkEvent</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">App</span><span class="w"> </span><span class="o">*</span><span class="n">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arg</span><span class="p">;</span>
+<span class="w">    </span><span class="n">xtk_dialog_setopen</span><span class="p">(</span><span class="o">&amp;</span><span class="n">app</span><span class="o">-&gt;</span><span class="n">scene</span><span class="p">,</span><span class="w"> </span><span class="n">app</span><span class="o">-&gt;</span><span class="n">confirm_dlg</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkChangeStamp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">});</span>
+<span class="w">    </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">choice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="o">-&gt;</span><span class="n">payload</span><span class="p">.</span><span class="n">u</span><span class="p">.</span><span class="n">i32</span><span class="p">;</span><span class="w"> </span><span class="c1">// 1 = primary, 2 = secondary, 0 = close/Esc</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">choice</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">reset_document</span><span class="p">(</span><span class="n">app</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">XTK_EVENT_HANDLED</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="native-file-folder-dialogs">
+<h2>原生文件与文件夹对话框<a class="headerlink" href="#native-file-folder-dialogs" title="链接到此标题。">¶</a></h2>
+<p>引入 <code class="docutils literal notranslate"><span class="pre">&lt;fluxent/flux_filedialog.h&gt;</span></code> ，在按钮回调中调用 <code class="docutils literal notranslate"><span class="pre">flux_filedialog_show</span></code> 即可弹出原生 Windows 打开、保存或选择文件夹对话框：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="n">FluxFileFilter</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">kFilters</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">{.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"C Source Files"</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">spec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"*.c;*.h"</span><span class="p">},</span>
+<span class="w">    </span><span class="p">{.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"All Files"</span><span class="p">,</span><span class="w">      </span><span class="p">.</span><span class="n">spec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"*.*"</span><span class="p">},</span>
+<span class="p">};</span>
+
+<span class="n">FluxFileDialogDesc</span><span class="w"> </span><span class="n">desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">kind</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="n">FLUX_FILEDIALOG_OPEN</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">title</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s">"Select Source Files"</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">filters</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">kFilters</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">filter_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">multiple</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="c1">// Returns malloc'd UTF-8 paths (one path per line), or NULL when cancelled:</span>
+<span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">flux_filedialog_show</span><span class="p">(</span><span class="n">app</span><span class="o">-&gt;</span><span class="n">flux</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">desc</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">paths</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">open_selected_paths</span><span class="p">(</span><span class="n">app</span><span class="p">,</span><span class="w"> </span><span class="n">paths</span><span class="p">);</span>
+<span class="w">    </span><span class="n">free</span><span class="p">(</span><span class="n">paths</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="ole-drag-and-drop-on-containers-cards">
+<h2>容器与卡片上的 OLE 拖放<a class="headerlink" href="#ole-drag-and-drop-on-containers-cards" title="链接到此标题。">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk_controls.h&gt;</span></code> 中的所有 <code class="docutils literal notranslate"><span class="pre">container</span></code> 与 <code class="docutils literal notranslate"><span class="pre">card</span></code> 控件均内置 OLE 拖放属性与事件：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// Configure a card as a file/text drop target:</span>
+<span class="n">XtkLocalId</span><span class="w"> </span><span class="n">drop_card</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_card_create</span><span class="p">(</span>
+<span class="w">    </span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">parent</span><span class="p">,</span>
+<span class="w">    </span><span class="o">&amp;</span><span class="p">(</span><span class="n">XtkContainerProps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">set</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_CONTAINER_DROP_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_PL_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_PT_MASK</span>
+<span class="w">              </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_PR_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_PB_MASK</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">drop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_DROP_COPY</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">pl</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">pt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">pr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">pb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">);</span>
+<span class="n">xtk_card_ondraghover</span><span class="p">(</span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_ref_local</span><span class="p">(</span><span class="n">drop_card</span><span class="p">),</span><span class="w"> </span><span class="n">on_drag_hover</span><span class="p">,</span><span class="w"> </span><span class="n">app</span><span class="p">);</span>
+<span class="n">xtk_card_ondropfiles</span><span class="p">(</span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_ref_local</span><span class="p">(</span><span class="n">drop_card</span><span class="p">),</span><span class="w"> </span><span class="n">on_drop_files</span><span class="p">,</span><span class="w"> </span><span class="n">app</span><span class="p">);</span>
+<span class="n">xtk_card_ondroptext</span><span class="p">(</span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_ref_local</span><span class="p">(</span><span class="n">drop_card</span><span class="p">),</span><span class="w"> </span><span class="n">on_drop_text</span><span class="p">,</span><span class="w"> </span><span class="n">app</span><span class="p">);</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">on_drag_hover</span></code> 在 <code class="docutils literal notranslate"><span class="pre">e-&gt;payload.u.b</span></code> 中接收悬停状态（拖入时为 <code class="docutils literal notranslate"><span class="pre">true</span></code> ，离开时为 <code class="docutils literal notranslate"><span class="pre">false</span></code> ）。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">on_drop_files</span></code> 与 <code class="docutils literal notranslate"><span class="pre">on_drop_text</span></code> 在 <code class="docutils literal notranslate"><span class="pre">e-&gt;payload.u.string.{data,</span> <span class="pre">len}</span></code> 中接收借用的 UTF-8 切片（多文件路径以换行符分隔）。在拖放回调执行期间，还可通过 <code class="docutils literal notranslate"><span class="pre">&lt;fluxent/flux_data.h&gt;</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">flux_drag_data()</span></code> 读取当前 OLE 数据对象中的位图或自定义格式。</p></li>
+<li><p>若要将容器或卡片设为 <strong>拖拽源</strong> ，设置 <code class="docutils literal notranslate"><span class="pre">XTK_CONTAINER_DRAGTEXT_MASK</span></code> （ <code class="docutils literal notranslate"><span class="pre">.dragtext</span></code> ）或 <code class="docutils literal notranslate"><span class="pre">XTK_CONTAINER_DRAGFILES_MASK</span></code> （ <code class="docutils literal notranslate"><span class="pre">.dragfiles</span></code> ）并通过 <code class="docutils literal notranslate"><span class="pre">xtk_container_ondragcompleted</span></code> 订阅拖拽完成事件。</p></li>
+</ul>
+</section>
+<section id="clipboard-data-fluxdata">
+<h2>剪贴板数据（ <code class="docutils literal notranslate"><span class="pre">FluxData</span></code> ）<a class="headerlink" href="#clipboard-data-fluxdata" title="链接到此标题。">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;fluxent/flux_data.h&gt;</span></code> 同时提供纯文本便捷接口与多格式 <code class="docutils literal notranslate"><span class="pre">FluxData</span></code> 数据容器：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// Plain UTF-8 text:</span>
+<span class="n">flux_clipboard_settext</span><span class="p">(</span><span class="s">"Copied from Xent"</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">);</span>
+<span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">clip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">flux_clipboard_text</span><span class="p">();</span><span class="w"> </span><span class="c1">// Caller frees with free(clip)</span>
+<span class="n">free</span><span class="p">(</span><span class="n">clip</span><span class="p">);</span>
+
+<span class="c1">// Rich multi-format payload (text + custom binary format):</span>
+<span class="n">FluxData</span><span class="w"> </span><span class="o">*</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">flux_data_create</span><span class="p">();</span>
+<span class="n">flux_data_settext</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="s">"Node #42"</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">);</span>
+<span class="n">flux_data_setcustom</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="s">"application/x-myapp-node"</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">node_id</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">node_id</span><span class="p">));</span>
+<span class="n">flux_clipboard_set</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
+<span class="n">flux_data_destroy</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="window-chrome-themes-background-threads">
+<h2>窗口外观、主题与后台线程调度<a class="headerlink" href="#window-chrome-themes-background-threads" title="链接到此标题。">¶</a></h2>
+<ul class="simple">
+<li><p><strong>主题与背景材质</strong> ：通过 <code class="docutils literal notranslate"><span class="pre">flux_app_theme(app)</span></code> 获取 <code class="docutils literal notranslate"><span class="pre">FluxTheme</span> <span class="pre">*</span></code> （用 <code class="docutils literal notranslate"><span class="pre">flux_theme_setmode</span></code> 切换浅色/深色/跟随系统，用 <code class="docutils literal notranslate"><span class="pre">flux_theme_colors</span></code> 读取当前 Fluent 调色板），并通过 <code class="docutils literal notranslate"><span class="pre">flux_app_window(app)</span></code> 获取 <code class="docutils literal notranslate"><span class="pre">FluxWindow</span> <span class="pre">*</span></code> （调用 <code class="docutils literal notranslate"><span class="pre">flux_window_setbackdrop</span></code> 、 <code class="docutils literal notranslate"><span class="pre">flux_window_settitle</span></code> 、 <code class="docutils literal notranslate"><span class="pre">flux_window_size</span></code> 、 <code class="docutils literal notranslate"><span class="pre">flux_window_dpi</span></code> 、 <code class="docutils literal notranslate"><span class="pre">flux_window_close</span></code> ）。</p></li>
+<li><p><strong>自定义标题栏</strong> ：既可以使用 <code class="docutils literal notranslate"><span class="pre">XTK_TITLEBAR_INTEGRATE_MASK</span></code> （ <code class="docutils literal notranslate"><span class="pre">.integrate</span> <span class="pre">=</span> <span class="pre">true</span></code> ）创建 <code class="docutils literal notranslate"><span class="pre">xtk_titlebar_create</span></code> 控件，也可以直接调用 <code class="docutils literal notranslate"><span class="pre">flux_window_extendtitlebar</span></code> 与 <code class="docutils literal notranslate"><span class="pre">flux_window_settitlebar</span></code> 自定义窗口拖拽区与交互穿透矩形。</p></li>
+<li><p><strong>跨线程 UI 调度</strong> ：后台工作线程通过 <code class="docutils literal notranslate"><span class="pre">flux_app_invoke(app,</span> <span class="pre">apply_worker_result,</span> <span class="pre">result_ctx)</span></code> 将结果切回窗口线程。 <code class="docutils literal notranslate"><span class="pre">flux_app_invoke</span></code> 会借用 <code class="docutils literal notranslate"><span class="pre">result_ctx</span></code> 直至 <code class="docutils literal notranslate"><span class="pre">apply_worker_result</span></code> 在 UI 线程执行——在该回调内即可安全开启 <code class="docutils literal notranslate"><span class="pre">XtkTxn</span></code> 或调用 <code class="docutils literal notranslate"><span class="pre">xtk_&lt;ctrl&gt;_set*</span></code> ，随后释放 <code class="docutils literal notranslate"><span class="pre">result_ctx</span></code> 。</p></li>
+</ul>
+</section>
+</section>
+
+
+    </main>
+    <nav class="related bottom" role="navigation">
+  <a class="prev" href="virtualization.html" title="Previous">
+    &larr; 5. 命令式虚拟化列表与分组协议
+  </a>
+  <a class="next" href="../concepts.html" title="Next">
+    架构与核心概念 &rarr;
+  </a>
+  <div class="clear"></div>
+    </nav>
+    
+
+  </div>
+
+  <div class="clear"></div>
+</div>
+<footer class="footer" role="contentinfo">
+    &copy; Copyright 2026, Project Xent.
+  
+  Created using <a href="http://sphinx-doc.org/">Sphinx</a> with
+  <a href="https://github.com/vsalvino/sphinx-library">Library</a> theme.
+  
+  <a href="../_sources/imperative/shell.rst.txt" rel="nofollow">Page source</a>
+</footer>
+  </body>
+</html>

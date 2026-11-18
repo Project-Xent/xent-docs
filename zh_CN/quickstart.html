@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>快速开始 &#8212; Xent 0.3.3 文档</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=c03c27c6" />
+    <link rel="stylesheet" type="text/css" href="_static/library/library.css?v=fa49c7df" />
+    <script src="_static/documentation_options.js?v=0538d007"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/translations.js?v=540d3cec"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="声明式开发指南" href="declarative/index.html" />
+    <link rel="prev" title="Project Xent" href="index.html" />
+ 
+
+<link rel="stylesheet" id="sphinx-library-type" href="_static/library/type-book.css" type="text/css" />
+<link rel="stylesheet" href="_static/custom.css" type="text/css" />
+<meta name="viewport" content="width=device-width, initial-scale=0.9" />
+<script>
+  mobile_menu_content = "";
+  function toggleMenu() {
+    var div = document.getElementsByClassName("document").item(0);
+    var btn = document.getElementById("menu-toggler");
+    if(div.classList.contains("mobile-show")) {
+      div.classList.remove("mobile-show");
+      btn.innerHTML = mobile_menu_content;
+    }
+    else {
+      div.classList.add("mobile-show");
+      mobile_menu_content = btn.innerHTML;
+      btn.innerHTML = btn.getAttribute("data-open");
+    }
+  }
+</script>
+  </head>
+<body class="sepia">
+<script>
+  (function () {
+    var key = "sphinx-library-mode";
+    var dark = window.matchMedia("(prefers-color-scheme: dark)");
+    function stored() {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function apply() {
+      document.body.className = stored() || (dark.matches ? "dark" : "sepia");
+    }
+    window.toggleMode = function (theme) {
+      try {
+        if (theme) localStorage.setItem(key, theme);
+        else localStorage.removeItem(key);
+      } catch (e) {}
+      apply();
+    };
+    dark.addEventListener("change", apply);
+    apply();
+  })();
+</script>
+<div class="document">
+
+  
+  <nav class="mobile-menu" role="navigation">
+    
+  <button type="button" id="menu-toggler" onclick="toggleMenu();"
+    data-open="× Close">≡ Menu</button>
+  <a href="index.html">Xent</a>
+  <noscript>
+    <div>
+      JavaScript is required to open/close mobile menu.
+    </div>
+  </noscript>
+  </nav>
+  
+
+  
+  <nav class="sphinxsidebar" role="navigation" aria-label="main navigation">
+    
+
+
+<h1 class="logo ">
+  <a href="index.html">Xent</a>
+</h1>
+
+
+
+<p class="description">Native cross-platform UI in C23.</p>
+
+
+
+<p class="description">Version 0.3.3</p>
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="提交" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>目录</h3>
+<p class="caption" role="heading"><span class="caption-text">使用手册</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="declarative/index.html">声明式开发指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="imperative/index.html">命令式开发指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">架构与核心概念</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API 参考</a></li>
+</ul>
+
+<h3>本页目录</h3>
+<div class="localtoc"><ul>
+<li><a class="reference internal" href="#">快速开始</a><ul>
+<li><a class="reference internal" href="#step-1-install-the-toolchain">第 1 步：安装工具链</a></li>
+<li><a class="reference internal" href="#step-2-install-the-project-templates">第 2 步：安装项目模板</a></li>
+<li><a class="reference internal" href="#step-3-declarative-vs-imperative-comparison-how-to-choose">第 3 步：声明式与命令式——对比与选型</a><ul>
+<li><a class="reference internal" href="#how-to-choose">选型建议</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#step-4-create-install-dependencies-build-and-run-your-first-app">第 4 步：创建项目、安装依赖、编译并运行第一个应用</a></li>
+<li><a class="reference internal" href="#next-steps">后续阅读</a></li>
+</ul>
+</li>
+</ul>
+</div><h3>阅读模式</h3>
+<button type="button" onclick="toggleMode(null);">自动</button>
+<button type="button" onclick="toggleMode('light');">浅色</button>
+<button type="button" onclick="toggleMode('sepia');">护眼</button>
+<button type="button" onclick="toggleMode('dark');">深色</button>
+<noscript>
+  <div>切换阅读模式需要启用 JavaScript.</div>
+</noscript>
+  </nav>
+  <div class="documentwrapper">
+    
+
+    <main class="body" role="main" id="main">
+      
+  <section id="quick-start">
+<h1>快速开始<a class="headerlink" href="#quick-start" title="链接到此标题。">¶</a></h1>
+<p>本指南介绍如何在 Windows 上安装 C23 工具链、添加官方项目模板、在 <strong>声明式</strong> 与 <strong>命令式</strong> 两条路线之间做出选择，以及编译并运行第一个 <strong>Xent 0.3.3</strong> 应用程序。</p>
+<section id="step-1-install-the-toolchain">
+<h2>第 1 步：安装工具链<a class="headerlink" href="#step-1-install-the-toolchain" title="链接到此标题。">¶</a></h2>
+<p>在 Windows 上构建 Xent C 应用需要 <strong>Windows 10 1903 及以上版本</strong> 、 <code class="docutils literal notranslate"><span class="pre">git</span></code> 、 <strong>Xmake 3.1.2+</strong> 以及 <strong>llvm-mingw</strong> C23 编译工具链。</p>
+<ol class="arabic">
+<li><p><strong>安装 Xmake（3.1.2 及以上版本）</strong> ：按照官方 <a class="reference external" href="https://xmake.io/guide/quick-start.html">Xmake 安装指南</a> 完成安装，并安装 <a class="reference external" href="https://git-scm.com/">Git</a> 以便 Xmake 拉取依赖仓库。</p></li>
+<li><p><strong>安装 llvm-mingw（UCRT 版）</strong> ：Xent 在 Windows 上以 <code class="docutils literal notranslate"><span class="pre">llvm-mingw</span></code> Clang 作为主力 C23 工具链。前往官方仓库 <a class="reference external" href="https://github.com/mstorsjo/llvm-mingw">mstorsjo/llvm-mingw</a> ，从 <a class="reference external" href="https://github.com/mstorsjo/llvm-mingw/releases">llvm-mingw Releases</a> 下载对应架构的 Windows 原生 <strong>UCRT</strong> <code class="docutils literal notranslate"><span class="pre">.zip</span></code> 压缩包：</p>
+<ul class="simple">
+<li><p>64 位 x86 Windows： <code class="docutils literal notranslate"><span class="pre">llvm-mingw-&lt;date&gt;-ucrt-x86_64.zip</span></code></p></li>
+<li><p>ARM64 Windows： <code class="docutils literal notranslate"><span class="pre">llvm-mingw-&lt;date&gt;-ucrt-aarch64.zip</span></code></p></li>
+</ul>
+<p>将压缩包解压到固定目录（例如 <code class="docutils literal notranslate"><span class="pre">C:\llvm-mingw</span></code> ），并将其中的 <code class="docutils literal notranslate"><span class="pre">bin</span></code> 目录（ <code class="docutils literal notranslate"><span class="pre">C:\llvm-mingw\bin</span></code> ）加入当前用户的 <code class="docutils literal notranslate"><span class="pre">PATH</span></code> 环境变量。</p>
+</li>
+</ol>
+<p>重新打开一个终端窗口，验证以下三条命令均能输出版本号：</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">xmake</span> <span class="p">-</span><span class="n">-version</span>
+<span class="n">git</span> <span class="p">-</span><span class="n">-version</span>
+<span class="n">x86_64-w64-mingw32-clang</span> <span class="p">-</span><span class="n">-version</span>
+</pre></div>
+</div>
+</section>
+<section id="step-2-install-the-project-templates">
+<h2>第 2 步：安装项目模板<a class="headerlink" href="#step-2-install-the-project-templates" title="链接到此标题。">¶</a></h2>
+<p>Project Xent 通过 <a class="reference external" href="https://xmake.io/guide/extensions/addons/installation.html">Xmake Addon</a> 分发开箱即用的 C23 工程模板。为当前用户安装一次 <code class="docutils literal notranslate"><span class="pre">xent-repo</span></code> 插件并查看可用模板列表：</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">xmake</span> <span class="n">addon</span> <span class="n">-i</span> <span class="n">github</span><span class="p">:</span><span class="n">Project-Xent</span><span class="p">/</span><span class="n">xent-repo</span>
+<span class="n">xmake</span> <span class="n">create</span> <span class="p">-</span><span class="n">-list</span>
+</pre></div>
+</div>
+<p>在 <code class="docutils literal notranslate"><span class="pre">c</span></code> 语言分类下包含两个 Fluxent 工程模板：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fluxent.decl</span></code> —— 声明式应用模板（ <code class="docutils literal notranslate"><span class="pre">flux_run</span></code> ）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fluxent.imp</span></code> —— 命令式应用模板（ <code class="docutils literal notranslate"><span class="pre">XtkScene</span></code> / <code class="docutils literal notranslate"><span class="pre">XtkTxn</span></code> ）</p></li>
+</ul>
+</section>
+<section id="step-3-declarative-vs-imperative-comparison-how-to-choose">
+<h2>第 3 步：声明式与命令式——对比与选型<a class="headerlink" href="#step-3-declarative-vs-imperative-comparison-how-to-choose" title="链接到此标题。">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">fluxent.decl</span></code> 与 <code class="docutils literal notranslate"><span class="pre">fluxent.imp</span></code> 共享同一个保留式 Fluxent 宿主、原生 Direct2D/DirectWrite 控件、无障碍支持以及原子化 <code class="docutils literal notranslate"><span class="pre">XtkBatch</span></code> 提交引擎。请根据应用场景选择适合的编程模型：</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 40.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>对比维度</p></th>
+<th class="head"><p>声明式（ <code class="docutils literal notranslate"><span class="pre">fluxent.decl</span></code> ）</p></th>
+<th class="head"><p>命令式（ <code class="docutils literal notranslate"><span class="pre">fluxent.imp</span></code> ）</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>编程模型</strong></p></td>
+<td><p>由 <code class="docutils literal notranslate"><span class="pre">flux_run</span></code> 驱动的单向 Model–View–Update（MVU）循环。</p></td>
+<td><p>持有保留式 <code class="docutils literal notranslate"><span class="pre">XtkScene</span></code> 句柄，通过原子化 <code class="docutils literal notranslate"><span class="pre">XtkTxn</span></code> 事务与 C 事件回调驱动。</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>入口函数与头文件</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">flux_run(&amp;cfg,</span> <span class="pre">&amp;model,</span> <span class="pre">update,</span> <span class="pre">view)</span></code> ，配合 <code class="docutils literal notranslate"><span class="pre">&lt;fluxent/fluxent.h&gt;</span></code> 与 <code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk.h&gt;</span></code> 构建器。</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">flux_app_create</span></code> + <code class="docutils literal notranslate"><span class="pre">flux_app_attachhost</span></code> + <code class="docutils literal notranslate"><span class="pre">xtk_scene_fromhost</span></code> ，配合 <code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk_controls.h&gt;</span></code> 。</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>界面构建与更新方式</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">view()</span></code> 根据当前 <code class="docutils literal notranslate"><span class="pre">Model</span></code> 返回轻量 <code class="docutils literal notranslate"><span class="pre">XtkEl</span> <span class="pre">*</span></code> 描述树，协调器自动计算并提交最小 <code class="docutils literal notranslate"><span class="pre">XtkBatch</span></code> 变更。</p></td>
+<td><p>开启 <code class="docutils literal notranslate"><span class="pre">XtkTxn</span></code> 事务，通过带 <code class="docutils literal notranslate"><span class="pre">.set</span></code> 位掩码的 <code class="docutils literal notranslate"><span class="pre">xtk_*_create</span></code> 创建控件、保存 <code class="docutils literal notranslate"><span class="pre">XtkCtrl</span></code> 句柄，并直接调用 <code class="docutils literal notranslate"><span class="pre">xtk_*_set*</span></code> 更新属性。</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>事件处理</strong></p></td>
+<td><p>控件投递 <code class="docutils literal notranslate"><span class="pre">XtkMsg</span></code> 消息值，所有状态转移集中在 <code class="docutils literal notranslate"><span class="pre">update(model,</span> <span class="pre">msg)</span></code> 函数中完成。</p></td>
+<td><p>控件触发由 <code class="docutils literal notranslate"><span class="pre">xtk_*_on*</span></code> 或 <code class="docutils literal notranslate"><span class="pre">xtk_txn_on</span></code> 绑定的 <code class="docutils literal notranslate"><span class="pre">XtkEventFn</span></code> 回调函数，在回调中标记脏状态并更新目标控件。</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>优势</strong></p></td>
+<td><p>代码简明；界面与状态自动保持一致；自动管理控件生命周期；条件分支与动态布局直观清晰。</p></td>
+<td><p>按属性定点直写；显式掌控事务边界与 <code class="docutils literal notranslate"><span class="pre">XtkCtrl</span></code> 句柄生命周期；同时也是多语言绑定所使用的稳定 C ABI。</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>需要权衡之处</strong></p></td>
+<td><p>在每批消息处理后重新求值 <code class="docutils literal notranslate"><span class="pre">view()</span></code> （大型静态子树可通过 <code class="docutils literal notranslate"><span class="pre">xtk_memo_region</span></code> 或 <code class="docutils literal notranslate"><span class="pre">xtk_static_region</span></code> 缓存复用）。</p></td>
+<td><p>需要显式填写 <code class="docutils literal notranslate"><span class="pre">.set</span></code> 属性位掩码、将 <code class="docutils literal notranslate"><span class="pre">XtkLocalId</span></code> 解析为 <code class="docutils literal notranslate"><span class="pre">XtkCtrl</span></code> 句柄，并手动维护状态到控件的同步。</p></td>
+</tr>
+</tbody>
+</table>
+<section id="how-to-choose">
+<h3>选型建议<a class="headerlink" href="#how-to-choose" title="链接到此标题。">¶</a></h3>
+<ul class="simple">
+<li><p><strong>默认优先选择声明式（</strong> <code class="docutils literal notranslate"><span class="pre">fluxent.decl</span></code> <strong>）</strong> ：适合初次上手 Xent，以及开发桌面应用、表单、设置面板、多步向导与各类开发工具。</p></li>
+<li><p><strong>在以下场景选择命令式（</strong> <code class="docutils literal notranslate"><span class="pre">fluxent.imp</span></code> <strong>）</strong> ：需要将 Xent 接入已有的回调驱动或帧驱动 C 引擎、每帧对少量控件执行高频定点属性写入，或基于 Xent C ABI 编写其他语言绑定。</p></li>
+</ul>
+</section>
+</section>
+<section id="step-4-create-install-dependencies-build-and-run-your-first-app">
+<h2>第 4 步：创建项目、安装依赖、编译并运行第一个应用<a class="headerlink" href="#step-4-create-install-dependencies-build-and-run-your-first-app" title="链接到此标题。">¶</a></h2>
+<p>使用所选模板生成新项目（声明式使用 <code class="docutils literal notranslate"><span class="pre">-t</span> <span class="pre">fluxent.decl</span></code> ，命令式使用 <code class="docutils literal notranslate"><span class="pre">-t</span> <span class="pre">fluxent.imp</span></code> ）：</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">xmake</span> <span class="n">create</span> <span class="n">-l</span> <span class="n">c</span> <span class="n">-t</span> <span class="n">fluxent</span><span class="p">.</span><span class="n">decl</span> <span class="n">hello</span>
+<span class="nb">cd </span><span class="n">hello</span>
+</pre></div>
+</div>
+<p>该命令会自动生成配置好 C23 标准、 <code class="docutils literal notranslate"><span class="pre">xent-repo</span></code> 包仓库与 Windows 窗口子系统的 <code class="docutils literal notranslate"><span class="pre">xmake.lua</span></code> 和 <code class="docutils literal notranslate"><span class="pre">src/main.c</span></code> 。</p>
+<p>将 Xmake 工具链指向解压后的 <code class="docutils literal notranslate"><span class="pre">llvm-mingw</span></code> 根目录（即包含 <code class="docutils literal notranslate"><span class="pre">bin</span></code> 的上一级目录，例如 <code class="docutils literal notranslate"><span class="pre">C:\llvm-mingw</span></code> ）：</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">xmake</span> <span class="n">f</span> <span class="n">-p</span> <span class="n">mingw</span> <span class="n">-a</span> <span class="n">x86_64</span> <span class="p">-</span><span class="n">-mingw</span><span class="p">=</span><span class="s2">"C:\llvm-mingw"</span> <span class="n">-m</span> <span class="n">debug</span> <span class="n">-y</span>
+</pre></div>
+</div>
+<p><em>（在 ARM64 Windows 上请传入</em> <code class="docutils literal notranslate"><span class="pre">-a</span> <span class="pre">arm64</span></code> <em>。）</em></p>
+<p>安装 <code class="docutils literal notranslate"><span class="pre">xmake.lua</span></code> 中声明的项目依赖—— <code class="docutils literal notranslate"><span class="pre">xmake</span> <span class="pre">require</span></code> 会自动下载并编译 <code class="docutils literal notranslate"><span class="pre">fluxent</span> <span class="pre">0.3.3</span></code> 及其传递依赖（ <code class="docutils literal notranslate"><span class="pre">xent-kit</span> <span class="pre">0.3.3</span></code> 、 <code class="docutils literal notranslate"><span class="pre">xent-core</span> <span class="pre">0.3.3</span></code> 与 <code class="docutils literal notranslate"><span class="pre">cwinrt</span> <span class="pre">0.3.1</span></code> ）：</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">xmake</span> <span class="n">require</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p>首次执行 <code class="docutils literal notranslate"><span class="pre">xmake</span> <span class="pre">require</span></code> 会从源码编译并缓存这四个包。随时可运行 <code class="docutils literal notranslate"><span class="pre">xmake</span> <span class="pre">require</span> <span class="pre">--list</span></code> 查看已安装的依赖包与版本。</p>
+</div>
+<p>编译并运行应用：</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">xmake</span>
+<span class="n">xmake</span> <span class="n">run</span>
+</pre></div>
+</div>
+<p>此时会打开一个带 Mica 材质、标题为 <strong>hello</strong> 的原生窗口，包含 <code class="docutils literal notranslate"><span class="pre">Counter</span></code> 标题、 <code class="docutils literal notranslate"><span class="pre">Value:</span> <span class="pre">0</span></code> 以及 <code class="docutils literal notranslate"><span class="pre">−</span></code> 、 <code class="docutils literal notranslate"><span class="pre">+</span></code> 、 <code class="docutils literal notranslate"><span class="pre">Reset</span></code> 按钮。后续修改 <code class="docutils literal notranslate"><span class="pre">src/main.c</span></code> 后，只需执行 <code class="docutils literal notranslate"><span class="pre">xmake</span></code> 与 <code class="docutils literal notranslate"><span class="pre">xmake</span> <span class="pre">run</span></code> 即可增量编译运行；当更新 <code class="docutils literal notranslate"><span class="pre">xmake.lua</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">add_requires</span></code> 时再运行一次 <code class="docutils literal notranslate"><span class="pre">xmake</span> <span class="pre">require</span></code> 。</p>
+</section>
+<section id="next-steps">
+<h2>后续阅读<a class="headerlink" href="#next-steps" title="链接到此标题。">¶</a></h2>
+<p>按照你选择的开发路线继续深入：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="declarative/index.html"><span class="doc">声明式开发指南</span></a> —— 掌握 Elm MVU 单向循环，解析 <code class="docutils literal notranslate"><span class="pre">fluxent.decl</span></code> 模板，系统学习布局容器、表单输入、虚拟化集合、多页导航与系统集成。</p></li>
+<li><p><a class="reference internal" href="imperative/index.html"><span class="doc">命令式开发指南</span></a> —— 掌握 <code class="docutils literal notranslate"><span class="pre">fluxent.imp</span></code> 生命周期、原子化 <code class="docutils literal notranslate"><span class="pre">XtkTxn</span></code> 事务、 <code class="docutils literal notranslate"><span class="pre">.set</span></code> 属性位掩码、事件路由、 <code class="docutils literal notranslate"><span class="pre">XTK_EVENT_REALIZE</span></code> 虚拟化列表与桌面外壳接口。</p></li>
+<li><p><a class="reference internal" href="concepts.html"><span class="doc">架构与核心概念</span></a> —— 了解 <code class="docutils literal notranslate"><span class="pre">xent-core</span></code> 、 <code class="docutils literal notranslate"><span class="pre">xent-kit</span></code> 与 <code class="docutils literal notranslate"><span class="pre">fluxent</span></code> 的协作方式，以及如何用 <code class="docutils literal notranslate"><span class="pre">flux_controls_use</span></code> 裁剪可执行文件体积。</p></li>
+</ul>
+</section>
+</section>
+
+
+    </main>
+    <nav class="related bottom" role="navigation">
+  <a class="prev" href="index.html" title="Previous">
+    &larr; Project Xent
+  </a>
+  <a class="next" href="declarative/index.html" title="Next">
+    声明式开发指南 &rarr;
+  </a>
+  <div class="clear"></div>
+    </nav>
+    
+
+  </div>
+
+  <div class="clear"></div>
+</div>
+<footer class="footer" role="contentinfo">
+    &copy; Copyright 2026, Project Xent.
+  
+  Created using <a href="http://sphinx-doc.org/">Sphinx</a> with
+  <a href="https://github.com/vsalvino/sphinx-library">Library</a> theme.
+  
+  <a href="_sources/quickstart.rst.txt" rel="nofollow">Page source</a>
+</footer>
+  </body>
+</html>

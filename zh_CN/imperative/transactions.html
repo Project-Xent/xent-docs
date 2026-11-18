@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>2. 原子事务与动态子树管理 &#8212; Xent 0.3.3 文档</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=c03c27c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/library/library.css?v=fa49c7df" />
+    <script src="../_static/documentation_options.js?v=0538d007"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/translations.js?v=540d3cec"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="3. 强类型构建器、属性位掩码与布局" href="properties.html" />
+    <link rel="prev" title="1. 应用、宿主与场景生命周期" href="lifecycle.html" />
+ 
+
+<link rel="stylesheet" id="sphinx-library-type" href="../_static/library/type-book.css" type="text/css" />
+<link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+<meta name="viewport" content="width=device-width, initial-scale=0.9" />
+<script>
+  mobile_menu_content = "";
+  function toggleMenu() {
+    var div = document.getElementsByClassName("document").item(0);
+    var btn = document.getElementById("menu-toggler");
+    if(div.classList.contains("mobile-show")) {
+      div.classList.remove("mobile-show");
+      btn.innerHTML = mobile_menu_content;
+    }
+    else {
+      div.classList.add("mobile-show");
+      mobile_menu_content = btn.innerHTML;
+      btn.innerHTML = btn.getAttribute("data-open");
+    }
+  }
+</script>
+  </head>
+<body class="sepia">
+<script>
+  (function () {
+    var key = "sphinx-library-mode";
+    var dark = window.matchMedia("(prefers-color-scheme: dark)");
+    function stored() {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function apply() {
+      document.body.className = stored() || (dark.matches ? "dark" : "sepia");
+    }
+    window.toggleMode = function (theme) {
+      try {
+        if (theme) localStorage.setItem(key, theme);
+        else localStorage.removeItem(key);
+      } catch (e) {}
+      apply();
+    };
+    dark.addEventListener("change", apply);
+    apply();
+  })();
+</script>
+<div class="document">
+
+  
+  <nav class="mobile-menu" role="navigation">
+    
+  <button type="button" id="menu-toggler" onclick="toggleMenu();"
+    data-open="× Close">≡ Menu</button>
+  <a href="../index.html">Xent</a>
+  <noscript>
+    <div>
+      JavaScript is required to open/close mobile menu.
+    </div>
+  </noscript>
+  </nav>
+  
+
+  
+  <nav class="sphinxsidebar" role="navigation" aria-label="main navigation">
+    
+
+
+<h1 class="logo ">
+  <a href="../index.html">Xent</a>
+</h1>
+
+
+
+<p class="description">Native cross-platform UI in C23.</p>
+
+
+
+<p class="description">Version 0.3.3</p>
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="提交" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>目录</h3>
+<p class="caption" role="heading"><span class="caption-text">使用手册</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../declarative/index.html">声明式开发指南</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">命令式开发指南</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lifecycle.html">1. 应用、宿主与场景生命周期</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2. 原子事务与动态子树管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="properties.html">3. 强类型构建器、属性位掩码与布局</a></li>
+<li class="toctree-l2"><a class="reference internal" href="events.html">4. 事件路由、帧同步与变更戳</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualization.html">5. 命令式虚拟化列表与分组协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shell.html">6. 对话框、拖放、剪贴板与窗口集成</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts.html">架构与核心概念</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API 参考</a></li>
+</ul>
+
+<h3>本页目录</h3>
+<div class="localtoc"><ul>
+<li><a class="reference internal" href="#">2. 原子事务与动态子树管理</a><ul>
+<li><a class="reference internal" href="#all-or-nothing-commit-guarantee">全有或全无的原子提交保证</a></li>
+<li><a class="reference internal" href="#transaction-operations-overview">事务操作函数一览</a></li>
+<li><a class="reference internal" href="#addressing-nodes-with-xtknoderef">使用 <code class="docutils literal notranslate"><span class="pre">XtkNodeRef</span></code> 统一寻址节点</a></li>
+<li><a class="reference internal" href="#resolving-xtklocalid-to-xtkctrl-after-commit">提交后将 <code class="docutils literal notranslate"><span class="pre">XtkLocalId</span></code> 解析为持久 <code class="docutils literal notranslate"><span class="pre">XtkCtrl</span></code></a></li>
+<li><a class="reference internal" href="#diagnosing-rejected-batches-with-xtkbatchdiag">使用 <code class="docutils literal notranslate"><span class="pre">XtkBatchDiag</span></code> 排查批次失败原因</a></li>
+<li><a class="reference internal" href="#atomic-page-switching-pattern">无闪烁原子切页模式</a></li>
+</ul>
+</li>
+</ul>
+</div><h3>阅读模式</h3>
+<button type="button" onclick="toggleMode(null);">自动</button>
+<button type="button" onclick="toggleMode('light');">浅色</button>
+<button type="button" onclick="toggleMode('sepia');">护眼</button>
+<button type="button" onclick="toggleMode('dark');">深色</button>
+<noscript>
+  <div>切换阅读模式需要启用 JavaScript.</div>
+</noscript>
+  </nav>
+  <div class="documentwrapper">
+    
+
+    <main class="body" role="main" id="main">
+      
+  <section id="atomic-transactions-dynamic-subtrees">
+<h1>2. 原子事务与动态子树管理<a class="headerlink" href="#atomic-transactions-dynamic-subtrees" title="链接到此标题。">¶</a></h1>
+<p>保留式 <code class="docutils literal notranslate"><span class="pre">XtkScene</span></code> 的所有结构性变更——创建控件、销毁子树、插入、同级重排、跨父节点重挂载以及绑定事件监听——都在 <code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk_scene.h&gt;</span></code> 声明的 <code class="docutils literal notranslate"><span class="pre">XtkTxn</span></code> 事务中完成。</p>
+<section id="all-or-nothing-commit-guarantee">
+<h2>全有或全无的原子提交保证<a class="headerlink" href="#all-or-nothing-commit-guarantee" title="链接到此标题。">¶</a></h2>
+<p>调用 <code class="docutils literal notranslate"><span class="pre">xtk_txn_commit(&amp;txn,</span> <span class="pre">&amp;diag)</span></code> 时，宿主按四个阶段执行（ <code class="docutils literal notranslate"><span class="pre">VALIDATE</span></code> 、 <code class="docutils literal notranslate"><span class="pre">PREFLIGHT</span></code> 、 <code class="docutils literal notranslate"><span class="pre">PREPARE</span></code> 、 <code class="docutils literal notranslate"><span class="pre">COMMIT</span></code> ）：</p>
+<ul class="simple">
+<li><p>在触碰活动树之前，预先校验全部句柄代次、父子无环约束、已注册控件类型、属性类型及所需内存分配。</p></li>
+<li><p>校验与准备全部通过后，批次内的所有变更一次性生效，并推进 <code class="docutils literal notranslate"><span class="pre">xtk_scene_revision(&amp;scene)</span></code> 版本号。</p></li>
+<li><p>若任意一步失败， <code class="docutils literal notranslate"><span class="pre">xtk_txn_commit</span></code> 返回 <code class="docutils literal notranslate"><span class="pre">NULL</span></code> 、填入可选的 <code class="docutils literal notranslate"><span class="pre">XtkBatchDiag</span></code> 诊断结构，并保持原有 <code class="docutils literal notranslate"><span class="pre">XtkScene</span></code> 完好不变。</p></li>
+</ul>
+</section>
+<section id="transaction-operations-overview">
+<h2>事务操作函数一览<a class="headerlink" href="#transaction-operations-overview" title="链接到此标题。">¶</a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 36.0%" />
+<col style="width: 64.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>函数</p></th>
+<th class="head"><p>用途</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">xtk_txn_begin(&amp;scene,</span> <span class="pre">&amp;txn)</span></code></p></td>
+<td><p>开启一个由新 <code class="docutils literal notranslate"><span class="pre">XtkBatch</span></code> 承载的事务。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">xtk_&lt;ctrl&gt;_create(&amp;txn,</span> <span class="pre">parent,</span> <span class="pre">&amp;props)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk_controls.h&gt;</span></code> 中的强类型创建函数；将新控件追加到 <code class="docutils literal notranslate"><span class="pre">parent</span></code> 末尾并返回 <code class="docutils literal notranslate"><span class="pre">XtkLocalId</span></code> 。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">xtk_txn_create(&amp;txn,</span> <span class="pre">type,</span> <span class="pre">parent,</span> <span class="pre">before,</span> <span class="pre">patches,</span> <span class="pre">count)</span></code></p></td>
+<td><p>面向任意 <code class="docutils literal notranslate"><span class="pre">XtkCtrlId</span></code> （如 <code class="docutils literal notranslate"><span class="pre">XTK_CTRL_LISTITEM</span></code> 或 <code class="docutils literal notranslate"><span class="pre">XTK_CTRL_GROUPHEADER</span></code> ）的底层创建函数，支持指定 <code class="docutils literal notranslate"><span class="pre">before</span></code> 插入位置。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">xtk_txn_insert(&amp;txn,</span> <span class="pre">parent,</span> <span class="pre">child,</span> <span class="pre">before)</span></code></p></td>
+<td><p>将尚无父节点的控件插入到 <code class="docutils literal notranslate"><span class="pre">before</span></code> 之前（ <code class="docutils literal notranslate"><span class="pre">before</span></code> 为 <code class="docutils literal notranslate"><span class="pre">xtk_ref_none()</span></code> 时追加到末尾）。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">xtk_txn_move(&amp;txn,</span> <span class="pre">parent,</span> <span class="pre">child,</span> <span class="pre">before)</span></code></p></td>
+<td><p>在当前同一个 <code class="docutils literal notranslate"><span class="pre">parent</span></code> 下调整 <code class="docutils literal notranslate"><span class="pre">child</span></code> 的同级排列顺序。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">xtk_txn_reparent(&amp;txn,</span> <span class="pre">child,</span> <span class="pre">new_parent,</span> <span class="pre">before)</span></code></p></td>
+<td><p>将已有父节点的 <code class="docutils literal notranslate"><span class="pre">child</span></code> 迁移至新的父节点 <code class="docutils literal notranslate"><span class="pre">new_parent</span></code> 下。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">xtk_txn_drop(&amp;txn,</span> <span class="pre">target)</span></code></p></td>
+<td><p>销毁 <code class="docutils literal notranslate"><span class="pre">target</span></code> 及其全部后代子树，自动解除其上的事件订阅并使旧 <code class="docutils literal notranslate"><span class="pre">XtkCtrl</span></code> 代次失效。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">xtk_txn_commit(&amp;txn,</span> <span class="pre">&amp;diag)</span></code></p></td>
+<td><p>原子提交整个批次并返回堆分配的 <code class="docutils literal notranslate"><span class="pre">XtkBatchResult</span> <span class="pre">*</span></code> （出错时返回 <code class="docutils literal notranslate"><span class="pre">NULL</span></code> ）。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">xtk_txn_abort(&amp;txn)</span></code></p></td>
+<td><p>放弃尚未提交的事务并释放其内部批次缓冲区。</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="addressing-nodes-with-xtknoderef">
+<h2>使用 <code class="docutils literal notranslate"><span class="pre">XtkNodeRef</span></code> 统一寻址节点<a class="headerlink" href="#addressing-nodes-with-xtknoderef" title="链接到此标题。">¶</a></h2>
+<p>在未提交的 <code class="docutils literal notranslate"><span class="pre">XtkTxn</span></code> 中，往往需要同时引用先前已提交的持久控件（如 <code class="docutils literal notranslate"><span class="pre">xtk_scene_root(&amp;scene)</span></code> ）和前两行刚创建、仅有批次局部编号 <code class="docutils literal notranslate"><span class="pre">XtkLocalId</span></code> 的新控件。 <code class="docutils literal notranslate"><span class="pre">XtkNodeRef</span></code> 统一表示这三类引用：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_ref_existing(ctrl)</span></code> —— 包装先前批次已提交的带代次校验 <code class="docutils literal notranslate"><span class="pre">XtkCtrl</span></code> 句柄。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_ref_local(local_id)</span></code> —— 包装 <strong>当前</strong> <code class="docutils literal notranslate"><span class="pre">XtkTxn</span></code> 中刚创建的 <code class="docutils literal notranslate"><span class="pre">XtkLocalId</span></code> 。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_ref_none()</span></code> —— 空节点引用（作为 <code class="docutils literal notranslate"><span class="pre">before</span></code> 参数时表示追加到子列表末尾）。</p></li>
+</ul>
+</section>
+<section id="resolving-xtklocalid-to-xtkctrl-after-commit">
+<h2>提交后将 <code class="docutils literal notranslate"><span class="pre">XtkLocalId</span></code> 解析为持久 <code class="docutils literal notranslate"><span class="pre">XtkCtrl</span></code><a class="headerlink" href="#resolving-xtklocalid-to-xtkctrl-after-commit" title="链接到此标题。">¶</a></h2>
+<p>静态标题、布局容器与分隔线在挂载完子节点后通常无需再次修改，其 <code class="docutils literal notranslate"><span class="pre">XtkLocalId</span></code> 用完即可忽略。对于后续需要动态更新属性的控件，可从 <code class="docutils literal notranslate"><span class="pre">XtkBatchResult</span></code> 中提取持久 <code class="docutils literal notranslate"><span class="pre">XtkCtrl</span></code> 句柄：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="n">XtkCtrl</span><span class="w"> </span><span class="nf">resolve_ctrl</span><span class="p">(</span><span class="n">XtkBatchResult</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="n">res</span><span class="p">,</span><span class="w"> </span><span class="n">XtkLocalId</span><span class="w"> </span><span class="n">local</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">local</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">XTK_LOCAL_INVALID</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">XTK_CTRL_INVALID</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">res</span><span class="o">-&gt;</span><span class="n">control_count</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">res</span><span class="o">-&gt;</span><span class="n">controls</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">local</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">local</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="o">-&gt;</span><span class="n">controls</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">control</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">XTK_CTRL_INVALID</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>读取完 <code class="docutils literal notranslate"><span class="pre">result-&gt;controls</span></code> 与 <code class="docutils literal notranslate"><span class="pre">result-&gt;subscriptions</span></code> 后，调用 <code class="docutils literal notranslate"><span class="pre">xtk_batchresult_destroy(result)</span></code> 释放非空的 <code class="docutils literal notranslate"><span class="pre">XtkBatchResult</span> <span class="pre">*</span></code> 。</p>
+</section>
+<section id="diagnosing-rejected-batches-with-xtkbatchdiag">
+<h2>使用 <code class="docutils literal notranslate"><span class="pre">XtkBatchDiag</span></code> 排查批次失败原因<a class="headerlink" href="#diagnosing-rejected-batches-with-xtkbatchdiag" title="链接到此标题。">¶</a></h2>
+<p>开发阶段向 <code class="docutils literal notranslate"><span class="pre">xtk_txn_commit</span></code> 传入 <code class="docutils literal notranslate"><span class="pre">XtkBatchDiag</span></code> ，可在批次被拒绝时直接定位失败的操作序号与错误码：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">XtkBatchDiag</span><span class="w">    </span><span class="n">diag</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<span class="n">XtkBatchResult</span><span class="w"> </span><span class="o">*</span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_txn_commit</span><span class="p">(</span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">diag</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">result</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span><span class="w"> </span><span class="s">"Batch failed: error=%d stage=%d op=%u</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span>
+<span class="w">            </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="n">diag</span><span class="p">.</span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="n">diag</span><span class="p">.</span><span class="n">stage</span><span class="p">,</span><span class="w"> </span><span class="n">diag</span><span class="p">.</span><span class="n">failed_op</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>常见 <code class="docutils literal notranslate"><span class="pre">diag.error</span></code> 原因：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">XTK_BATCH_ERR_BACKEND</span></code> —— 启动时漏掉了该控件对应的 <code class="docutils literal notranslate"><span class="pre">flux_controls_use</span></code> 模块注册。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">XTK_BATCH_ERR_UNKNOWN_CONTROL</span></code> / <code class="docutils literal notranslate"><span class="pre">STALE_HANDLE</span></code> —— 传入的 <code class="docutils literal notranslate"><span class="pre">XtkCtrl</span></code> 句柄所属子树已在之前的批次中被销毁。</p></li>
+</ul>
+</section>
+<section id="atomic-page-switching-pattern">
+<h2>无闪烁原子切页模式<a class="headerlink" href="#atomic-page-switching-pattern" title="链接到此标题。">¶</a></h2>
+<p>在多视图命令式应用中切换页面（如响应 <code class="docutils literal notranslate"><span class="pre">NavigationView</span></code> 或 <code class="docutils literal notranslate"><span class="pre">TabView</span></code> 选择事件）时，在 <strong>同一个</strong> <code class="docutils literal notranslate"><span class="pre">XtkTxn</span></code> 内销毁旧页面根节点并构建新页面子树：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">switch_page</span><span class="p">(</span><span class="n">App</span><span class="w"> </span><span class="o">*</span><span class="n">app</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">next_page</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">XtkTxn</span><span class="w"> </span><span class="n">txn</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">xtk_txn_begin</span><span class="p">(</span><span class="o">&amp;</span><span class="n">app</span><span class="o">-&gt;</span><span class="n">scene</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">txn</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// 1. Drop the previous page subtree in the same transaction</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">app</span><span class="o">-&gt;</span><span class="n">page_root</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">XTK_CTRL_INVALID</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">xtk_txn_drop</span><span class="p">(</span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_ref_existing</span><span class="p">(</span><span class="n">app</span><span class="o">-&gt;</span><span class="n">page_root</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 2. Build the new page under the persistent NavigationView handle</span>
+<span class="w">    </span><span class="n">XtkLocalId</span><span class="w"> </span><span class="n">scroll</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_scroll_create</span><span class="p">(</span>
+<span class="w">        </span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_ref_existing</span><span class="p">(</span><span class="n">app</span><span class="o">-&gt;</span><span class="n">nav_ctrl</span><span class="p">),</span>
+<span class="w">        </span><span class="o">&amp;</span><span class="p">(</span><span class="n">XtkScrollProps</span><span class="p">)</span><span class="w"> </span><span class="p">{.</span><span class="n">set</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_SCROLL_GROW_MASK</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">grow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0f</span><span class="p">}</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">    </span><span class="n">build_page_contents</span><span class="p">(</span><span class="n">app</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_ref_local</span><span class="p">(</span><span class="n">scroll</span><span class="p">),</span><span class="w"> </span><span class="n">next_page</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 3. Commit both the drop and the new build atomically—zero flicker</span>
+<span class="w">    </span><span class="n">XtkBatchResult</span><span class="w"> </span><span class="o">*</span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_txn_commit</span><span class="p">(</span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">res</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// 4. Now that old subscriptions are detached, free old page callback contexts</span>
+<span class="w">    </span><span class="n">free_previous_page_contexts</span><span class="p">(</span><span class="n">app</span><span class="p">);</span>
+<span class="w">    </span><span class="n">app</span><span class="o">-&gt;</span><span class="n">page_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resolve_ctrl</span><span class="p">(</span><span class="n">res</span><span class="p">,</span><span class="w"> </span><span class="n">scroll</span><span class="p">);</span>
+<span class="w">    </span><span class="n">xtk_batchresult_destroy</span><span class="p">(</span><span class="n">res</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>在包含 <code class="docutils literal notranslate"><span class="pre">xtk_txn_drop</span></code> 的事务成功提交 <strong>之后</strong> 再释放旧页面事件回调所借用的 <code class="docutils literal notranslate"><span class="pre">userdata</span></code> 内存，可确保控件存活期间所有借用指针始终有效。</p>
+</section>
+</section>
+
+
+    </main>
+    <nav class="related bottom" role="navigation">
+  <a class="prev" href="lifecycle.html" title="Previous">
+    &larr; 1. 应用、宿主与场景生命周期
+  </a>
+  <a class="next" href="properties.html" title="Next">
+    3. 强类型构建器、属性位掩码与布局 &rarr;
+  </a>
+  <div class="clear"></div>
+    </nav>
+    
+
+  </div>
+
+  <div class="clear"></div>
+</div>
+<footer class="footer" role="contentinfo">
+    &copy; Copyright 2026, Project Xent.
+  
+  Created using <a href="http://sphinx-doc.org/">Sphinx</a> with
+  <a href="https://github.com/vsalvino/sphinx-library">Library</a> theme.
+  
+  <a href="../_sources/imperative/transactions.rst.txt" rel="nofollow">Page source</a>
+</footer>
+  </body>
+</html>

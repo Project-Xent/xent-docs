@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>xent-kit &#8212; Xent 0.3.3 文档</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=c03c27c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/library/library.css?v=fa49c7df" />
+    <script src="../_static/documentation_options.js?v=0538d007"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/translations.js?v=540d3cec"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="Fluxent" href="fluxent.html" />
+    <link rel="prev" title="xent-core" href="core.html" />
+ 
+
+<link rel="stylesheet" id="sphinx-library-type" href="../_static/library/type-book.css" type="text/css" />
+<link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+<meta name="viewport" content="width=device-width, initial-scale=0.9" />
+<script>
+  mobile_menu_content = "";
+  function toggleMenu() {
+    var div = document.getElementsByClassName("document").item(0);
+    var btn = document.getElementById("menu-toggler");
+    if(div.classList.contains("mobile-show")) {
+      div.classList.remove("mobile-show");
+      btn.innerHTML = mobile_menu_content;
+    }
+    else {
+      div.classList.add("mobile-show");
+      mobile_menu_content = btn.innerHTML;
+      btn.innerHTML = btn.getAttribute("data-open");
+    }
+  }
+</script>
+  </head>
+<body class="sepia">
+<script>
+  (function () {
+    var key = "sphinx-library-mode";
+    var dark = window.matchMedia("(prefers-color-scheme: dark)");
+    function stored() {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function apply() {
+      document.body.className = stored() || (dark.matches ? "dark" : "sepia");
+    }
+    window.toggleMode = function (theme) {
+      try {
+        if (theme) localStorage.setItem(key, theme);
+        else localStorage.removeItem(key);
+      } catch (e) {}
+      apply();
+    };
+    dark.addEventListener("change", apply);
+    apply();
+  })();
+</script>
+<div class="document">
+
+  
+  <nav class="mobile-menu" role="navigation">
+    
+  <button type="button" id="menu-toggler" onclick="toggleMenu();"
+    data-open="× Close">≡ Menu</button>
+  <a href="../index.html">Xent</a>
+  <noscript>
+    <div>
+      JavaScript is required to open/close mobile menu.
+    </div>
+  </noscript>
+  </nav>
+  
+
+  
+  <nav class="sphinxsidebar" role="navigation" aria-label="main navigation">
+    
+
+
+<h1 class="logo ">
+  <a href="../index.html">Xent</a>
+</h1>
+
+
+
+<p class="description">Native cross-platform UI in C23.</p>
+
+
+
+<p class="description">Version 0.3.3</p>
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="提交" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>目录</h3>
+<p class="caption" role="heading"><span class="caption-text">使用手册</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../declarative/index.html">声明式开发指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imperative/index.html">命令式开发指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts.html">架构与核心概念</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API 参考</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">xent-core</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">xent-kit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fluxent.html">Fluxent</a></li>
+</ul>
+</li>
+</ul>
+
+<h3>本页目录</h3>
+<div class="localtoc"><ul>
+<li><a class="reference internal" href="#">xent-kit</a><ul>
+<li><a class="reference internal" href="#c.xtk_batch_set"><code class="docutils literal notranslate"><span class="pre">xtk_batch_set()</span></code></a></li>
+<li><a class="reference internal" href="#c.xtk_batch_on"><code class="docutils literal notranslate"><span class="pre">xtk_batch_on()</span></code></a></li>
+<li><a class="reference internal" href="#c.XtkValueView"><code class="docutils literal notranslate"><span class="pre">XtkValueView</span></code></a></li>
+<li><a class="reference internal" href="#c.XtkEventPayload"><code class="docutils literal notranslate"><span class="pre">XtkEventPayload</span></code></a></li>
+<li><a class="reference internal" href="#c.xtk_rt_post"><code class="docutils literal notranslate"><span class="pre">xtk_rt_post()</span></code></a></li>
+<li><a class="reference internal" href="#c.xtk_rt_poststring"><code class="docutils literal notranslate"><span class="pre">xtk_rt_poststring()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div><h3>阅读模式</h3>
+<button type="button" onclick="toggleMode(null);">自动</button>
+<button type="button" onclick="toggleMode('light');">浅色</button>
+<button type="button" onclick="toggleMode('sepia');">护眼</button>
+<button type="button" onclick="toggleMode('dark');">深色</button>
+<noscript>
+  <div>切换阅读模式需要启用 JavaScript.</div>
+</noscript>
+  </nav>
+  <div class="documentwrapper">
+    
+
+    <main class="body" role="main" id="main">
+      
+  <section id="xent-kit">
+<h1>xent-kit<a class="headerlink" href="#xent-kit" title="链接到此标题。">¶</a></h1>
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xtk_batch_set">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xtk_batch_set</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XtkBatch</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">batch</span></span>, <span class="n"><span class="pre">XtkNodeRef</span></span><span class="w"> </span><span class="n"><span class="pre">target</span></span>, <span class="n"><span class="pre">XtkPropertyId</span></span><span class="w"> </span><span class="n"><span class="pre">id</span></span>, <span class="n"><span class="pre">XtkValue</span></span><span class="w"> </span><span class="n"><span class="pre">value</span></span>, <span class="n"><span class="pre">XtkChangeStamp</span></span><span class="w"> </span><span class="n"><span class="pre">change</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xtk_batch_set" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>拷贝字符串与字节切片，调用方随后可释放原内存。当 <cite>len &gt; 0</cite> 且指针为 NULL 时返回失败且保持批次原样；资源 ID 按值拷贝。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xtk_batch_on">
+<span class="n"><span class="pre">XtkSubRef</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xtk_batch_on</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XtkBatch</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">batch</span></span>, <span class="n"><span class="pre">XtkNodeRef</span></span><span class="w"> </span><span class="n"><span class="pre">target</span></span>, <span class="n"><span class="pre">XtkEventId</span></span><span class="w"> </span><span class="n"><span class="pre">event</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">phases</span></span>, <span class="n"><span class="pre">XtkEventFn</span></span><span class="w"> </span><span class="n"><span class="pre">fn</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">arg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xtk_batch_on" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>arg</cite> 直至取消订阅或宿主销毁。</p>
+</dd></dl>
+
+<dl class="c struct">
+<dt class="sig sig-object c" id="c.XtkValueView">
+<span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">XtkValueView</span></span></span><a class="headerlink" href="#c.XtkValueView" title="链接到此定义。">¶</a><br /></dt>
+<dd><p><cite>string</cite> 与 <cite>bytes</cite> 指向宿主内部保存的副本，有效至该属性下次变更或宿主销毁为止。</p>
+</dd></dl>
+
+<dl class="c struct">
+<dt class="sig sig-object c" id="c.XtkEventPayload">
+<span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">XtkEventPayload</span></span></span><a class="headerlink" href="#c.XtkEventPayload" title="链接到此定义。">¶</a><br /></dt>
+<dd><p><cite>string</cite> 与 <cite>query.text</cite> 仅在本次回调函数执行期间有效。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xtk_rt_post">
+<span class="n"><span class="pre">XtkPostStatus</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xtk_rt_post</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XtkRt</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">rt</span></span>, <span class="n"><span class="pre">XtkMsg</span></span><span class="w"> </span><span class="n"><span class="pre">msg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xtk_rt_post" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>在创建 <cite>rt</cite> 的同一线程上调用。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xtk_rt_poststring">
+<span class="n"><span class="pre">XtkPostStatus</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xtk_rt_poststring</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XtkRt</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">rt</span></span>, <span class="n"><span class="pre">XtkMsg</span></span><span class="w"> </span><span class="n"><span class="pre">msg</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">data</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xtk_rt_poststring" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>在创建 <cite>rt</cite> 的同一线程上调用。拷贝 <cite>data</cite> ，调用方随后可释放；当 <cite>len &gt; 0</cite> 且 <cite>data</cite> 为 NULL 时拒绝投递。</p>
+</dd></dl>
+
+</section>
+
+
+    </main>
+    <nav class="related bottom" role="navigation">
+  <a class="prev" href="core.html" title="Previous">
+    &larr; xent-core
+  </a>
+  <a class="next" href="fluxent.html" title="Next">
+    Fluxent &rarr;
+  </a>
+  <div class="clear"></div>
+    </nav>
+    
+
+  </div>
+
+  <div class="clear"></div>
+</div>
+<footer class="footer" role="contentinfo">
+    &copy; Copyright 2026, Project Xent.
+  
+  Created using <a href="http://sphinx-doc.org/">Sphinx</a> with
+  <a href="https://github.com/vsalvino/sphinx-library">Library</a> theme.
+  
+  <a href="../_sources/api/kit.rst.txt" rel="nofollow">Page source</a>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>3. Typed Control Builders, Bitmasks, &amp; Layouts &#8212; Xent 0.3.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=c03c27c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/library/library.css?v=fa49c7df" />
+    <script src="../_static/documentation_options.js?v=d5a15cff"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="4. Event Routing, Frame Sync, &amp; Change Stamps" href="events.html" />
+    <link rel="prev" title="2. Atomic Transactions &amp; Dynamic Subtrees" href="transactions.html" />
+ 
+
+<link rel="stylesheet" id="sphinx-library-type" href="../_static/library/type-book.css" type="text/css" />
+<link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+<meta name="viewport" content="width=device-width, initial-scale=0.9" />
+<script>
+  mobile_menu_content = "";
+  function toggleMenu() {
+    var div = document.getElementsByClassName("document").item(0);
+    var btn = document.getElementById("menu-toggler");
+    if(div.classList.contains("mobile-show")) {
+      div.classList.remove("mobile-show");
+      btn.innerHTML = mobile_menu_content;
+    }
+    else {
+      div.classList.add("mobile-show");
+      mobile_menu_content = btn.innerHTML;
+      btn.innerHTML = btn.getAttribute("data-open");
+    }
+  }
+</script>
+  </head>
+<body class="sepia">
+<script>
+  (function () {
+    var key = "sphinx-library-mode";
+    var dark = window.matchMedia("(prefers-color-scheme: dark)");
+    function stored() {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function apply() {
+      document.body.className = stored() || (dark.matches ? "dark" : "sepia");
+    }
+    window.toggleMode = function (theme) {
+      try {
+        if (theme) localStorage.setItem(key, theme);
+        else localStorage.removeItem(key);
+      } catch (e) {}
+      apply();
+    };
+    dark.addEventListener("change", apply);
+    apply();
+  })();
+</script>
+<div class="document">
+
+  
+  <nav class="mobile-menu" role="navigation">
+    
+  <button type="button" id="menu-toggler" onclick="toggleMenu();"
+    data-open="× Close">≡ Menu</button>
+  <a href="../index.html">Xent</a>
+  <noscript>
+    <div>
+      JavaScript is required to open/close mobile menu.
+    </div>
+  </noscript>
+  </nav>
+  
+
+  
+  <nav class="sphinxsidebar" role="navigation" aria-label="main navigation">
+    
+
+
+<h1 class="logo ">
+  <a href="../index.html">Xent</a>
+</h1>
+
+
+
+<p class="description">Native cross-platform UI in C23.</p>
+
+
+
+<p class="description">Version 0.3.3</p>
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Contents</h3>
+<p class="caption" role="heading"><span class="caption-text">Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../declarative/index.html">Declarative UI Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Imperative UI Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lifecycle.html">1. App, Host, &amp; Scene Lifecycle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transactions.html">2. Atomic Transactions &amp; Dynamic Subtrees</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">3. Typed Control Builders, Bitmasks, &amp; Layouts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="events.html">4. Event Routing, Frame Sync, &amp; Change Stamps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualization.html">5. Imperative Virtualized Lists &amp; Grouping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shell.html">6. Dialogs, Drag-and-Drop, Clipboard, &amp; Windowing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts.html">Architecture &amp; Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
+</ul>
+
+<h3>Page Contents</h3>
+<div class="localtoc"><ul>
+<li><a class="reference internal" href="#">3. Typed Control Builders, Bitmasks, &amp; Layouts</a><ul>
+<li><a class="reference internal" href="#naming-conventions-in-xtk-xtk-controls-h">Naming Conventions in <code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk_controls.h&gt;</span></code></a></li>
+<li><a class="reference internal" href="#working-with-set-masks-and-strings">Working with <code class="docutils literal notranslate"><span class="pre">.set</span></code> Masks and Strings</a><ul>
+<li><a class="reference internal" href="#string-length-rules">String Length Rules</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#writing-reusable-flex-layout-helpers">Writing Reusable Flex Layout Helpers</a></li>
+<li><a class="reference internal" href="#generic-property-access-composite-setters">Generic Property Access &amp; Composite Setters</a></li>
+</ul>
+</li>
+</ul>
+</div><h3>Reading Mode</h3>
+<button type="button" onclick="toggleMode(null);">Auto</button>
+<button type="button" onclick="toggleMode('light');">Light</button>
+<button type="button" onclick="toggleMode('sepia');">Sepia</button>
+<button type="button" onclick="toggleMode('dark');">Dark</button>
+<noscript>
+  <div>JavaScript is required to toggle reading modes.</div>
+</noscript>
+  </nav>
+  <div class="documentwrapper">
+    
+
+    <main class="body" role="main" id="main">
+      
+  <section id="typed-control-builders-bitmasks-layouts">
+<h1>3. Typed Control Builders, Bitmasks, &amp; Layouts<a class="headerlink" href="#typed-control-builders-bitmasks-layouts" title="Link to this heading">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk_controls.h&gt;</span></code> is generated directly from <code class="docutils literal notranslate"><span class="pre">xent-kit/tools/catalog.lua</span></code>
+and provides typed creation structs, property setters, and event subscription
+helpers for all 70+ controls.</p>
+<section id="naming-conventions-in-xtk-xtk-controls-h">
+<h2>Naming Conventions in <code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk_controls.h&gt;</span></code><a class="headerlink" href="#naming-conventions-in-xtk-xtk-controls-h" title="Link to this heading">¶</a></h2>
+<p>Every catalog control <code class="docutils literal notranslate"><span class="pre">&lt;ctrl&gt;</span></code> (such as <code class="docutils literal notranslate"><span class="pre">container</span></code>, <code class="docutils literal notranslate"><span class="pre">card</span></code>, <code class="docutils literal notranslate"><span class="pre">scroll</span></code>,
+<code class="docutils literal notranslate"><span class="pre">text</span></code>, <code class="docutils literal notranslate"><span class="pre">button</span></code>, <code class="docutils literal notranslate"><span class="pre">checkbox</span></code>, <code class="docutils literal notranslate"><span class="pre">slider</span></code>, <code class="docutils literal notranslate"><span class="pre">textbox</span></code>, <code class="docutils literal notranslate"><span class="pre">combo</span></code>,
+<code class="docutils literal notranslate"><span class="pre">list</span></code>, <code class="docutils literal notranslate"><span class="pre">nav</span></code>, <code class="docutils literal notranslate"><span class="pre">dialog</span></code>, <code class="docutils literal notranslate"><span class="pre">commandbar</span></code>) follows the same generated
+pattern:</p>
+<ul class="simple">
+<li><p><strong>Properties struct</strong>: <code class="docutils literal notranslate"><span class="pre">Xtk&lt;Ctrl&gt;Props</span></code> (for example <code class="docutils literal notranslate"><span class="pre">XtkButtonProps</span></code>,
+<code class="docutils literal notranslate"><span class="pre">XtkContainerProps</span></code>, <code class="docutils literal notranslate"><span class="pre">XtkTextBoxProps</span></code>).</p></li>
+<li><p><strong>Bitmask constants</strong>: <code class="docutils literal notranslate"><span class="pre">XTK_&lt;CTRL&gt;_&lt;PROP&gt;_MASK</span></code> (for example
+<code class="docutils literal notranslate"><span class="pre">XTK_BUTTON_TEXT_MASK</span></code>, <code class="docutils literal notranslate"><span class="pre">XTK_BUTTON_STYLE_MASK</span></code>, <code class="docutils literal notranslate"><span class="pre">XTK_BUTTON_W_MASK</span></code>).</p></li>
+<li><p><strong>Transaction creator</strong>:
+<code class="docutils literal notranslate"><span class="pre">XtkLocalId</span> <span class="pre">xtk_&lt;ctrl&gt;_create(XtkTxn</span> <span class="pre">*txn,</span> <span class="pre">XtkNodeRef</span> <span class="pre">parent,</span> <span class="pre">Xtk&lt;Ctrl&gt;Props</span> <span class="pre">const</span> <span class="pre">*props);</span></code></p></li>
+<li><p><strong>Live property setters</strong>:
+<code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">xtk_&lt;ctrl&gt;_set&lt;prop&gt;(XtkScene</span> <span class="pre">*scene,</span> <span class="pre">XtkCtrl</span> <span class="pre">control,</span> <span class="pre">&lt;type&gt;</span> <span class="pre">value,</span> <span class="pre">XtkChangeStamp</span> <span class="pre">change);</span></code></p></li>
+<li><p><strong>Event subscribers</strong>:
+<code class="docutils literal notranslate"><span class="pre">XtkSubRef</span> <span class="pre">xtk_&lt;ctrl&gt;_on&lt;event&gt;(XtkTxn</span> <span class="pre">*txn,</span> <span class="pre">XtkNodeRef</span> <span class="pre">target,</span> <span class="pre">XtkEventFn</span> <span class="pre">fn,</span> <span class="pre">void</span> <span class="pre">*arg);</span></code></p></li>
+</ul>
+<p>Shared layout fields—<code class="docutils literal notranslate"><span class="pre">w</span></code>, <code class="docutils literal notranslate"><span class="pre">h</span></code>, <code class="docutils literal notranslate"><span class="pre">grow</span></code>, <code class="docutils literal notranslate"><span class="pre">shrink</span></code>, <code class="docutils literal notranslate"><span class="pre">self</span></code>
+(<code class="docutils literal notranslate"><span class="pre">XentFlexAlign</span></code>), <code class="docutils literal notranslate"><span class="pre">ml</span></code>, <code class="docutils literal notranslate"><span class="pre">mt</span></code>, <code class="docutils literal notranslate"><span class="pre">mr</span></code>, <code class="docutils literal notranslate"><span class="pre">mb</span></code> (margins), and <code class="docutils literal notranslate"><span class="pre">tip</span></code>
+(tooltip string)—appear directly on every control’s <code class="docutils literal notranslate"><span class="pre">Xtk&lt;Ctrl&gt;Props</span></code> struct.</p>
+</section>
+<section id="working-with-set-masks-and-strings">
+<h2>Working with <code class="docutils literal notranslate"><span class="pre">.set</span></code> Masks and Strings<a class="headerlink" href="#working-with-set-masks-and-strings" title="Link to this heading">¶</a></h2>
+<p>In C compound literals, omitted struct fields default to <code class="docutils literal notranslate"><span class="pre">0</span></code>—which is also a
+meaningful value for <code class="docutils literal notranslate"><span class="pre">gap</span> <span class="pre">=</span> <span class="pre">0.0f</span></code>, <code class="docutils literal notranslate"><span class="pre">sel</span> <span class="pre">=</span> <span class="pre">0</span></code>, or enum variant <code class="docutils literal notranslate"><span class="pre">0</span></code>. The
+<code class="docutils literal notranslate"><span class="pre">.set</span></code> bitmask tells the encoder exactly which fields you populated:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">XtkLocalId</span><span class="w"> </span><span class="n">btn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_button_create</span><span class="p">(</span>
+<span class="w">    </span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">parent</span><span class="p">,</span>
+<span class="w">    </span><span class="o">&amp;</span><span class="p">(</span><span class="n">XtkButtonProps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">set</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_BUTTON_TEXT_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_BUTTON_ICON_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_BUTTON_STYLE_MASK</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">text</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">"Save"</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">icon</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">"Save"</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_BUTTON_ACCENT</span><span class="p">,</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<section id="string-length-rules">
+<h3>String Length Rules<a class="headerlink" href="#string-length-rules" title="Link to this heading">¶</a></h3>
+<p>Every string property on <code class="docutils literal notranslate"><span class="pre">Xtk&lt;Ctrl&gt;Props</span></code> has both a pointer field (such as
+<code class="docutils literal notranslate"><span class="pre">.text</span></code>, <code class="docutils literal notranslate"><span class="pre">.icon</span></code>, <code class="docutils literal notranslate"><span class="pre">.placeholder</span></code>, <code class="docutils literal notranslate"><span class="pre">.tip</span></code>) and a byte-length field
+(<code class="docutils literal notranslate"><span class="pre">.text_len</span></code>, <code class="docutils literal notranslate"><span class="pre">.icon_len</span></code>, <code class="docutils literal notranslate"><span class="pre">.placeholder_len</span></code>, <code class="docutils literal notranslate"><span class="pre">.tip_len</span></code>), and string
+setters take <code class="docutils literal notranslate"><span class="pre">(char</span> <span class="pre">const</span> <span class="pre">*data,</span> <span class="pre">uint32_t</span> <span class="pre">len)</span></code>:</p>
+<ul class="simple">
+<li><p><strong>Null-terminated C strings</strong>: Leaving <code class="docutils literal notranslate"><span class="pre">.text_len</span> <span class="pre">=</span> <span class="pre">0</span></code> (or passing <code class="docutils literal notranslate"><span class="pre">len</span> <span class="pre">=</span> <span class="pre">0</span></code>
+to <code class="docutils literal notranslate"><span class="pre">xtk_&lt;ctrl&gt;_set&lt;prop&gt;</span></code>) automatically measures <code class="docutils literal notranslate"><span class="pre">strlen(data)</span></code> when
+<code class="docutils literal notranslate"><span class="pre">data</span></code> is non-NULL.</p></li>
+<li><p><strong>Explicit byte slices &amp; compile-time literals</strong>: Passing a non-zero length
+skips <code class="docutils literal notranslate"><span class="pre">strlen</span></code> and supports non-null-terminated UTF-8 slices—for example
+<code class="docutils literal notranslate"><span class="pre">#define</span> <span class="pre">LIT(s)</span> <span class="pre">.text</span> <span class="pre">=</span> <span class="pre">s,</span> <span class="pre">.text_len</span> <span class="pre">=</span> <span class="pre">sizeof(s)</span> <span class="pre">-</span> <span class="pre">1</span></code> for string literals or
+<code class="docutils literal notranslate"><span class="pre">(uint32_t)</span> <span class="pre">snprintf(...)</span></code> for formatted buffers.</p></li>
+<li><p>The batch copies string bytes immediately during <code class="docutils literal notranslate"><span class="pre">xtk_*_create</span></code> and
+<code class="docutils literal notranslate"><span class="pre">xtk_*_set*</span></code>, so temporary stack buffers like <code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">buf[64]</span></code> are safe to
+reuse right after the call returns.</p></li>
+</ul>
+</section>
+</section>
+<section id="writing-reusable-flex-layout-helpers">
+<h2>Writing Reusable Flex Layout Helpers<a class="headerlink" href="#writing-reusable-flex-layout-helpers" title="Link to this heading">¶</a></h2>
+<p>Imperative code becomes as compact to read as declarative code once you wrap
+your common column, row, card, and label patterns into small helper functions
+(the exact technique used in <code class="docutils literal notranslate"><span class="pre">fluxent/examples/gallery_imp/helpers.c</span></code>):</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="n">XtkLocalId</span><span class="w"> </span><span class="nf">ui_column</span><span class="p">(</span><span class="n">XtkTxn</span><span class="w"> </span><span class="o">*</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">XtkNodeRef</span><span class="w"> </span><span class="n">parent</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">gap</span><span class="p">,</span><span class="w"> </span><span class="n">XentFlexAlign</span><span class="w"> </span><span class="n">align</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">xtk_container_create</span><span class="p">(</span>
+<span class="w">        </span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">parent</span><span class="p">,</span>
+<span class="w">        </span><span class="o">&amp;</span><span class="p">(</span><span class="n">XtkContainerProps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="p">.</span><span class="n">set</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_CONTAINER_DIR_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_ITEMS_MASK</span>
+<span class="w">                   </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_GAP_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_SHRINK_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_FITH_MASK</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">dir</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_STACK_COLUMN</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">items</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">align</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">gap</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">gap</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">fith</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="n">XtkLocalId</span><span class="w"> </span><span class="nf">ui_row</span><span class="p">(</span><span class="n">XtkTxn</span><span class="w"> </span><span class="o">*</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">XtkNodeRef</span><span class="w"> </span><span class="n">parent</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">gap</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">wrap</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">xtk_container_create</span><span class="p">(</span>
+<span class="w">        </span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">parent</span><span class="p">,</span>
+<span class="w">        </span><span class="o">&amp;</span><span class="p">(</span><span class="n">XtkContainerProps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="p">.</span><span class="n">set</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_CONTAINER_DIR_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_ITEMS_MASK</span>
+<span class="w">                   </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_GAP_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_WRAP_MASK</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">dir</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_STACK_ROW</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">items</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XENT_FLEX_ALIGN_CENTER</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">gap</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">gap</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">wrap</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">wrap</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">XENT_FLEX_WRAP</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">XENT_FLEX_NO_WRAP</span><span class="p">,</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="n">XtkLocalId</span><span class="w"> </span><span class="nf">ui_card</span><span class="p">(</span><span class="n">XtkTxn</span><span class="w"> </span><span class="o">*</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">XtkNodeRef</span><span class="w"> </span><span class="n">parent</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">gap</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">pad</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">xtk_card_create</span><span class="p">(</span>
+<span class="w">        </span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">parent</span><span class="p">,</span>
+<span class="w">        </span><span class="o">&amp;</span><span class="p">(</span><span class="n">XtkContainerProps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="p">.</span><span class="n">set</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_CONTAINER_DIR_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_ITEMS_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_GAP_MASK</span>
+<span class="w">                   </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_PL_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_PT_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_PR_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_PB_MASK</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">dir</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_STACK_COLUMN</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">items</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XENT_FLEX_ALIGN_STRETCH</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">gap</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">gap</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">pl</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">pad</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">pt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pad</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">pr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pad</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">pb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pad</span><span class="p">,</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Key <code class="docutils literal notranslate"><span class="pre">XtkContainerProps</span></code> layout flags:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">.dir</span></code>: <code class="docutils literal notranslate"><span class="pre">XTK_STACK_COLUMN</span></code> or <code class="docutils literal notranslate"><span class="pre">XTK_STACK_ROW</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.items</span></code> and <code class="docutils literal notranslate"><span class="pre">.justify</span></code>: Cross-axis <code class="docutils literal notranslate"><span class="pre">XentFlexAlign</span></code> and main-axis
+<code class="docutils literal notranslate"><span class="pre">XentFlexJustify</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.pl</span></code>, <code class="docutils literal notranslate"><span class="pre">.pt</span></code>, <code class="docutils literal notranslate"><span class="pre">.pr</span></code>, <code class="docutils literal notranslate"><span class="pre">.pb</span></code>: Inner padding on left, top, right, bottom.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.fill</span></code>: Stretches the container along its parent’s main/cross space.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.fith</span></code> / <code class="docutils literal notranslate"><span class="pre">.fitw</span></code>: Sizes the container tightly to its children’s measured
+height or width inside scrollable regions.</p></li>
+</ul>
+</section>
+<section id="generic-property-access-composite-setters">
+<h2>Generic Property Access &amp; Composite Setters<a class="headerlink" href="#generic-property-access-composite-setters" title="Link to this heading">¶</a></h2>
+<p>Alongside the generated per-control wrappers, <code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk_scene.h&gt;</span></code> provides
+control-agnostic helpers:</p>
+<ul class="simple">
+<li><p><strong>Setting properties inside a multi-op transaction</strong>: Call
+<code class="docutils literal notranslate"><span class="pre">xtk_txn_set(&amp;txn,</span> <span class="pre">ref,</span> <span class="pre">XTK_PROP_WIDTH,</span> <span class="pre">(XtkValue)</span> <span class="pre">{.kind</span> <span class="pre">=</span> <span class="pre">XTK_VALUE_F32,</span> <span class="pre">.u.f32</span> <span class="pre">=</span> <span class="pre">240.0f},</span> <span class="pre">(XtkChangeStamp)</span> <span class="pre">{0})</span></code>
+to batch multiple property updates across many controls into a single commit.</p></li>
+<li><p><strong>Reading current property values</strong>: Call
+<code class="docutils literal notranslate"><span class="pre">xtk_ctrl_get(&amp;scene,</span> <span class="pre">ctrl,</span> <span class="pre">XTK_PROP_TEXT,</span> <span class="pre">&amp;view,</span> <span class="pre">&amp;stamp)</span></code>. String and byte
+slices inside <code class="docutils literal notranslate"><span class="pre">XtkValueView</span></code> point at the host’s internal storage and stay
+valid until that property is modified again or the host is destroyed.</p></li>
+<li><p><strong>Populating composite item collections</strong>: Controls that own structured child
+definitions have dedicated transaction helpers in <code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk_scene.h&gt;</span></code>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_txn_setitems(&amp;txn,</span> <span class="pre">target,</span> <span class="pre">strings,</span> <span class="pre">count)</span></code> (and live
+<code class="docutils literal notranslate"><span class="pre">xtk_ctrl_setitems</span></code>) — Populates <code class="docutils literal notranslate"><span class="pre">ComboBox</span></code>, <code class="docutils literal notranslate"><span class="pre">AutoSuggestBox</span></code>,
+<code class="docutils literal notranslate"><span class="pre">BreadcrumbBar</span></code>, or <code class="docutils literal notranslate"><span class="pre">LoopingSelector</span></code> item lists.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_txn_setselitems(&amp;txn,</span> <span class="pre">target,</span> <span class="pre">selector_items,</span> <span class="pre">count)</span></code> — Populates
+<code class="docutils literal notranslate"><span class="pre">SelectorBar</span></code> items with icons and labels.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_txn_settabs(&amp;txn,</span> <span class="pre">target,</span> <span class="pre">tab_descs,</span> <span class="pre">count)</span></code> — Populates <code class="docutils literal notranslate"><span class="pre">TabView</span></code>
+tab headers.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_txn_settree(&amp;txn,</span> <span class="pre">target,</span> <span class="pre">&amp;tree_desc)</span></code> — Populates a <code class="docutils literal notranslate"><span class="pre">TreeView</span></code>
+hierarchy.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_txn_setnav(&amp;txn,</span> <span class="pre">target,</span> <span class="pre">&amp;nav_desc)</span></code> — Populates <code class="docutils literal notranslate"><span class="pre">NavigationView</span></code>
+menu items, headers, separators, footer items, and integrated window title
+bar settings.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+
+
+    </main>
+    <nav class="related bottom" role="navigation">
+  <a class="prev" href="transactions.html" title="Previous">
+    &larr; 2. Atomic Transactions &amp; Dynamic Subtrees
+  </a>
+  <a class="next" href="events.html" title="Next">
+    4. Event Routing, Frame Sync, &amp; Change Stamps &rarr;
+  </a>
+  <div class="clear"></div>
+    </nav>
+    
+
+  </div>
+
+  <div class="clear"></div>
+</div>
+<footer class="footer" role="contentinfo">
+    &copy; Copyright 2026, Project Xent.
+  
+  Created using <a href="http://sphinx-doc.org/">Sphinx</a> with
+  <a href="https://github.com/vsalvino/sphinx-library">Library</a> theme.
+  
+  <a href="../_sources/imperative/properties.rst.txt" rel="nofollow">Page source</a>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>声明式开发指南 &#8212; Xent 0.3.3 文档</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=c03c27c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/library/library.css?v=fa49c7df" />
+    <script src="../_static/documentation_options.js?v=0538d007"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/translations.js?v=540d3cec"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="1. Elm MVU 循环与应用结构" href="mvu.html" />
+    <link rel="prev" title="快速开始" href="../quickstart.html" />
+ 
+
+<link rel="stylesheet" id="sphinx-library-type" href="../_static/library/type-book.css" type="text/css" />
+<link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+<meta name="viewport" content="width=device-width, initial-scale=0.9" />
+<script>
+  mobile_menu_content = "";
+  function toggleMenu() {
+    var div = document.getElementsByClassName("document").item(0);
+    var btn = document.getElementById("menu-toggler");
+    if(div.classList.contains("mobile-show")) {
+      div.classList.remove("mobile-show");
+      btn.innerHTML = mobile_menu_content;
+    }
+    else {
+      div.classList.add("mobile-show");
+      mobile_menu_content = btn.innerHTML;
+      btn.innerHTML = btn.getAttribute("data-open");
+    }
+  }
+</script>
+  </head>
+<body class="sepia">
+<script>
+  (function () {
+    var key = "sphinx-library-mode";
+    var dark = window.matchMedia("(prefers-color-scheme: dark)");
+    function stored() {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function apply() {
+      document.body.className = stored() || (dark.matches ? "dark" : "sepia");
+    }
+    window.toggleMode = function (theme) {
+      try {
+        if (theme) localStorage.setItem(key, theme);
+        else localStorage.removeItem(key);
+      } catch (e) {}
+      apply();
+    };
+    dark.addEventListener("change", apply);
+    apply();
+  })();
+</script>
+<div class="document">
+
+  
+  <nav class="mobile-menu" role="navigation">
+    
+  <button type="button" id="menu-toggler" onclick="toggleMenu();"
+    data-open="× Close">≡ Menu</button>
+  <a href="../index.html">Xent</a>
+  <noscript>
+    <div>
+      JavaScript is required to open/close mobile menu.
+    </div>
+  </noscript>
+  </nav>
+  
+
+  
+  <nav class="sphinxsidebar" role="navigation" aria-label="main navigation">
+    
+
+
+<h1 class="logo ">
+  <a href="../index.html">Xent</a>
+</h1>
+
+
+
+<p class="description">Native cross-platform UI in C23.</p>
+
+
+
+<p class="description">Version 0.3.3</p>
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="提交" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>目录</h3>
+<p class="caption" role="heading"><span class="caption-text">使用手册</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">快速开始</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">声明式开发指南</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mvu.html">1. Elm MVU 循环与应用结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="layout.html">2. 布局容器、文本排版与图像媒体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html">3. 表单输入、选择器与受控状态</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collections.html">4. 虚拟化列表、网格、树视图与子树缓存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="navigation.html">5. 多页导航、工具栏与模态弹层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="host.html">6. 文件对话框、拖放、主题切换与后台线程</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../imperative/index.html">命令式开发指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts.html">架构与核心概念</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API 参考</a></li>
+</ul>
+<h3>阅读模式</h3>
+<button type="button" onclick="toggleMode(null);">自动</button>
+<button type="button" onclick="toggleMode('light');">浅色</button>
+<button type="button" onclick="toggleMode('sepia');">护眼</button>
+<button type="button" onclick="toggleMode('dark');">深色</button>
+<noscript>
+  <div>切换阅读模式需要启用 JavaScript.</div>
+</noscript>
+  </nav>
+  <div class="documentwrapper">
+    
+
+    <main class="body" role="main" id="main">
+      
+  <section id="declarative-ui-guide">
+<h1>声明式开发指南<a class="headerlink" href="#declarative-ui-guide" title="链接到此标题。">¶</a></h1>
+<p><strong>声明式路线</strong> （ <code class="docutils literal notranslate"><span class="pre">fluxent.decl</span></code> ）围绕 <code class="docutils literal notranslate"><span class="pre">flux_run</span></code> 与 <code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk.h&gt;</span></code> 中的元素构建器开发原生 Windows 应用。代码将应用状态存放在普通 C <code class="docutils literal notranslate"><span class="pre">struct</span></code> 中，在 <code class="docutils literal notranslate"><span class="pre">update()</span></code> 中处理带整数标签的消息，在 <code class="docutils literal notranslate"><span class="pre">view()</span></code> 中描述当前界面结构，并由协调器对底层保留式控件执行增量更新。</p>
+<p>从零上手建议按章节顺序阅读，也可按页面需求直接查阅对应控件分类：</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="mvu.html"><span class="doc">1. Elm MVU 循环与应用结构</span></a> —— 理解 Elm Model–View–Update 循环，逐行拆解 <code class="docutils literal notranslate"><span class="pre">fluxent.decl</span></code> 模板，组织大型消息分发表、注册控件模块并管理帧内存池动态字符串。</p></li>
+<li><p><a class="reference internal" href="layout.html"><span class="doc">2. 布局容器、文本排版与图像媒体</span></a> —— 使用 Flex 堆栈容器、卡片、布局修饰器、受控 <code class="docutils literal notranslate"><span class="pre">ScrollViewer</span></code> 视口、可继承文本样式与异步 WIC 图像编排界面。</p></li>
+<li><p><a class="reference internal" href="inputs.html"><span class="doc">3. 表单输入、选择器与受控状态</span></a> —— 处理按钮、开关、滑块、本地化 <code class="docutils literal notranslate"><span class="pre">NumberBox</span></code> 、受控 <code class="docutils literal notranslate"><span class="pre">TextBox</span></code> / <code class="docutils literal notranslate"><span class="pre">AutoSuggestBox</span></code> 文本编辑，以及日期、时间、日历与颜色选择器。</p></li>
+<li><p><a class="reference internal" href="collections.html"><span class="doc">4. 虚拟化列表、网格、树视图与子树缓存</span></a> —— 渲染 10 万行级虚拟化 <code class="docutils literal notranslate"><span class="pre">ListView</span></code> 与 <code class="docutils literal notranslate"><span class="pre">GridView</span></code> 、吸顶分组标题、可排序拖拽列头、层级 <code class="docutils literal notranslate"><span class="pre">TreeView</span></code> 、节点键（Key）与缓存区域。</p></li>
+<li><p><a class="reference internal" href="navigation.html"><span class="doc">5. 多页导航、工具栏与模态弹层</span></a> —— 使用 <code class="docutils literal notranslate"><span class="pre">NavigationView</span></code> 、 <code class="docutils literal notranslate"><span class="pre">TabView</span></code> 、 <code class="docutils literal notranslate"><span class="pre">SplitView</span></code> 、自定义 <code class="docutils literal notranslate"><span class="pre">TitleBar</span></code> 、 <code class="docutils literal notranslate"><span class="pre">CommandBar</span></code> 溢出工具栏、模态 <code class="docutils literal notranslate"><span class="pre">ContentDialog</span></code> 、 <code class="docutils literal notranslate"><span class="pre">TeachingTip</span></code> 与状态栏搭建多页应用外壳。</p></li>
+<li><p><a class="reference internal" href="host.html"><span class="doc">6. 文件对话框、拖放、主题切换与后台线程</span></a> —— 获取 <code class="docutils literal notranslate"><span class="pre">FluxApp</span> <span class="pre">*</span></code> 调用原生文件对话框、OLE 拖放、剪贴板读写、实时主题与背景材质切换以及后台工作线程通信。</p></li>
+</ol>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="mvu.html">1. Elm MVU 循环与应用结构</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mvu.html#the-unidirectional-frame-loop">单向帧循环</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mvu.html#dissecting-the-fluxent-decl-counter">拆解 <code class="docutils literal notranslate"><span class="pre">fluxent.decl</span></code> 计数器模板</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mvu.html#designing-model-and-xtkmsg">设计 <code class="docutils literal notranslate"><span class="pre">Model</span></code> 与 <code class="docutils literal notranslate"><span class="pre">XtkMsg</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="mvu.html#registering-control-modules">注册控件模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mvu.html#scratch-arena-memory-lifetimes">帧内存池（Scratch Arena）生命周期</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="layout.html">2. 布局容器、文本排版与图像媒体</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="layout.html#flex-stacks-cards-and-xtk-kids">Flex 堆栈容器、卡片与 <code class="docutils literal notranslate"><span class="pre">xtk_kids</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="layout.html#sizing-and-layout-modifiers">尺寸与布局修饰器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="layout.html#scrollable-viewports-controlled-scrolling">可滚动视口与受控滚动</a></li>
+<li class="toctree-l2"><a class="reference internal" href="layout.html#typography-inherited-text-styles">文本排版与样式继承</a></li>
+<li class="toctree-l2"><a class="reference internal" href="layout.html#images-svg-animated-media-nine-grid">图像、SVG、动图与九宫格拉伸</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="inputs.html">3. 表单输入、选择器与受控状态</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html#xtkmsg-payload-reference"><code class="docutils literal notranslate"><span class="pre">XtkMsg</span></code> 载荷字段速查表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html#buttons-links-and-menu-variants">按钮、超链接与下拉菜单按钮</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html#toggles-radio-groups-and-numeric-controls">开关、单选按钮组与数值控件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html#controlled-text-editing-autosuggestbox">受控文本编辑与 <code class="docutils literal notranslate"><span class="pre">AutoSuggestBox</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html#combobox-date-time-calendar-color-pickers">下拉框、日期、时间、日历与颜色选择器</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="collections.html">4. 虚拟化列表、网格、树视图与子树缓存</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="collections.html#virtualized-listview-listbox-gridview">虚拟化 <code class="docutils literal notranslate"><span class="pre">ListView</span></code> 、 <code class="docutils literal notranslate"><span class="pre">ListBox</span></code> 与 <code class="docutils literal notranslate"><span class="pre">GridView</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="collections.html#grouped-lists-with-sticky-headers-0-3-3">带吸顶标题的分组列表（0.3.3）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collections.html#details-table-view-with-columnheader-0-3-3">带 <code class="docutils literal notranslate"><span class="pre">ColumnHeader</span></code> 表头的明细列表（0.3.3）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collections.html#hierarchical-treeview">层级树视图 <code class="docutils literal notranslate"><span class="pre">TreeView</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="collections.html#reconciler-keys-memoized-regions">协调器节点键（Key）与缓存区域</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="navigation.html">5. 多页导航、工具栏与模态弹层</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="navigation.html#multi-page-app-shell-with-navigationview">使用 <code class="docutils literal notranslate"><span class="pre">NavigationView</span></code> 搭建多页应用外壳</a></li>
+<li class="toctree-l2"><a class="reference internal" href="navigation.html#splitview-and-custom-titlebar"><code class="docutils literal notranslate"><span class="pre">SplitView</span></code> 分栏与自定义 <code class="docutils literal notranslate"><span class="pre">TitleBar</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="navigation.html#document-tabview-selectorbar-expander">多文档 <code class="docutils literal notranslate"><span class="pre">TabView</span></code> 、 <code class="docutils literal notranslate"><span class="pre">SelectorBar</span></code> 与 <code class="docutils literal notranslate"><span class="pre">Expander</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="navigation.html#menubar-and-commandbar-0-3-3"><code class="docutils literal notranslate"><span class="pre">MenuBar</span></code> 菜单栏与 <code class="docutils literal notranslate"><span class="pre">CommandBar</span></code> 命令栏（0.3.3）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="navigation.html#modal-contentdialog-teachingtip-status-controls">模态 <code class="docutils literal notranslate"><span class="pre">ContentDialog</span></code> 、 <code class="docutils literal notranslate"><span class="pre">TeachingTip</span></code> 与状态反馈控件</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="host.html">6. 文件对话框、拖放、主题切换与后台线程</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="host.html#capturing-fluxapp-via-on-start-and-on-stop">通过 <code class="docutils literal notranslate"><span class="pre">on_start</span></code> 与 <code class="docutils literal notranslate"><span class="pre">on_stop</span></code> 获取 <code class="docutils literal notranslate"><span class="pre">FluxApp</span> <span class="pre">*</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="host.html#native-file-folder-pickers">原生文件与文件夹选择对话框</a></li>
+<li class="toctree-l2"><a class="reference internal" href="host.html#ole-drag-and-drop-clipboard">OLE 拖放与剪贴板</a></li>
+<li class="toctree-l2"><a class="reference internal" href="host.html#switching-theme-backdrop-window-state">切换主题、窗口材质与窗口状态</a></li>
+<li class="toctree-l2"><a class="reference internal" href="host.html#background-worker-threads">后台工作线程通信</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+    </main>
+    <nav class="related bottom" role="navigation">
+  <a class="prev" href="../quickstart.html" title="Previous">
+    &larr; 快速开始
+  </a>
+  <a class="next" href="mvu.html" title="Next">
+    1. Elm MVU 循环与应用结构 &rarr;
+  </a>
+  <div class="clear"></div>
+    </nav>
+    
+
+  </div>
+
+  <div class="clear"></div>
+</div>
+<footer class="footer" role="contentinfo">
+    &copy; Copyright 2026, Project Xent.
+  
+  Created using <a href="http://sphinx-doc.org/">Sphinx</a> with
+  <a href="https://github.com/vsalvino/sphinx-library">Library</a> theme.
+  
+  <a href="../_sources/declarative/index.rst.txt" rel="nofollow">Page source</a>
+</footer>
+  </body>
+</html>

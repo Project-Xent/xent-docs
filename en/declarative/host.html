@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>6. File Dialogs, Drag-and-Drop, Theme, &amp; Worker Threads &#8212; Xent 0.3.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=c03c27c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/library/library.css?v=fa49c7df" />
+    <script src="../_static/documentation_options.js?v=d5a15cff"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Imperative UI Guide" href="../imperative/index.html" />
+    <link rel="prev" title="5. Navigation, Toolbars, &amp; Modal Overlays" href="navigation.html" />
+ 
+
+<link rel="stylesheet" id="sphinx-library-type" href="../_static/library/type-book.css" type="text/css" />
+<link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+<meta name="viewport" content="width=device-width, initial-scale=0.9" />
+<script>
+  mobile_menu_content = "";
+  function toggleMenu() {
+    var div = document.getElementsByClassName("document").item(0);
+    var btn = document.getElementById("menu-toggler");
+    if(div.classList.contains("mobile-show")) {
+      div.classList.remove("mobile-show");
+      btn.innerHTML = mobile_menu_content;
+    }
+    else {
+      div.classList.add("mobile-show");
+      mobile_menu_content = btn.innerHTML;
+      btn.innerHTML = btn.getAttribute("data-open");
+    }
+  }
+</script>
+  </head>
+<body class="sepia">
+<script>
+  (function () {
+    var key = "sphinx-library-mode";
+    var dark = window.matchMedia("(prefers-color-scheme: dark)");
+    function stored() {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function apply() {
+      document.body.className = stored() || (dark.matches ? "dark" : "sepia");
+    }
+    window.toggleMode = function (theme) {
+      try {
+        if (theme) localStorage.setItem(key, theme);
+        else localStorage.removeItem(key);
+      } catch (e) {}
+      apply();
+    };
+    dark.addEventListener("change", apply);
+    apply();
+  })();
+</script>
+<div class="document">
+
+  
+  <nav class="mobile-menu" role="navigation">
+    
+  <button type="button" id="menu-toggler" onclick="toggleMenu();"
+    data-open="× Close">≡ Menu</button>
+  <a href="../index.html">Xent</a>
+  <noscript>
+    <div>
+      JavaScript is required to open/close mobile menu.
+    </div>
+  </noscript>
+  </nav>
+  
+
+  
+  <nav class="sphinxsidebar" role="navigation" aria-label="main navigation">
+    
+
+
+<h1 class="logo ">
+  <a href="../index.html">Xent</a>
+</h1>
+
+
+
+<p class="description">Native cross-platform UI in C23.</p>
+
+
+
+<p class="description">Version 0.3.3</p>
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Contents</h3>
+<p class="caption" role="heading"><span class="caption-text">Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Declarative UI Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="mvu.html">1. The Elm MVU Loop &amp; App Anatomy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="layout.html">2. Layout, Typography, &amp; Media</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html">3. Forms, Pickers, &amp; Controlled Inputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collections.html">4. Virtualized Lists, Grids, Trees, &amp; Caching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="navigation.html">5. Navigation, Toolbars, &amp; Modal Overlays</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">6. File Dialogs, Drag-and-Drop, Theme, &amp; Worker Threads</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../imperative/index.html">Imperative UI Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts.html">Architecture &amp; Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
+</ul>
+
+<h3>Page Contents</h3>
+<div class="localtoc"><ul>
+<li><a class="reference internal" href="#">6. File Dialogs, Drag-and-Drop, Theme, &amp; Worker Threads</a><ul>
+<li><a class="reference internal" href="#capturing-fluxapp-via-on-start-and-on-stop">Capturing <code class="docutils literal notranslate"><span class="pre">FluxApp</span> <span class="pre">*</span></code> via <code class="docutils literal notranslate"><span class="pre">on_start</span></code> and <code class="docutils literal notranslate"><span class="pre">on_stop</span></code></a></li>
+<li><a class="reference internal" href="#native-file-folder-pickers">Native File &amp; Folder Pickers</a></li>
+<li><a class="reference internal" href="#ole-drag-and-drop-clipboard">OLE Drag-and-Drop &amp; Clipboard</a><ul>
+<li><a class="reference internal" href="#drop-targets-drag-sources-xtk-dragdrop">Drop Targets &amp; Drag Sources (<code class="docutils literal notranslate"><span class="pre">xtk_dragdrop</span></code>)</a></li>
+<li><a class="reference internal" href="#clipboard-read-write">Clipboard Read &amp; Write</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#switching-theme-backdrop-window-state">Switching Theme, Backdrop, &amp; Window State</a></li>
+<li><a class="reference internal" href="#background-worker-threads">Background Worker Threads</a></li>
+</ul>
+</li>
+</ul>
+</div><h3>Reading Mode</h3>
+<button type="button" onclick="toggleMode(null);">Auto</button>
+<button type="button" onclick="toggleMode('light');">Light</button>
+<button type="button" onclick="toggleMode('sepia');">Sepia</button>
+<button type="button" onclick="toggleMode('dark');">Dark</button>
+<noscript>
+  <div>JavaScript is required to toggle reading modes.</div>
+</noscript>
+  </nav>
+  <div class="documentwrapper">
+    
+
+    <main class="body" role="main" id="main">
+      
+  <section id="file-dialogs-drag-and-drop-theme-worker-threads">
+<h1>6. File Dialogs, Drag-and-Drop, Theme, &amp; Worker Threads<a class="headerlink" href="#file-dialogs-drag-and-drop-theme-worker-threads" title="Link to this heading">¶</a></h1>
+<p>Desktop applications frequently interact with the OS shell—opening native file
+pickers, accepting dropped files from Explorer, reading the clipboard, switching
+themes, and running long tasks off the UI thread. Here is how all four integrate
+cleanly into the declarative MVU loop.</p>
+<section id="capturing-fluxapp-via-on-start-and-on-stop">
+<h2>Capturing <code class="docutils literal notranslate"><span class="pre">FluxApp</span> <span class="pre">*</span></code> via <code class="docutils literal notranslate"><span class="pre">on_start</span></code> and <code class="docutils literal notranslate"><span class="pre">on_stop</span></code><a class="headerlink" href="#capturing-fluxapp-via-on-start-and-on-stop" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">flux_run</span></code> creates and owns the <code class="docutils literal notranslate"><span class="pre">FluxApp</span> <span class="pre">*</span></code> instance for you. Populate
+<code class="docutils literal notranslate"><span class="pre">on_start</span></code>, <code class="docutils literal notranslate"><span class="pre">on_stop</span></code>, and <code class="docutils literal notranslate"><span class="pre">user</span></code> on <code class="docutils literal notranslate"><span class="pre">FluxAppCfg</span></code> to store the
+<code class="docutils literal notranslate"><span class="pre">FluxApp</span> <span class="pre">*</span></code> pointer inside <code class="docutils literal notranslate"><span class="pre">Model</span></code> for the lifetime of the window:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">Model</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">FluxApp</span><span class="w"> </span><span class="o">*</span><span class="n">app</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">char</span><span class="w">    </span><span class="o">*</span><span class="n">chosen_folder</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w">     </span><span class="n">dark_mode</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="n">Model</span><span class="p">;</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">app_start</span><span class="p">(</span><span class="n">FluxApp</span><span class="w"> </span><span class="o">*</span><span class="n">app</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">user</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Model</span><span class="w"> </span><span class="o">*</span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">app</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">app</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">app_stop</span><span class="p">(</span><span class="n">FluxApp</span><span class="w"> </span><span class="o">*</span><span class="n">app</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">user</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">app</span><span class="p">;</span>
+<span class="w">    </span><span class="n">Model</span><span class="w"> </span><span class="o">*</span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// Join any background threads before clearing m-&gt;app</span>
+<span class="w">    </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="n">WINAPI</span><span class="w"> </span><span class="nf">WinMain</span><span class="p">(</span><span class="n">HINSTANCE</span><span class="w"> </span><span class="n">hInst</span><span class="p">,</span><span class="w"> </span><span class="n">HINSTANCE</span><span class="w"> </span><span class="n">hPrev</span><span class="p">,</span><span class="w"> </span><span class="n">LPSTR</span><span class="w"> </span><span class="n">cmdLine</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">showCmd</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">hInst</span><span class="p">;</span><span class="w"> </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">hPrev</span><span class="p">;</span><span class="w"> </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">cmdLine</span><span class="p">;</span><span class="w"> </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">showCmd</span><span class="p">;</span>
+<span class="w">    </span><span class="n">flux_controls_all</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">Model</span><span class="w"> </span><span class="n">model</span><span class="p">;</span>
+<span class="w">    </span><span class="n">FluxAppCfg</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">title</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="sa">L</span><span class="s">"Shell Integration"</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">width</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="mi">720</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">height</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mi">480</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">backdrop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FLUX_BACKDROP_MICA</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">on_start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">app_start</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">on_stop</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">app_stop</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">user</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">model</span><span class="p">,</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">flux_run</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cfg</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">update</span><span class="p">,</span><span class="w"> </span><span class="n">view</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="native-file-folder-pickers">
+<h2>Native File &amp; Folder Pickers<a class="headerlink" href="#native-file-folder-pickers" title="Link to this heading">¶</a></h2>
+<p>Include <code class="docutils literal notranslate"><span class="pre">&lt;fluxent/flux_filedialog.h&gt;</span></code> and call <code class="docutils literal notranslate"><span class="pre">flux_filedialog_post</span></code> inside
+<code class="docutils literal notranslate"><span class="pre">update()</span></code> when the user clicks a “Browse…” button. It opens the Windows
+Common Item Dialog without tangling your <code class="docutils literal notranslate"><span class="pre">view()</span></code> code and posts the result
+back as an <code class="docutils literal notranslate"><span class="pre">XtkMsg</span></code>:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="n">FluxFileFilter</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">kDocFilters</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">{.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Markdown &amp; Text"</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">spec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"*.md;*.txt"</span><span class="p">},</span>
+<span class="w">    </span><span class="p">{.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"All Files"</span><span class="p">,</span><span class="w">       </span><span class="p">.</span><span class="n">spec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"*.*"</span><span class="p">},</span>
+<span class="p">};</span>
+
+<span class="c1">// Inside update():</span>
+<span class="k">case</span><span class="w"> </span><span class="no">MSG_BROWSE_OPEN</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">FluxFileDialogDesc</span><span class="w"> </span><span class="n">desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">kind</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="n">FLUX_FILEDIALOG_OPEN</span><span class="p">,</span><span class="w"> </span><span class="c1">// or FLUX_FILEDIALOG_SAVE / FLUX_FILEDIALOG_FOLDER</span>
+<span class="w">        </span><span class="p">.</span><span class="n">title</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s">"Open Document"</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">filters</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">kDocFilters</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">filter_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">multiple</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="n">flux_filedialog_post</span><span class="p">(</span><span class="n">m</span><span class="o">-&gt;</span><span class="n">app</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">desc</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_FILE_PICKED</span><span class="p">));</span>
+<span class="w">    </span><span class="k">break</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">case</span><span class="w"> </span><span class="no">MSG_FILE_PICKED</span><span class="p">:</span>
+<span class="w">    </span><span class="c1">// msg.b is true when the user confirmed; msg.ptr holds UTF-8 path(s), one per line</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">msg</span><span class="p">.</span><span class="n">b</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">msg</span><span class="p">.</span><span class="n">ptr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">m</span><span class="o">-&gt;</span><span class="n">chosen_folder</span><span class="p">);</span>
+<span class="w">        </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">chosen_folder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">strdup</span><span class="p">((</span><span class="kt">char</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">msg</span><span class="p">.</span><span class="n">ptr</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">break</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="ole-drag-and-drop-clipboard">
+<h2>OLE Drag-and-Drop &amp; Clipboard<a class="headerlink" href="#ole-drag-and-drop-clipboard" title="Link to this heading">¶</a></h2>
+<section id="drop-targets-drag-sources-xtk-dragdrop">
+<h3>Drop Targets &amp; Drag Sources (<code class="docutils literal notranslate"><span class="pre">xtk_dragdrop</span></code>)<a class="headerlink" href="#drop-targets-drag-sources-xtk-dragdrop" title="Link to this heading">¶</a></h3>
+<p>Wrap any container or card in <code class="docutils literal notranslate"><span class="pre">xtk_dragdrop(ui,</span> <span class="pre">desc,</span> <span class="pre">child)</span></code> to accept files
+or text dragged from Windows Explorer and other apps, or to turn an element into
+a drag source:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// Drop target:</span>
+<span class="n">xtk_dragdrop</span><span class="p">(</span>
+<span class="w">    </span><span class="n">ui</span><span class="p">,</span>
+<span class="w">    </span><span class="p">(</span><span class="n">XtkDragDropDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">drop</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_DROP_COPY</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">hover</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_DROP_HOVER</span><span class="p">),</span><span class="w"> </span><span class="c1">// msg.b = pointer is hovering over target</span>
+<span class="w">        </span><span class="p">.</span><span class="n">drop_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_DROP_FILES</span><span class="p">),</span><span class="w"> </span><span class="c1">// msg.ptr = newline-separated UTF-8 paths</span>
+<span class="w">        </span><span class="p">.</span><span class="n">drop_text</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_DROP_TEXT</span><span class="p">),</span><span class="w">  </span><span class="c1">// msg.ptr = dropped UTF-8 text</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="n">xtk_card</span><span class="p">(</span>
+<span class="w">        </span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkStackDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{.</span><span class="n">padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">24</span><span class="p">,</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span><span class="w"> </span><span class="mi">24</span><span class="p">}},</span>
+<span class="w">        </span><span class="n">xtk_kids</span><span class="p">(</span><span class="n">xtk_text</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">hovering</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">"Release to import"</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">"Drop files here"</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkTextDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">}))</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1">// Drag source:</span>
+<span class="n">xtk_dragdrop</span><span class="p">(</span>
+<span class="w">    </span><span class="n">ui</span><span class="p">,</span>
+<span class="w">    </span><span class="p">(</span><span class="n">XtkDragDropDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">drag_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Snippet from Xent"</span><span class="p">,</span><span class="w"> </span><span class="c1">// or .drag_files = "C:\\path\\file.txt"</span>
+<span class="w">        </span><span class="p">.</span><span class="n">dragged</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_DRAG_FINISHED</span><span class="p">),</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="n">xtk_card</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkStackDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">},</span><span class="w"> </span><span class="n">xtk_kids</span><span class="p">(</span><span class="n">xtk_text</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="s">"Drag me"</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkTextDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">})))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>As with <code class="docutils literal notranslate"><span class="pre">TextBox</span></code>, duplicate <code class="docutils literal notranslate"><span class="pre">(char</span> <span class="pre">const</span> <span class="pre">*)</span> <span class="pre">msg.ptr</span></code> with <code class="docutils literal notranslate"><span class="pre">strdup</span></code> inside
+<code class="docutils literal notranslate"><span class="pre">update()</span></code> when handling <code class="docutils literal notranslate"><span class="pre">MSG_DROP_FILES</span></code> or <code class="docutils literal notranslate"><span class="pre">MSG_DROP_TEXT</span></code>.</p>
+</section>
+<section id="clipboard-read-write">
+<h3>Clipboard Read &amp; Write<a class="headerlink" href="#clipboard-read-write" title="Link to this heading">¶</a></h3>
+<p>Include <code class="docutils literal notranslate"><span class="pre">&lt;fluxent/flux_data.h&gt;</span></code> inside <code class="docutils literal notranslate"><span class="pre">update()</span></code> to read or write the
+Windows clipboard:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// Copy UTF-8 text to clipboard:</span>
+<span class="n">flux_clipboard_settext</span><span class="p">(</span><span class="n">text</span><span class="p">,</span><span class="w"> </span><span class="n">strlen</span><span class="p">(</span><span class="n">text</span><span class="p">));</span>
+
+<span class="c1">// Paste UTF-8 text from clipboard (caller frees the returned buffer):</span>
+<span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">pasted</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">flux_clipboard_text</span><span class="p">();</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pasted</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">free</span><span class="p">(</span><span class="n">m</span><span class="o">-&gt;</span><span class="n">notes</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">notes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pasted</span><span class="p">;</span><span class="w"> </span><span class="c1">// Transfer ownership directly into Model</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>For multi-format clipboard payloads (files, raw RGBA <code class="docutils literal notranslate"><span class="pre">FluxBitmap</span></code> images, or
+custom MIME/clipboard formats), construct a <code class="docutils literal notranslate"><span class="pre">FluxData</span> <span class="pre">*</span></code> via
+<code class="docutils literal notranslate"><span class="pre">flux_data_create()</span></code> and pass it to <code class="docutils literal notranslate"><span class="pre">flux_clipboard_set</span></code>.</p>
+</section>
+</section>
+<section id="switching-theme-backdrop-window-state">
+<h2>Switching Theme, Backdrop, &amp; Window State<a class="headerlink" href="#switching-theme-backdrop-window-state" title="Link to this heading">¶</a></h2>
+<p>With <code class="docutils literal notranslate"><span class="pre">m-&gt;app</span></code> stored from <code class="docutils literal notranslate"><span class="pre">on_start</span></code>, <code class="docutils literal notranslate"><span class="pre">update()</span></code> can adjust live window
+chrome in response to settings controls:</p>
+<ul class="simple">
+<li><p><strong>Theme mode</strong>: <code class="docutils literal notranslate"><span class="pre">flux_theme_setmode(flux_app_theme(m-&gt;app),</span> <span class="pre">FLUX_THEME_DARK);</span></code>
+(accepts <code class="docutils literal notranslate"><span class="pre">FLUX_THEME_SYSTEM</span></code>, <code class="docutils literal notranslate"><span class="pre">FLUX_THEME_LIGHT</span></code>, or <code class="docutils literal notranslate"><span class="pre">FLUX_THEME_DARK</span></code>).</p></li>
+<li><p><strong>Window backdrop</strong>:
+<code class="docutils literal notranslate"><span class="pre">flux_window_setbackdrop(flux_app_window(m-&gt;app),</span> <span class="pre">FLUX_BACKDROP_MICA_ALT);</span></code>
+(accepts <code class="docutils literal notranslate"><span class="pre">FLUX_BACKDROP_NONE</span></code>, <code class="docutils literal notranslate"><span class="pre">MICA</span></code>, <code class="docutils literal notranslate"><span class="pre">MICA_ALT</span></code>, or <code class="docutils literal notranslate"><span class="pre">ACRYLIC</span></code>).</p></li>
+<li><p><strong>Dynamic window title &amp; close</strong>:
+<code class="docutils literal notranslate"><span class="pre">flux_window_settitle(flux_app_window(m-&gt;app),</span> <span class="pre">L&quot;Unsaved</span> <span class="pre">*&quot;);</span></code> and
+<code class="docutils literal notranslate"><span class="pre">flux_window_close(flux_app_window(m-&gt;app));</span></code> (for example after confirming
+an exit <code class="docutils literal notranslate"><span class="pre">ContentDialog</span></code>).</p></li>
+</ul>
+</section>
+<section id="background-worker-threads">
+<h2>Background Worker Threads<a class="headerlink" href="#background-worker-threads" title="Link to this heading">¶</a></h2>
+<p>Keep <code class="docutils literal notranslate"><span class="pre">update()</span></code> fast and non-blocking by offloading network calls, archive
+extraction, or heavy indexing to a worker thread. Pass <code class="docutils literal notranslate"><span class="pre">FluxApp</span> <span class="pre">*</span></code> into your
+worker context and report progress back via thread-safe message posting:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="n">DWORD</span><span class="w"> </span><span class="n">WINAPI</span><span class="w"> </span><span class="n">worker_proc</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">param</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">FluxApp</span><span class="w"> </span><span class="o">*</span><span class="n">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">param</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span><span class="w"> </span><span class="n">step</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Perform background work...</span>
+<span class="w">        </span><span class="n">flux_app_post</span><span class="p">(</span><span class="n">app</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_msg_i</span><span class="p">(</span><span class="n">MSG_PROGRESS_STEP</span><span class="p">,</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="n">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"All 100 items processed."</span><span class="p">;</span>
+<span class="w">    </span><span class="n">flux_app_poststring</span><span class="p">(</span><span class="n">app</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_WORKER_LOG</span><span class="p">),</span><span class="w"> </span><span class="n">summary</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">uint32_t</span><span class="p">)</span><span class="w"> </span><span class="n">strlen</span><span class="p">(</span><span class="n">summary</span><span class="p">));</span>
+<span class="w">    </span><span class="n">flux_app_post</span><span class="p">(</span><span class="n">app</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_WORKER_DONE</span><span class="p">));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">flux_app_post</span></code> enqueues scalar <code class="docutils literal notranslate"><span class="pre">XtkMsg</span></code> values from any thread and wakes
+the UI loop.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">flux_app_poststring</span></code> copies the UTF-8 string safely onto the queue and
+delivers it as <code class="docutils literal notranslate"><span class="pre">(char</span> <span class="pre">const</span> <span class="pre">*)</span> <span class="pre">msg.ptr</span></code> inside <code class="docutils literal notranslate"><span class="pre">update()</span></code> on the UI
+thread.</p></li>
+<li><p>Always join active worker threads inside <code class="docutils literal notranslate"><span class="pre">FluxAppCfg.on_stop</span></code> before the
+process destroys <code class="docutils literal notranslate"><span class="pre">FluxApp</span></code>. See <code class="docutils literal notranslate"><span class="pre">fluxent/examples/installer_wizard/</span></code> for a
+complete multi-page setup wizard with pause, cancel, and worker synchronization.</p></li>
+</ul>
+</section>
+</section>
+
+
+    </main>
+    <nav class="related bottom" role="navigation">
+  <a class="prev" href="navigation.html" title="Previous">
+    &larr; 5. Navigation, Toolbars, &amp; Modal Overlays
+  </a>
+  <a class="next" href="../imperative/index.html" title="Next">
+    Imperative UI Guide &rarr;
+  </a>
+  <div class="clear"></div>
+    </nav>
+    
+
+  </div>
+
+  <div class="clear"></div>
+</div>
+<footer class="footer" role="contentinfo">
+    &copy; Copyright 2026, Project Xent.
+  
+  Created using <a href="http://sphinx-doc.org/">Sphinx</a> with
+  <a href="https://github.com/vsalvino/sphinx-library">Library</a> theme.
+  
+  <a href="../_sources/declarative/host.rst.txt" rel="nofollow">Page source</a>
+</footer>
+  </body>
+</html>

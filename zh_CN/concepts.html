@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>架构与核心概念 &#8212; Xent 0.3.3 文档</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=c03c27c6" />
+    <link rel="stylesheet" type="text/css" href="_static/library/library.css?v=fa49c7df" />
+    <script src="_static/documentation_options.js?v=0538d007"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/translations.js?v=540d3cec"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="API 参考" href="api/index.html" />
+    <link rel="prev" title="6. 对话框、拖放、剪贴板与窗口集成" href="imperative/shell.html" />
+ 
+
+<link rel="stylesheet" id="sphinx-library-type" href="_static/library/type-book.css" type="text/css" />
+<link rel="stylesheet" href="_static/custom.css" type="text/css" />
+<meta name="viewport" content="width=device-width, initial-scale=0.9" />
+<script>
+  mobile_menu_content = "";
+  function toggleMenu() {
+    var div = document.getElementsByClassName("document").item(0);
+    var btn = document.getElementById("menu-toggler");
+    if(div.classList.contains("mobile-show")) {
+      div.classList.remove("mobile-show");
+      btn.innerHTML = mobile_menu_content;
+    }
+    else {
+      div.classList.add("mobile-show");
+      mobile_menu_content = btn.innerHTML;
+      btn.innerHTML = btn.getAttribute("data-open");
+    }
+  }
+</script>
+  </head>
+<body class="sepia">
+<script>
+  (function () {
+    var key = "sphinx-library-mode";
+    var dark = window.matchMedia("(prefers-color-scheme: dark)");
+    function stored() {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function apply() {
+      document.body.className = stored() || (dark.matches ? "dark" : "sepia");
+    }
+    window.toggleMode = function (theme) {
+      try {
+        if (theme) localStorage.setItem(key, theme);
+        else localStorage.removeItem(key);
+      } catch (e) {}
+      apply();
+    };
+    dark.addEventListener("change", apply);
+    apply();
+  })();
+</script>
+<div class="document">
+
+  
+  <nav class="mobile-menu" role="navigation">
+    
+  <button type="button" id="menu-toggler" onclick="toggleMenu();"
+    data-open="× Close">≡ Menu</button>
+  <a href="index.html">Xent</a>
+  <noscript>
+    <div>
+      JavaScript is required to open/close mobile menu.
+    </div>
+  </noscript>
+  </nav>
+  
+
+  
+  <nav class="sphinxsidebar" role="navigation" aria-label="main navigation">
+    
+
+
+<h1 class="logo ">
+  <a href="index.html">Xent</a>
+</h1>
+
+
+
+<p class="description">Native cross-platform UI in C23.</p>
+
+
+
+<p class="description">Version 0.3.3</p>
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="提交" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>目录</h3>
+<p class="caption" role="heading"><span class="caption-text">使用手册</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="declarative/index.html">声明式开发指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="imperative/index.html">命令式开发指南</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">架构与核心概念</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API 参考</a></li>
+</ul>
+
+<h3>本页目录</h3>
+<div class="localtoc"><ul>
+<li><a class="reference internal" href="#">架构与核心概念</a><ul>
+<li><a class="reference internal" href="#three-layer-package-responsibilities">三层包职责划分</a></li>
+<li><a class="reference internal" href="#retained-control-architecture">保留式控件架构</a></li>
+<li><a class="reference internal" href="#modular-control-registration-binary-size">模块化控件注册与体积裁剪</a></li>
+<li><a class="reference internal" href="#thread-safety-background-work">线程安全与后台任务</a></li>
+</ul>
+</li>
+</ul>
+</div><h3>阅读模式</h3>
+<button type="button" onclick="toggleMode(null);">自动</button>
+<button type="button" onclick="toggleMode('light');">浅色</button>
+<button type="button" onclick="toggleMode('sepia');">护眼</button>
+<button type="button" onclick="toggleMode('dark');">深色</button>
+<noscript>
+  <div>切换阅读模式需要启用 JavaScript.</div>
+</noscript>
+  </nav>
+  <div class="documentwrapper">
+    
+
+    <main class="body" role="main" id="main">
+      
+  <section id="architecture-core-concepts">
+<h1>架构与核心概念<a class="headerlink" href="#architecture-core-concepts" title="链接到此标题。">¶</a></h1>
+<p>本页说明 <strong>Xent 0.3.3</strong> 中 <code class="docutils literal notranslate"><span class="pre">xent-core</span></code> 、 <code class="docutils literal notranslate"><span class="pre">xent-kit</span></code> 与 <code class="docutils literal notranslate"><span class="pre">fluxent</span></code> 的职责分层，以及保留式控件、可执行文件裁剪与后台线程通信的核心约定。</p>
+<section id="three-layer-package-responsibilities">
+<h2>三层包职责划分<a class="headerlink" href="#three-layer-package-responsibilities" title="链接到此标题。">¶</a></h2>
+<p>Project Xent 将布局计算、控件协议语义与操作系统原生渲染划分为清晰的三层：</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">xent-core</span></code> —— <strong>无头布局引擎与显示列表</strong></p>
+<ul class="simple">
+<li><p>维护带代次校验的 <code class="docutils literal notranslate"><span class="pre">XentNodeId</span></code> 节点树，即使节点槽位复用也能可靠识别过期句柄。</p></li>
+<li><p>负责 <code class="docutils literal notranslate"><span class="pre">ABSOLUTE</span></code> 、 <code class="docutils literal notranslate"><span class="pre">FLEX</span></code> 、 <code class="docutils literal notranslate"><span class="pre">SWIFTSTACK</span></code> 与 <code class="docutils literal notranslate"><span class="pre">GRID</span></code> 布局计算、固有内容测量、脏标记传播、焦点顺序、无障碍语义角色以及不可变 <code class="docutils literal notranslate"><span class="pre">XentDisplayList</span></code> 绘制指令列表。</p></li>
+<li><p>采用可移植 C23 实现，供各平台宿主、无头排版工具直接调用，并通过 <code class="docutils literal notranslate"><span class="pre">xent-kit</span></code> 导出共享布局类型（如 <code class="docutils literal notranslate"><span class="pre">XentFlexAlign</span></code> 、 <code class="docutils literal notranslate"><span class="pre">XentInsets</span></code> ）。</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xent-kit</span></code> —— <strong>控件协议、保留式宿主 ABI 与协调器</strong></p>
+<ul class="simple">
+<li><p>定义由 <code class="docutils literal notranslate"><span class="pre">tools/catalog.lua</span></code> 生成的 70 余种标准控件目录、强类型属性与标准化事件。</p></li>
+<li><p>定义原子化变更编码格式 <code class="docutils literal notranslate"><span class="pre">XtkBatch</span></code> ：宿主在提交前对整批操作完成校验与准备，遇到任何错误时完整保留原有活动树状态。</p></li>
+<li><p>在该协议之上同时提供两套公开编程接口：命令式 <code class="docutils literal notranslate"><span class="pre">XtkScene</span></code> / <code class="docutils literal notranslate"><span class="pre">XtkTxn</span></code> API 与声明式 <code class="docutils literal notranslate"><span class="pre">xtk_*</span></code> 协调器。</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fluxent</span></code> —— <strong>Windows 原生宿主</strong></p>
+<ul class="simple">
+<li><p>基于 Win32、Direct2D、DirectWrite（文本塑形、字素级编辑、输入法）、DirectComposition 与 DirectManipulation（平滑滚动与 Mica/Acrylic 背景材质）、WIC（异步图像解码）、UI Automation（屏幕阅读器无障碍）以及 <code class="docutils literal notranslate"><span class="pre">cwinrt</span></code> （纯 C WinRT 投影）在 Windows 10 1903+ 上实现 <code class="docutils literal notranslate"><span class="pre">XtkHost</span></code> 。</p></li>
+<li><p>提供面向声明式应用的 <code class="docutils literal notranslate"><span class="pre">flux_run</span></code> 入口，以及面向命令式应用与桌面外壳集成（文件对话框、菜单、弹出层、拖放、剪贴板）的 <code class="docutils literal notranslate"><span class="pre">flux_app_*</span></code> 与 <code class="docutils literal notranslate"><span class="pre">flux_host_*</span></code> 接口。</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="retained-control-architecture">
+<h2>保留式控件架构<a class="headerlink" href="#retained-control-architecture" title="链接到此标题。">¶</a></h2>
+<p>无论采用声明式还是命令式，Xent 均运行在统一的 <strong>保留式（Retained）</strong> 控件架构之上：</p>
+<ul class="simple">
+<li><p>Fluxent 宿主维护持久的原生控件实例，完整保留文本选区、输入法组字状态、键盘焦点导航、惯性滚动与系统无障碍节点。</p></li>
+<li><p>在声明式模式下， <code class="docutils literal notranslate"><span class="pre">view()</span></code> 在消息到达时于帧内存池中构造轻量描述节点，协调器将其与上一帧结构比对后，向现有控件提交增量 <code class="docutils literal notranslate"><span class="pre">XtkBatch</span></code> 补丁。</p></li>
+<li><p>事件驱动的帧调度使空闲窗口保持休眠，在用户输入、活动动画、异步图像解码完成或调用 <code class="docutils literal notranslate"><span class="pre">flux_app_post</span></code> / <code class="docutils literal notranslate"><span class="pre">flux_app_redraw</span></code> 时按需唤醒渲染。</p></li>
+</ul>
+</section>
+<section id="modular-control-registration-binary-size">
+<h2>模块化控件注册与体积裁剪<a class="headerlink" href="#modular-control-registration-binary-size" title="链接到此标题。">¶</a></h2>
+<p>在 <strong>Fluxent 0.3.3</strong> 中，每种控件都封装为声明在 <code class="docutils literal notranslate"><span class="pre">&lt;fluxent/flux_controls.h&gt;</span></code> 中的独立 <code class="docutils literal notranslate"><span class="pre">FluxControlModule</span></code> （如 <code class="docutils literal notranslate"><span class="pre">flux_ctrl_container</span></code> 、 <code class="docutils literal notranslate"><span class="pre">flux_ctrl_text</span></code> 、 <code class="docutils literal notranslate"><span class="pre">flux_ctrl_button</span></code> 、 <code class="docutils literal notranslate"><span class="pre">flux_ctrl_textbox</span></code> 、 <code class="docutils literal notranslate"><span class="pre">flux_ctrl_list</span></code> ），配合链接器死代码消除，只将实际注册的控件编入最终程序：</p>
+<ul class="simple">
+<li><p><strong>按需注册（</strong> <code class="docutils literal notranslate"><span class="pre">flux_controls_use(&amp;flux_ctrl_&lt;name&gt;)</span></code> <strong>）</strong> ：逐个注册所需控件模块（每个模块会自动注册其内部依赖的子控件），未使用的控件代码会被链接器裁掉，使单文件可执行程序保持精简。</p></li>
+<li><p><strong>全量注册（</strong> <code class="docutils literal notranslate"><span class="pre">flux_controls_all()</span></code> <strong>）</strong> ：一次调用注册全部内置控件模块，适合快速原型验证或使用大量控件的综合型应用。</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>请在首次批次提交前完成所用控件模块的注册；创建未注册的控件类型会返回 <code class="docutils literal notranslate"><span class="pre">XTK_BATCH_ERR_BACKEND</span></code> 。</p>
+</div>
+</section>
+<section id="thread-safety-background-work">
+<h2>线程安全与后台任务<a class="headerlink" href="#thread-safety-background-work" title="链接到此标题。">¶</a></h2>
+<p>UI 树、 <code class="docutils literal notranslate"><span class="pre">XtkScene</span></code> 与 <code class="docutils literal notranslate"><span class="pre">FluxApp</span></code> 窗口运行在主 UI 线程上。执行网络请求、磁盘读写或计算任务的后台工作线程，通过 <code class="docutils literal notranslate"><span class="pre">FluxApp</span></code> 提供的线程安全投递函数将结果传回 UI 线程：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">flux_app_post(app,</span> <span class="pre">xtk_msg_i(MSG_DONE,</span> <span class="pre">status))</span></code> —— 从任意线程将 <code class="docutils literal notranslate"><span class="pre">XtkMsg</span></code> 入队并唤醒窗口事件循环。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">flux_app_poststring(app,</span> <span class="pre">xtk_msg(MSG_LOG),</span> <span class="pre">text,</span> <span class="pre">len)</span></code> —— 拷贝 UTF-8 字符串并在 UI 线程上投递给 <code class="docutils literal notranslate"><span class="pre">update()</span></code> 。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">flux_app_invoke(app,</span> <span class="pre">fn,</span> <span class="pre">ctx)</span></code> —— 调度 <code class="docutils literal notranslate"><span class="pre">fn(ctx)</span></code> 到 UI 线程执行。</p></li>
+</ul>
+</section>
+</section>
+
+
+    </main>
+    <nav class="related bottom" role="navigation">
+  <a class="prev" href="imperative/shell.html" title="Previous">
+    &larr; 6. 对话框、拖放、剪贴板与窗口集成
+  </a>
+  <a class="next" href="api/index.html" title="Next">
+    API 参考 &rarr;
+  </a>
+  <div class="clear"></div>
+    </nav>
+    
+
+  </div>
+
+  <div class="clear"></div>
+</div>
+<footer class="footer" role="contentinfo">
+    &copy; Copyright 2026, Project Xent.
+  
+  Created using <a href="http://sphinx-doc.org/">Sphinx</a> with
+  <a href="https://github.com/vsalvino/sphinx-library">Library</a> theme.
+  
+  <a href="_sources/concepts.rst.txt" rel="nofollow">Page source</a>
+</footer>
+  </body>
+</html>

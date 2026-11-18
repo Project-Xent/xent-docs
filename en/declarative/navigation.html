@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>5. Navigation, Toolbars, &amp; Modal Overlays &#8212; Xent 0.3.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=c03c27c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/library/library.css?v=fa49c7df" />
+    <script src="../_static/documentation_options.js?v=d5a15cff"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="6. File Dialogs, Drag-and-Drop, Theme, &amp; Worker Threads" href="host.html" />
+    <link rel="prev" title="4. Virtualized Lists, Grids, Trees, &amp; Caching" href="collections.html" />
+ 
+
+<link rel="stylesheet" id="sphinx-library-type" href="../_static/library/type-book.css" type="text/css" />
+<link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+<meta name="viewport" content="width=device-width, initial-scale=0.9" />
+<script>
+  mobile_menu_content = "";
+  function toggleMenu() {
+    var div = document.getElementsByClassName("document").item(0);
+    var btn = document.getElementById("menu-toggler");
+    if(div.classList.contains("mobile-show")) {
+      div.classList.remove("mobile-show");
+      btn.innerHTML = mobile_menu_content;
+    }
+    else {
+      div.classList.add("mobile-show");
+      mobile_menu_content = btn.innerHTML;
+      btn.innerHTML = btn.getAttribute("data-open");
+    }
+  }
+</script>
+  </head>
+<body class="sepia">
+<script>
+  (function () {
+    var key = "sphinx-library-mode";
+    var dark = window.matchMedia("(prefers-color-scheme: dark)");
+    function stored() {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function apply() {
+      document.body.className = stored() || (dark.matches ? "dark" : "sepia");
+    }
+    window.toggleMode = function (theme) {
+      try {
+        if (theme) localStorage.setItem(key, theme);
+        else localStorage.removeItem(key);
+      } catch (e) {}
+      apply();
+    };
+    dark.addEventListener("change", apply);
+    apply();
+  })();
+</script>
+<div class="document">
+
+  
+  <nav class="mobile-menu" role="navigation">
+    
+  <button type="button" id="menu-toggler" onclick="toggleMenu();"
+    data-open="× Close">≡ Menu</button>
+  <a href="../index.html">Xent</a>
+  <noscript>
+    <div>
+      JavaScript is required to open/close mobile menu.
+    </div>
+  </noscript>
+  </nav>
+  
+
+  
+  <nav class="sphinxsidebar" role="navigation" aria-label="main navigation">
+    
+
+
+<h1 class="logo ">
+  <a href="../index.html">Xent</a>
+</h1>
+
+
+
+<p class="description">Native cross-platform UI in C23.</p>
+
+
+
+<p class="description">Version 0.3.3</p>
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Contents</h3>
+<p class="caption" role="heading"><span class="caption-text">Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Declarative UI Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="mvu.html">1. The Elm MVU Loop &amp; App Anatomy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="layout.html">2. Layout, Typography, &amp; Media</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html">3. Forms, Pickers, &amp; Controlled Inputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collections.html">4. Virtualized Lists, Grids, Trees, &amp; Caching</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">5. Navigation, Toolbars, &amp; Modal Overlays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="host.html">6. File Dialogs, Drag-and-Drop, Theme, &amp; Worker Threads</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../imperative/index.html">Imperative UI Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts.html">Architecture &amp; Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
+</ul>
+
+<h3>Page Contents</h3>
+<div class="localtoc"><ul>
+<li><a class="reference internal" href="#">5. Navigation, Toolbars, &amp; Modal Overlays</a><ul>
+<li><a class="reference internal" href="#multi-page-app-shell-with-navigationview">Multi-Page App Shell with <code class="docutils literal notranslate"><span class="pre">NavigationView</span></code></a></li>
+<li><a class="reference internal" href="#splitview-and-custom-titlebar"><code class="docutils literal notranslate"><span class="pre">SplitView</span></code> and Custom <code class="docutils literal notranslate"><span class="pre">TitleBar</span></code></a></li>
+<li><a class="reference internal" href="#document-tabview-selectorbar-expander">Document <code class="docutils literal notranslate"><span class="pre">TabView</span></code>, <code class="docutils literal notranslate"><span class="pre">SelectorBar</span></code>, &amp; <code class="docutils literal notranslate"><span class="pre">Expander</span></code></a></li>
+<li><a class="reference internal" href="#menubar-and-commandbar-0-3-3"><code class="docutils literal notranslate"><span class="pre">MenuBar</span></code> and <code class="docutils literal notranslate"><span class="pre">CommandBar</span></code> (0.3.3)</a></li>
+<li><a class="reference internal" href="#modal-contentdialog-teachingtip-status-controls">Modal <code class="docutils literal notranslate"><span class="pre">ContentDialog</span></code>, <code class="docutils literal notranslate"><span class="pre">TeachingTip</span></code>, &amp; Status Controls</a></li>
+</ul>
+</li>
+</ul>
+</div><h3>Reading Mode</h3>
+<button type="button" onclick="toggleMode(null);">Auto</button>
+<button type="button" onclick="toggleMode('light');">Light</button>
+<button type="button" onclick="toggleMode('sepia');">Sepia</button>
+<button type="button" onclick="toggleMode('dark');">Dark</button>
+<noscript>
+  <div>JavaScript is required to toggle reading modes.</div>
+</noscript>
+  </nav>
+  <div class="documentwrapper">
+    
+
+    <main class="body" role="main" id="main">
+      
+  <section id="navigation-toolbars-modal-overlays">
+<h1>5. Navigation, Toolbars, &amp; Modal Overlays<a class="headerlink" href="#navigation-toolbars-modal-overlays" title="Link to this heading">¶</a></h1>
+<p>Real desktop applications combine multi-page navigation shells, document tabs,
+command toolbars, and modal confirmation dialogs—all driven declaratively from
+<code class="docutils literal notranslate"><span class="pre">Model</span></code> fields.</p>
+<section id="multi-page-app-shell-with-navigationview">
+<h2>Multi-Page App Shell with <code class="docutils literal notranslate"><span class="pre">NavigationView</span></code><a class="headerlink" href="#multi-page-app-shell-with-navigationview" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">xtk_nav</span></code> (register <code class="docutils literal notranslate"><span class="pre">&amp;flux_ctrl_nav</span></code>) provides a full WinUI
+<code class="docutils literal notranslate"><span class="pre">NavigationView</span></code> with collapsible sidebar pane, headers, separators, footer
+items, and optional custom window title bar integration:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">enum</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">PAGE_HOME</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="n">PAGE_PROJECTS</span><span class="p">,</span>
+<span class="w">    </span><span class="n">PAGE_SEP_1</span><span class="p">,</span>
+<span class="w">    </span><span class="n">PAGE_SETTINGS</span><span class="p">,</span>
+<span class="w">    </span><span class="n">PAGE_COUNT</span>
+<span class="p">};</span>
+
+<span class="k">static</span><span class="w"> </span><span class="n">XtkNavItemDesc</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">kNavItems</span><span class="p">[</span><span class="n">PAGE_COUNT</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">[</span><span class="n">PAGE_HOME</span><span class="p">]</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">{.</span><span class="n">kind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_NAV_ITEM</span><span class="p">,</span><span class="w">      </span><span class="p">.</span><span class="n">icon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Home"</span><span class="p">,</span><span class="w">     </span><span class="p">.</span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Home"</span><span class="p">},</span>
+<span class="w">    </span><span class="p">[</span><span class="n">PAGE_PROJECTS</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{.</span><span class="n">kind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_NAV_ITEM</span><span class="p">,</span><span class="w">      </span><span class="p">.</span><span class="n">icon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Folder"</span><span class="p">,</span><span class="w">   </span><span class="p">.</span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Projects"</span><span class="p">},</span>
+<span class="w">    </span><span class="p">[</span><span class="n">PAGE_SEP_1</span><span class="p">]</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="p">{.</span><span class="n">kind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_NAV_SEPARATOR</span><span class="p">},</span>
+<span class="w">    </span><span class="p">[</span><span class="n">PAGE_SETTINGS</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{.</span><span class="n">kind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_NAV_FOOTER</span><span class="p">,</span><span class="w">    </span><span class="p">.</span><span class="n">icon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Settings"</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Settings"</span><span class="p">},</span>
+<span class="p">};</span>
+
+<span class="k">static</span><span class="w"> </span><span class="n">XtkEl</span><span class="w"> </span><span class="o">*</span><span class="nf">active_page</span><span class="p">(</span><span class="n">XtkUi</span><span class="w"> </span><span class="o">*</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="n">Model</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">m</span><span class="o">-&gt;</span><span class="n">page</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">PAGE_PROJECTS</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">view_projects</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">);</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">PAGE_SETTINGS</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">view_settings</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">);</span>
+<span class="w">    </span><span class="k">default</span><span class="w">            </span><span class="o">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">view_home</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="n">XtkEl</span><span class="w"> </span><span class="o">*</span><span class="nf">view</span><span class="p">(</span><span class="n">XtkUi</span><span class="w"> </span><span class="o">*</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">model</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Model</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">model</span><span class="p">;</span>
+<span class="w">    </span><span class="n">XtkEl</span><span class="w"> </span><span class="o">*</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_grow</span><span class="p">(</span>
+<span class="w">        </span><span class="n">xtk_keyed_u64</span><span class="p">(</span>
+<span class="w">            </span><span class="n">xtk_scroll</span><span class="p">(</span>
+<span class="w">                </span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkScrollDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">},</span>
+<span class="w">                </span><span class="n">xtk_kids</span><span class="p">(</span><span class="n">xtk_column</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkStackDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{.</span><span class="n">padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">36</span><span class="p">,</span><span class="w"> </span><span class="mi">28</span><span class="p">,</span><span class="w"> </span><span class="mi">36</span><span class="p">,</span><span class="w"> </span><span class="mi">28</span><span class="p">},</span><span class="w"> </span><span class="p">.</span><span class="n">gap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">align</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XENT_FLEX_ALIGN_STRETCH</span><span class="p">},</span>
+<span class="w">                    </span><span class="n">xtk_kids</span><span class="p">(</span><span class="n">active_page</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">))</span>
+<span class="w">                </span><span class="p">))</span>
+<span class="w">            </span><span class="p">),</span>
+<span class="w">            </span><span class="p">(</span><span class="kt">uint64_t</span><span class="p">)</span><span class="w"> </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">page</span>
+<span class="w">        </span><span class="p">),</span>
+<span class="w">        </span><span class="mf">1.0f</span>
+<span class="w">    </span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">xtk_grow</span><span class="p">(</span>
+<span class="w">        </span><span class="n">xtk_nav</span><span class="p">(</span>
+<span class="w">            </span><span class="n">ui</span><span class="p">,</span>
+<span class="w">            </span><span class="p">(</span><span class="n">XtkNavDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="p">.</span><span class="n">items</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="n">kNavItems</span><span class="p">,</span>
+<span class="w">                </span><span class="p">.</span><span class="n">nitem</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="n">PAGE_COUNT</span><span class="p">,</span>
+<span class="w">                </span><span class="p">.</span><span class="n">sel</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">page</span><span class="p">,</span>
+<span class="w">                </span><span class="p">.</span><span class="n">window_title_bar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span>
+<span class="w">                </span><span class="p">.</span><span class="n">app_title</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s">"My Xent App"</span><span class="p">,</span>
+<span class="w">                </span><span class="p">.</span><span class="n">select</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_NAV_SELECT</span><span class="p">),</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="n">xtk_kids</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+<span class="w">        </span><span class="p">),</span>
+<span class="w">        </span><span class="mf">1.0f</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Wrapping the scrollable page container in <code class="docutils literal notranslate"><span class="pre">xtk_keyed_u64(...,</span> <span class="pre">m-&gt;page)</span></code> gives
+each route its own scroll viewport so every page starts cleanly at its own
+offset.</p>
+</section>
+<section id="splitview-and-custom-titlebar">
+<h2><code class="docutils literal notranslate"><span class="pre">SplitView</span></code> and Custom <code class="docutils literal notranslate"><span class="pre">TitleBar</span></code><a class="headerlink" href="#splitview-and-custom-titlebar" title="Link to this heading">¶</a></h2>
+<p>When you want a custom collapsible side drawer or custom window chrome without a
+<code class="docutils literal notranslate"><span class="pre">NavigationView</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_splitview(ui,</span> <span class="pre">desc,</span> <span class="pre">pane_el,</span> <span class="pre">content_el)</span></code> (<code class="docutils literal notranslate"><span class="pre">&amp;flux_ctrl_splitview</span></code>) —
+Supports <code class="docutils literal notranslate"><span class="pre">XTK_SPLITVIEW_INLINE</span></code>, <code class="docutils literal notranslate"><span class="pre">COMPACT_INLINE</span></code>, <code class="docutils literal notranslate"><span class="pre">OVERLAY</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">COMPACT_OVERLAY</span></code> modes on either <code class="docutils literal notranslate"><span class="pre">XTK_SPLITVIEW_LEFT</span></code> or <code class="docutils literal notranslate"><span class="pre">RIGHT</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_titlebar(ui,</span> <span class="pre">&quot;App</span> <span class="pre">Title&quot;,</span> <span class="pre">desc)</span></code> (<code class="docutils literal notranslate"><span class="pre">&amp;flux_ctrl_titlebar</span></code>) — Setting
+<code class="docutils literal notranslate"><span class="pre">.integrate_window</span> <span class="pre">=</span> <span class="pre">true</span></code> removes the standard Win32 title bar, draws
+themed caption buttons (Minimize / Maximize / Close) with Snap Layouts support,
+marks the bar draggable, and posts <code class="docutils literal notranslate"><span class="pre">.on_back</span></code> and <code class="docutils literal notranslate"><span class="pre">.on_pane_toggle</span></code>
+messages.</p></li>
+</ul>
+</section>
+<section id="document-tabview-selectorbar-expander">
+<h2>Document <code class="docutils literal notranslate"><span class="pre">TabView</span></code>, <code class="docutils literal notranslate"><span class="pre">SelectorBar</span></code>, &amp; <code class="docutils literal notranslate"><span class="pre">Expander</span></code><a class="headerlink" href="#document-tabview-selectorbar-expander" title="Link to this heading">¶</a></h2>
+<ul>
+<li><p><strong>Closable &amp; addable tabs</strong> (<code class="docutils literal notranslate"><span class="pre">xtk_tabs</span></code>, <code class="docutils literal notranslate"><span class="pre">&amp;flux_ctrl_tab</span></code>): Keep your open
+document list and active index in <code class="docutils literal notranslate"><span class="pre">Model</span></code>. Build a stack or arena array of
+<code class="docutils literal notranslate"><span class="pre">XtkTabDesc</span></code> headers and render the active tab’s body as the child:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">XtkTabDesc</span><span class="w"> </span><span class="n">headers</span><span class="p">[</span><span class="mi">16</span><span class="p">];</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">tab_count</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">headers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">XtkTabDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{.</span><span class="n">icon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Document"</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">tabs</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">title</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="n">xtk_tabs</span><span class="p">(</span>
+<span class="w">    </span><span class="n">ui</span><span class="p">,</span>
+<span class="w">    </span><span class="p">(</span><span class="n">XtkTabViewDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">tabs</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">headers</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">ntab</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">tab_count</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">sel</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">active_tab</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">select</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_TAB_SELECT</span><span class="p">),</span><span class="w"> </span><span class="c1">// msg.i = clicked tab index</span>
+<span class="w">        </span><span class="p">.</span><span class="n">close</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_TAB_CLOSE</span><span class="p">),</span><span class="w">  </span><span class="c1">// msg.i = closed tab index</span>
+<span class="w">        </span><span class="p">.</span><span class="n">add</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_TAB_NEW</span><span class="p">),</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="n">xtk_kids</span><span class="p">(</span><span class="n">m</span><span class="o">-&gt;</span><span class="n">tab_count</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">view_document</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">m</span><span class="o">-&gt;</span><span class="n">tabs</span><span class="p">[</span><span class="n">m</span><span class="o">-&gt;</span><span class="n">active_tab</span><span class="p">])</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nb">NULL</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Pivot &amp; path bars</strong>: <code class="docutils literal notranslate"><span class="pre">xtk_selector</span></code> (lightweight horizontal view switcher),
+<code class="docutils literal notranslate"><span class="pre">xtk_breadcrumb</span></code> (clickable path hierarchy posting segment index in
+<code class="docutils literal notranslate"><span class="pre">msg.i</span></code>), <code class="docutils literal notranslate"><span class="pre">xtk_expander</span></code> (collapsible disclosure card controlled by
+<code class="docutils literal notranslate"><span class="pre">.expanded</span></code> and <code class="docutils literal notranslate"><span class="pre">.toggle</span></code>), and <code class="docutils literal notranslate"><span class="pre">xtk_flip</span></code> / <code class="docutils literal notranslate"><span class="pre">xtk_pips</span></code> /
+<code class="docutils literal notranslate"><span class="pre">xtk_pager</span></code> for paged media carousels.</p></li>
+</ul>
+</section>
+<section id="menubar-and-commandbar-0-3-3">
+<h2><code class="docutils literal notranslate"><span class="pre">MenuBar</span></code> and <code class="docutils literal notranslate"><span class="pre">CommandBar</span></code> (0.3.3)<a class="headerlink" href="#menubar-and-commandbar-0-3-3" title="Link to this heading">¶</a></h2>
+<ul>
+<li><p><strong>Desktop MenuBar</strong> (<code class="docutils literal notranslate"><span class="pre">xtk_menubar</span></code>, <code class="docutils literal notranslate"><span class="pre">&amp;flux_ctrl_menubar</span></code>): Takes an array
+of <code class="docutils literal notranslate"><span class="pre">XtkMenuDesc</span></code> top-level menus (<code class="docutils literal notranslate"><span class="pre">File</span></code>, <code class="docutils literal notranslate"><span class="pre">Edit</span></code>, <code class="docutils literal notranslate"><span class="pre">View</span></code>), each
+pointing to an array of <code class="docutils literal notranslate"><span class="pre">XtkMenuItemDesc</span></code> items with <code class="docutils literal notranslate"><span class="pre">.click</span></code> messages.</p></li>
+<li><p><strong>Fluent CommandBar</strong> (<code class="docutils literal notranslate"><span class="pre">xtk_commandbar</span></code>, <code class="docutils literal notranslate"><span class="pre">&amp;flux_ctrl_commandbar</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&amp;flux_ctrl_appbarbutton</span></code>, <code class="docutils literal notranslate"><span class="pre">&amp;flux_ctrl_appbartoggle</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&amp;flux_ctrl_appbarsep</span></code>): Places primary icon/label commands on a toolbar,
+moves <code class="docutils literal notranslate"><span class="pre">.secondary</span> <span class="pre">=</span> <span class="pre">true</span></code> commands into the <code class="docutils literal notranslate"><span class="pre">...</span></code> overflow menu, and
+automatically overflows primary commands as the window narrows when
+<code class="docutils literal notranslate"><span class="pre">.dynamic</span> <span class="pre">=</span> <span class="pre">true</span></code>:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">xtk_commandbar</span><span class="p">(</span>
+<span class="w">    </span><span class="n">ui</span><span class="p">,</span>
+<span class="w">    </span><span class="p">(</span><span class="n">XtkCommandBarDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{.</span><span class="n">labels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_LABEL_RIGHT</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">dynamic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">},</span>
+<span class="w">    </span><span class="n">xtk_kids</span><span class="p">(</span>
+<span class="w">        </span><span class="n">xtk_appbarbutton</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="s">"New"</span><span class="p">,</span><span class="w">  </span><span class="p">(</span><span class="n">XtkAppBarDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{.</span><span class="n">icon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Add"</span><span class="p">,</span><span class="w">  </span><span class="p">.</span><span class="n">accel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Ctrl+N"</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">click</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_NEW</span><span class="p">)}),</span>
+<span class="w">        </span><span class="n">xtk_appbarbutton</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="s">"Save"</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkAppBarDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{.</span><span class="n">icon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Save"</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">accel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Ctrl+S"</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">click</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_SAVE</span><span class="p">)}),</span>
+<span class="w">        </span><span class="n">xtk_appbarsep</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkAppBarDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">}),</span>
+<span class="w">        </span><span class="n">xtk_appbartoggle</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="s">"Wrap"</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkAppBarDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{.</span><span class="n">icon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"AlignLeft"</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">checked</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">word_wrap</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">change</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_WRAP</span><span class="p">)}),</span>
+<span class="w">        </span><span class="n">xtk_appbarbutton</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="s">"Export PDF…"</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkAppBarDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{.</span><span class="n">secondary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">click</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_EXPORT_PDF</span><span class="p">)})</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="modal-contentdialog-teachingtip-status-controls">
+<h2>Modal <code class="docutils literal notranslate"><span class="pre">ContentDialog</span></code>, <code class="docutils literal notranslate"><span class="pre">TeachingTip</span></code>, &amp; Status Controls<a class="headerlink" href="#modal-contentdialog-teachingtip-status-controls" title="Link to this heading">¶</a></h2>
+<p>Overlays in declarative Xent are controlled by boolean flags in <code class="docutils literal notranslate"><span class="pre">Model</span></code>—place
+the <code class="docutils literal notranslate"><span class="pre">xtk_dialog</span></code> or <code class="docutils literal notranslate"><span class="pre">xtk_teachtip</span></code> element in your <code class="docutils literal notranslate"><span class="pre">view()</span></code> tree and
+toggle <code class="docutils literal notranslate"><span class="pre">.open</span></code>:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// In update():</span>
+<span class="k">case</span><span class="w"> </span><span class="no">MSG_ASK_DELETE</span><span class="p">:</span>
+<span class="w">    </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">confirm_open</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">break</span><span class="p">;</span>
+<span class="k">case</span><span class="w"> </span><span class="no">MSG_CONFIRM_RESULT</span><span class="p">:</span>
+<span class="w">    </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">confirm_open</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">msg</span><span class="p">.</span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">          </span><span class="c1">// 1 = primary, 2 = secondary, 0 = close/cancel</span>
+<span class="w">        </span><span class="n">delete_selected_item</span><span class="p">(</span><span class="n">m</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">break</span><span class="p">;</span>
+
+<span class="c1">// In view() (register &amp;flux_ctrl_dialog):</span>
+<span class="n">xtk_dialog</span><span class="p">(</span>
+<span class="w">    </span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="s">"Delete project?"</span><span class="p">,</span>
+<span class="w">    </span><span class="p">(</span><span class="n">XtkDialogDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">open</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">confirm_open</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">primary</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s">"Delete"</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">secondary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Archive instead"</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">close</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s">"Cancel"</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">w</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="mf">420.0f</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">contenth</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mf">64.0f</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">result</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_CONFIRM_RESULT</span><span class="p">),</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="n">xtk_kids</span><span class="p">(</span>
+<span class="w">        </span><span class="n">xtk_text</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="s">"Removing this project deletes local build caches permanently."</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkTextDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{.</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">14</span><span class="p">})</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>TeachingTip</strong> (<code class="docutils literal notranslate"><span class="pre">xtk_teachtip</span></code>, <code class="docutils literal notranslate"><span class="pre">&amp;flux_ctrl_teachtip</span></code>): Non-modal callout
+with <code class="docutils literal notranslate"><span class="pre">.subtitle</span></code>, <code class="docutils literal notranslate"><span class="pre">.action_text</span></code>, <code class="docutils literal notranslate"><span class="pre">.on_action</span></code>, <code class="docutils literal notranslate"><span class="pre">.light_dismiss</span> <span class="pre">=</span> <span class="pre">true</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">.close</span></code> message.</p></li>
+<li><p><strong>Status &amp; feedback</strong>: <code class="docutils literal notranslate"><span class="pre">xtk_infobar</span></code> (<code class="docutils literal notranslate"><span class="pre">XTK_INFOBAR_INFORMATIONAL</span></code>,
+<code class="docutils literal notranslate"><span class="pre">SUCCESS</span></code>, <code class="docutils literal notranslate"><span class="pre">WARNING</span></code>, <code class="docutils literal notranslate"><span class="pre">ERROR</span></code> banner with optional <code class="docutils literal notranslate"><span class="pre">.closable</span></code>
+button), <code class="docutils literal notranslate"><span class="pre">xtk_progress</span></code> (determinate or <code class="docutils literal notranslate"><span class="pre">.indeterminate</span> <span class="pre">=</span> <span class="pre">true</span></code> bar with
+<code class="docutils literal notranslate"><span class="pre">XTK_PROGRESS_NORMAL</span></code> / <code class="docutils literal notranslate"><span class="pre">PAUSED</span></code> / <code class="docutils literal notranslate"><span class="pre">ERROR</span></code> states),
+<code class="docutils literal notranslate"><span class="pre">xtk_progressring</span></code>, and <code class="docutils literal notranslate"><span class="pre">xtk_badge</span></code>.</p></li>
+</ul>
+</section>
+</section>
+
+
+    </main>
+    <nav class="related bottom" role="navigation">
+  <a class="prev" href="collections.html" title="Previous">
+    &larr; 4. Virtualized Lists, Grids, Trees, &amp; Caching
+  </a>
+  <a class="next" href="host.html" title="Next">
+    6. File Dialogs, Drag-and-Drop, Theme, &amp; Worker Threads &rarr;
+  </a>
+  <div class="clear"></div>
+    </nav>
+    
+
+  </div>
+
+  <div class="clear"></div>
+</div>
+<footer class="footer" role="contentinfo">
+    &copy; Copyright 2026, Project Xent.
+  
+  Created using <a href="http://sphinx-doc.org/">Sphinx</a> with
+  <a href="https://github.com/vsalvino/sphinx-library">Library</a> theme.
+  
+  <a href="../_sources/declarative/navigation.rst.txt" rel="nofollow">Page source</a>
+</footer>
+  </body>
+</html>

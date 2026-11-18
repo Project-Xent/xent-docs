@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Project Xent &#8212; Xent 0.3.3 文档</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=c03c27c6" />
+    <link rel="stylesheet" type="text/css" href="_static/library/library.css?v=fa49c7df" />
+    <script src="_static/documentation_options.js?v=0538d007"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/translations.js?v=540d3cec"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="快速开始" href="quickstart.html" />
+ 
+
+<link rel="stylesheet" id="sphinx-library-type" href="_static/library/type-book.css" type="text/css" />
+<link rel="stylesheet" href="_static/custom.css" type="text/css" />
+<meta name="viewport" content="width=device-width, initial-scale=0.9" />
+<script>
+  mobile_menu_content = "";
+  function toggleMenu() {
+    var div = document.getElementsByClassName("document").item(0);
+    var btn = document.getElementById("menu-toggler");
+    if(div.classList.contains("mobile-show")) {
+      div.classList.remove("mobile-show");
+      btn.innerHTML = mobile_menu_content;
+    }
+    else {
+      div.classList.add("mobile-show");
+      mobile_menu_content = btn.innerHTML;
+      btn.innerHTML = btn.getAttribute("data-open");
+    }
+  }
+</script>
+  </head>
+<body class="sepia">
+<script>
+  (function () {
+    var key = "sphinx-library-mode";
+    var dark = window.matchMedia("(prefers-color-scheme: dark)");
+    function stored() {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function apply() {
+      document.body.className = stored() || (dark.matches ? "dark" : "sepia");
+    }
+    window.toggleMode = function (theme) {
+      try {
+        if (theme) localStorage.setItem(key, theme);
+        else localStorage.removeItem(key);
+      } catch (e) {}
+      apply();
+    };
+    dark.addEventListener("change", apply);
+    apply();
+  })();
+</script>
+<div class="document">
+
+  
+  <nav class="mobile-menu" role="navigation">
+    
+  <button type="button" id="menu-toggler" onclick="toggleMenu();"
+    data-open="× Close">≡ Menu</button>
+  <a href="#">Xent</a>
+  <noscript>
+    <div>
+      JavaScript is required to open/close mobile menu.
+    </div>
+  </noscript>
+  </nav>
+  
+
+  
+  <nav class="sphinxsidebar" role="navigation" aria-label="main navigation">
+    
+
+
+<h1 class="logo ">
+  <a href="#">Xent</a>
+</h1>
+
+
+
+<p class="description">Native cross-platform UI in C23.</p>
+
+
+
+<p class="description">Version 0.3.3</p>
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="提交" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>目录</h3>
+<p class="caption" role="heading"><span class="caption-text">使用手册</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="declarative/index.html">声明式开发指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="imperative/index.html">命令式开发指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">架构与核心概念</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API 参考</a></li>
+</ul>
+
+<h3>本页目录</h3>
+<div class="localtoc"><ul>
+<li><a class="reference internal" href="#">Project Xent</a><ul>
+<li><a class="reference internal" href="#stack-overview">组件栈概览</a></li>
+</ul>
+</li>
+</ul>
+</div><h3>阅读模式</h3>
+<button type="button" onclick="toggleMode(null);">自动</button>
+<button type="button" onclick="toggleMode('light');">浅色</button>
+<button type="button" onclick="toggleMode('sepia');">护眼</button>
+<button type="button" onclick="toggleMode('dark');">深色</button>
+<noscript>
+  <div>切换阅读模式需要启用 JavaScript.</div>
+</noscript>
+  </nav>
+  <div class="documentwrapper">
+    
+
+    <main class="body" role="main" id="main">
+      
+  <section id="project-xent">
+<h1>Project Xent<a class="headerlink" href="#project-xent" title="链接到此标题。">¶</a></h1>
+<p>Project Xent 是使用 C23 编写的原生跨平台 UI 技术栈（当前版本 <strong>0.3.3</strong> ）。应用代码面向平台无关的控件协议编写，由底层原生宿主提供操作系统窗口、文本排版、输入处理与无障碍支持。</p>
+<section id="stack-overview">
+<h2>组件栈概览<a class="headerlink" href="#stack-overview" title="链接到此标题。">¶</a></h2>
+<p>Project Xent 由三个 C23 包组成。开发应用程序时，代码直接调用 <code class="docutils literal notranslate"><span class="pre">xent-kit</span></code> 与目标平台宿主（Windows 上为 <code class="docutils literal notranslate"><span class="pre">fluxent</span></code> ）：</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 24.0%" />
+<col style="width: 56.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>包名</p></th>
+<th class="head"><p>应用层调用方式</p></th>
+<th class="head"><p>核心职责</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">xent-core</span></code></p></td>
+<td><p>作为底层依赖自动拉取</p></td>
+<td><p>平台无关的布局引擎（Flex、Grid、SwiftStack、Absolute）、带代次校验的节点树、固有尺寸与文本测量缓存、语义树以及不可变显示列表。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">xent-kit</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk.h&gt;</span></code> 或 <code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk_controls.h&gt;</span></code></p></td>
+<td><p>标准控件目录、原子化 <code class="docutils literal notranslate"><span class="pre">XtkBatch</span></code> 事务协议、命令式 <code class="docutils literal notranslate"><span class="pre">XtkScene</span></code> 接口，以及声明式 <code class="docutils literal notranslate"><span class="pre">xtk_*</span></code> 运行时。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fluxent</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&lt;fluxent/fluxent.h&gt;</span></code></p></td>
+<td><p>基于 Win32、Direct2D、DirectWrite、DirectComposition、UI Automation 与 <code class="docutils literal notranslate"><span class="pre">cwinrt</span></code> 构建的 Windows 10 1903+ 原生宿主，负责窗口管理、Fluent 控件渲染、Mica/Acrylic 背景材质、输入法（IME）、输入分发以及应用主循环（ <code class="docutils literal notranslate"><span class="pre">flux_run</span></code> / <code class="docutils literal notranslate"><span class="pre">flux_app_run</span></code> ）。</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>官方 <strong>0.3.3</strong> 多语言绑定共享同一套控件目录与原生宿主： <code class="docutils literal notranslate"><span class="pre">oxent</span></code> （Rust）、 <code class="docutils literal notranslate"><span class="pre">zxent</span></code> （Zig）、 <code class="docutils literal notranslate"><span class="pre">xenthon</span></code> （Python 3.12+）与 <code class="docutils literal notranslate"><span class="pre">hsxent</span></code> （Haskell）。本手册介绍 C23 原生技术栈的用法。</p>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">使用手册</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速开始</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-1-install-the-toolchain">第 1 步：安装工具链</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-2-install-the-project-templates">第 2 步：安装项目模板</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-3-declarative-vs-imperative-comparison-how-to-choose">第 3 步：声明式与命令式——对比与选型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-4-create-install-dependencies-build-and-run-your-first-app">第 4 步：创建项目、安装依赖、编译并运行第一个应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#next-steps">后续阅读</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="declarative/index.html">声明式开发指南</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="declarative/mvu.html">1. Elm MVU 循环与应用结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="declarative/layout.html">2. 布局容器、文本排版与图像媒体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="declarative/inputs.html">3. 表单输入、选择器与受控状态</a></li>
+<li class="toctree-l2"><a class="reference internal" href="declarative/collections.html">4. 虚拟化列表、网格、树视图与子树缓存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="declarative/navigation.html">5. 多页导航、工具栏与模态弹层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="declarative/host.html">6. 文件对话框、拖放、主题切换与后台线程</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="imperative/index.html">命令式开发指南</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="imperative/lifecycle.html">1. 应用、宿主与场景生命周期</a></li>
+<li class="toctree-l2"><a class="reference internal" href="imperative/transactions.html">2. 原子事务与动态子树管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="imperative/properties.html">3. 强类型构建器、属性位掩码与布局</a></li>
+<li class="toctree-l2"><a class="reference internal" href="imperative/events.html">4. 事件路由、帧同步与变更戳</a></li>
+<li class="toctree-l2"><a class="reference internal" href="imperative/virtualization.html">5. 命令式虚拟化列表与分组协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="imperative/shell.html">6. 对话框、拖放、剪贴板与窗口集成</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">架构与核心概念</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#three-layer-package-responsibilities">三层包职责划分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#retained-control-architecture">保留式控件架构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#modular-control-registration-binary-size">模块化控件注册与体积裁剪</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#thread-safety-background-work">线程安全与后台任务</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API 参考</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/core.html">xent-core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/kit.html">xent-kit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/fluxent.html">Fluxent</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+    </main>
+    <nav class="related bottom" role="navigation">
+  <a class="next" href="quickstart.html" title="Next">
+    快速开始 &rarr;
+  </a>
+  <div class="clear"></div>
+    </nav>
+    
+
+  </div>
+
+  <div class="clear"></div>
+</div>
+<footer class="footer" role="contentinfo">
+    &copy; Copyright 2026, Project Xent.
+  
+  Created using <a href="http://sphinx-doc.org/">Sphinx</a> with
+  <a href="https://github.com/vsalvino/sphinx-library">Library</a> theme.
+  
+  <a href="_sources/index.rst.txt" rel="nofollow">Page source</a>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>5. 命令式虚拟化列表与分组协议 &#8212; Xent 0.3.3 文档</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=c03c27c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/library/library.css?v=fa49c7df" />
+    <script src="../_static/documentation_options.js?v=0538d007"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/translations.js?v=540d3cec"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="6. 对话框、拖放、剪贴板与窗口集成" href="shell.html" />
+    <link rel="prev" title="4. 事件路由、帧同步与变更戳" href="events.html" />
+ 
+
+<link rel="stylesheet" id="sphinx-library-type" href="../_static/library/type-book.css" type="text/css" />
+<link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+<meta name="viewport" content="width=device-width, initial-scale=0.9" />
+<script>
+  mobile_menu_content = "";
+  function toggleMenu() {
+    var div = document.getElementsByClassName("document").item(0);
+    var btn = document.getElementById("menu-toggler");
+    if(div.classList.contains("mobile-show")) {
+      div.classList.remove("mobile-show");
+      btn.innerHTML = mobile_menu_content;
+    }
+    else {
+      div.classList.add("mobile-show");
+      mobile_menu_content = btn.innerHTML;
+      btn.innerHTML = btn.getAttribute("data-open");
+    }
+  }
+</script>
+  </head>
+<body class="sepia">
+<script>
+  (function () {
+    var key = "sphinx-library-mode";
+    var dark = window.matchMedia("(prefers-color-scheme: dark)");
+    function stored() {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function apply() {
+      document.body.className = stored() || (dark.matches ? "dark" : "sepia");
+    }
+    window.toggleMode = function (theme) {
+      try {
+        if (theme) localStorage.setItem(key, theme);
+        else localStorage.removeItem(key);
+      } catch (e) {}
+      apply();
+    };
+    dark.addEventListener("change", apply);
+    apply();
+  })();
+</script>
+<div class="document">
+
+  
+  <nav class="mobile-menu" role="navigation">
+    
+  <button type="button" id="menu-toggler" onclick="toggleMenu();"
+    data-open="× Close">≡ Menu</button>
+  <a href="../index.html">Xent</a>
+  <noscript>
+    <div>
+      JavaScript is required to open/close mobile menu.
+    </div>
+  </noscript>
+  </nav>
+  
+
+  
+  <nav class="sphinxsidebar" role="navigation" aria-label="main navigation">
+    
+
+
+<h1 class="logo ">
+  <a href="../index.html">Xent</a>
+</h1>
+
+
+
+<p class="description">Native cross-platform UI in C23.</p>
+
+
+
+<p class="description">Version 0.3.3</p>
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="提交" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>目录</h3>
+<p class="caption" role="heading"><span class="caption-text">使用手册</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../declarative/index.html">声明式开发指南</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">命令式开发指南</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lifecycle.html">1. 应用、宿主与场景生命周期</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transactions.html">2. 原子事务与动态子树管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="properties.html">3. 强类型构建器、属性位掩码与布局</a></li>
+<li class="toctree-l2"><a class="reference internal" href="events.html">4. 事件路由、帧同步与变更戳</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">5. 命令式虚拟化列表与分组协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shell.html">6. 对话框、拖放、剪贴板与窗口集成</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts.html">架构与核心概念</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API 参考</a></li>
+</ul>
+
+<h3>本页目录</h3>
+<div class="localtoc"><ul>
+<li><a class="reference internal" href="#">5. 命令式虚拟化列表与分组协议</a><ul>
+<li><a class="reference internal" href="#how-xtk-event-realize-works"><code class="docutils literal notranslate"><span class="pre">XTK_EVENT_REALIZE</span></code> 工作机制</a></li>
+<li><a class="reference internal" href="#complete-100-000-row-imperative-listview-example">完整的 10 万行命令式 <code class="docutils literal notranslate"><span class="pre">ListView</span></code> 示例</a></li>
+<li><a class="reference internal" href="#grouped-lists-sticky-headers-0-3-3">分组列表与吸顶组标题（0.3.3）</a></li>
+</ul>
+</li>
+</ul>
+</div><h3>阅读模式</h3>
+<button type="button" onclick="toggleMode(null);">自动</button>
+<button type="button" onclick="toggleMode('light');">浅色</button>
+<button type="button" onclick="toggleMode('sepia');">护眼</button>
+<button type="button" onclick="toggleMode('dark');">深色</button>
+<noscript>
+  <div>切换阅读模式需要启用 JavaScript.</div>
+</noscript>
+  </nav>
+  <div class="documentwrapper">
+    
+
+    <main class="body" role="main" id="main">
+      
+  <section id="imperative-virtualized-lists-grouping">
+<h1>5. 命令式虚拟化列表与分组协议<a class="headerlink" href="#imperative-virtualized-lists-grouping" title="链接到此标题。">¶</a></h1>
+<p>声明式模式下 <code class="docutils literal notranslate"><span class="pre">xtk_list</span></code> 接收 <code class="docutils literal notranslate"><span class="pre">item(ui,</span> <span class="pre">env,</span> <span class="pre">index)</span></code> 回调；而在命令式模式（以及各语言绑定）中，虚拟化由一套与具体控件解耦的事件契约驱动：<strong>宿主通过</strong> <code class="docutils literal notranslate"><span class="pre">XTK_EVENT_REALIZE</span></code> <strong>告知当前屏幕可见的下标窗口，应用在</strong> <code class="docutils literal notranslate"><span class="pre">XtkTxn</span></code> <strong>事务内填充这一小段可见项</strong> 。</p>
+<section id="how-xtk-event-realize-works">
+<h2><code class="docutils literal notranslate"><span class="pre">XTK_EVENT_REALIZE</span></code> 工作机制<a class="headerlink" href="#how-xtk-event-realize-works" title="链接到此标题。">¶</a></h2>
+<p>以 <code class="docutils literal notranslate"><span class="pre">.nitem</span> <span class="pre">=</span> <span class="pre">100000</span></code> 创建 <code class="docutils literal notranslate"><span class="pre">ListView</span></code> 、 <code class="docutils literal notranslate"><span class="pre">ListBox</span></code> 、 <code class="docutils literal notranslate"><span class="pre">GridView</span></code> 或 <code class="docutils literal notranslate"><span class="pre">ItemsRepeater</span></code> 时，初始状态下包含零个行子控件。每当布局引擎完成视口测量或用户滚动进入新的行区间时，宿主都会在列表控件上触发 <code class="docutils literal notranslate"><span class="pre">XTK_EVENT_REALIZE</span></code> （ <code class="docutils literal notranslate"><span class="pre">event-&gt;payload.kind</span> <span class="pre">==</span> <span class="pre">XTK_EVENT_PAYLOAD_WINDOW</span></code> ）：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">event-&gt;payload.u.window.first</span></code> —— 需要实例化的首个可见行下标。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">event-&gt;payload.u.window.last</span></code> —— 需要实例化的最后一个可见行下标（闭区间）。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">event-&gt;payload.u.window.lanes</span></code> —— 每行包含的列槽数（纵向列表为 <code class="docutils literal notranslate"><span class="pre">1</span></code> ，多列 <code class="docutils literal notranslate"><span class="pre">GridView</span></code> 为 <code class="docutils literal notranslate"><span class="pre">&gt;=</span> <span class="pre">1</span></code> ）。</p></li>
+</ul>
+<p>在 <code class="docutils literal notranslate"><span class="pre">XTK_EVENT_REALIZE</span></code> 回调内开启一个 <code class="docutils literal notranslate"><span class="pre">XtkTxn</span></code> 事务并依次完成四步：</p>
+<ol class="arabic simple">
+<li><p><strong>销毁（Drop）</strong> 下标已滑出 <code class="docutils literal notranslate"><span class="pre">[first,</span> <span class="pre">last]</span></code> 区间外的旧 <code class="docutils literal notranslate"><span class="pre">XtkCtrl</span></code> 行控件。</p></li>
+<li><p><strong>保留（Keep）</strong> 仍处于重叠可见窗口内的现有行控件，使滚动过程原地复用已有实例。</p></li>
+<li><p><strong>创建（Create）</strong> 新进入视口的 <code class="docutils literal notranslate"><span class="pre">XTK_CTRL_LISTITEM</span></code> 子节点（向上滚动时插入到首个保留行之前，向下滚动时追加到末尾），并在其内部填充具体内容控件。</p></li>
+<li><p><strong>发布（Publish）</strong> 列表控件的 <code class="docutils literal notranslate"><span class="pre">XTK_PROP_REALIZED_FIRST</span> <span class="pre">=</span> <span class="pre">first</span></code> 属性并提交事务。</p></li>
+</ol>
+</section>
+<section id="complete-100-000-row-imperative-listview-example">
+<h2>完整的 10 万行命令式 <code class="docutils literal notranslate"><span class="pre">ListView</span></code> 示例<a class="headerlink" href="#complete-100-000-row-imperative-listview-example" title="链接到此标题。">¶</a></h2>
+<p>记得在启动时注册 <code class="docutils literal notranslate"><span class="pre">&amp;flux_ctrl_list</span></code> 、 <code class="docutils literal notranslate"><span class="pre">&amp;flux_ctrl_container</span></code> 与 <code class="docutils literal notranslate"><span class="pre">&amp;flux_ctrl_text</span></code> （或调用 <code class="docutils literal notranslate"><span class="pre">flux_controls_all()</span></code> ）：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define MAX_REALIZED_ROWS 128</span>
+
+<span class="k">typedef</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">VirtualList</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">XtkScene</span><span class="w"> </span><span class="o">*</span><span class="n">scene</span><span class="p">;</span>
+<span class="w">    </span><span class="n">XtkCtrl</span><span class="w">   </span><span class="n">slots</span><span class="p">[</span><span class="n">MAX_REALIZED_ROWS</span><span class="p">];</span>
+<span class="w">    </span><span class="kt">int</span><span class="w">       </span><span class="n">first</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w">       </span><span class="n">count</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="n">VirtualList</span><span class="p">;</span>
+
+<span class="k">static</span><span class="w"> </span><span class="n">XtkCtrl</span><span class="w"> </span><span class="nf">find_ctrl</span><span class="p">(</span><span class="n">XtkBatchResult</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="n">res</span><span class="p">,</span><span class="w"> </span><span class="n">XtkLocalId</span><span class="w"> </span><span class="n">local</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">res</span><span class="o">-&gt;</span><span class="n">control_count</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">res</span><span class="o">-&gt;</span><span class="n">controls</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">local</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">local</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="o">-&gt;</span><span class="n">controls</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">control</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">XTK_CTRL_INVALID</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">populate_row</span><span class="p">(</span><span class="n">XtkTxn</span><span class="w"> </span><span class="o">*</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">XtkNodeRef</span><span class="w"> </span><span class="n">item_slot</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">index</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="n">label</span><span class="p">[</span><span class="mi">64</span><span class="p">];</span>
+<span class="w">    </span><span class="kt">int</span><span class="w">  </span><span class="n">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">snprintf</span><span class="p">(</span><span class="n">label</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">label</span><span class="p">),</span><span class="w"> </span><span class="s">"Row #%d"</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">);</span>
+<span class="w">    </span><span class="n">xtk_text_create</span><span class="p">(</span>
+<span class="w">        </span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">item_slot</span><span class="p">,</span>
+<span class="w">        </span><span class="o">&amp;</span><span class="p">(</span><span class="n">XtkTextProps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="p">.</span><span class="n">set</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_TEXT_TEXT_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_TEXT_FONTSIZE_MASK</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">text</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">label</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">text_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">uint32_t</span><span class="p">)</span><span class="w"> </span><span class="n">len</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">fontsize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">14.0f</span><span class="p">,</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="nf">on_list_realize</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">arg</span><span class="p">,</span><span class="w"> </span><span class="n">XtkEvent</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="n">event</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">VirtualList</span><span class="w"> </span><span class="o">*</span><span class="n">vl</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">arg</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w">          </span><span class="n">first</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">event</span><span class="o">-&gt;</span><span class="n">payload</span><span class="p">.</span><span class="n">u</span><span class="p">.</span><span class="n">window</span><span class="p">.</span><span class="n">first</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w">          </span><span class="n">last</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">event</span><span class="o">-&gt;</span><span class="n">payload</span><span class="p">.</span><span class="n">u</span><span class="p">.</span><span class="n">window</span><span class="p">.</span><span class="n">last</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w">          </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">last</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">last</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">count</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">MAX_REALIZED_ROWS</span><span class="p">)</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MAX_REALIZED_ROWS</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">keep_lo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">vl</span><span class="o">-&gt;</span><span class="n">first</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">vl</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">old_end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vl</span><span class="o">-&gt;</span><span class="n">first</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">vl</span><span class="o">-&gt;</span><span class="n">count</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">new_end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">count</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">keep_hi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">old_end</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">new_end</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">old_end</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">new_end</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">XtkTxn</span><span class="w"> </span><span class="n">txn</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">xtk_txn_begin</span><span class="p">(</span><span class="n">vl</span><span class="o">-&gt;</span><span class="n">scene</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">txn</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">XTK_EVENT_HANDLED</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">XtkNodeRef</span><span class="w"> </span><span class="n">list_ref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_ref_existing</span><span class="p">(</span><span class="n">event</span><span class="o">-&gt;</span><span class="n">target</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 1. Drop rows that scrolled out of view</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">vl</span><span class="o">-&gt;</span><span class="n">count</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vl</span><span class="o">-&gt;</span><span class="n">first</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">idx</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">keep_lo</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">keep_hi</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">xtk_txn_drop</span><span class="p">(</span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_ref_existing</span><span class="p">(</span><span class="n">vl</span><span class="o">-&gt;</span><span class="n">slots</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 2. Keep overlapping rows and create newly visible XTK_CTRL_LISTITEM slots in order</span>
+<span class="w">    </span><span class="n">XtkNodeRef</span><span class="w"> </span><span class="n">anchor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">keep_hi</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">keep_lo</span>
+<span class="w">        </span><span class="o">?</span><span class="w"> </span><span class="n">xtk_ref_existing</span><span class="p">(</span><span class="n">vl</span><span class="o">-&gt;</span><span class="n">slots</span><span class="p">[</span><span class="n">keep_lo</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">vl</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">])</span>
+<span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="n">xtk_ref_none</span><span class="p">();</span>
+
+<span class="w">    </span><span class="n">XtkNodeRef</span><span class="w"> </span><span class="n">next_refs</span><span class="p">[</span><span class="n">MAX_REALIZED_ROWS</span><span class="p">];</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">count</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">idx</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">keep_lo</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">keep_hi</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">next_refs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_ref_existing</span><span class="p">(</span><span class="n">vl</span><span class="o">-&gt;</span><span class="n">slots</span><span class="p">[</span><span class="n">idx</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">vl</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">]);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">XtkNodeRef</span><span class="w"> </span><span class="n">before</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">keep_lo</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">anchor</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">xtk_ref_none</span><span class="p">();</span>
+<span class="w">            </span><span class="n">XtkLocalId</span><span class="w"> </span><span class="n">item</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_txn_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">XTK_CTRL_LISTITEM</span><span class="p">,</span><span class="w"> </span><span class="n">list_ref</span><span class="p">,</span><span class="w"> </span><span class="n">before</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">            </span><span class="n">populate_row</span><span class="p">(</span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_ref_local</span><span class="p">(</span><span class="n">item</span><span class="p">),</span><span class="w"> </span><span class="n">idx</span><span class="p">);</span>
+<span class="w">            </span><span class="n">next_refs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_ref_local</span><span class="p">(</span><span class="n">item</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 3. Publish the realized window origin and commit atomically</span>
+<span class="w">    </span><span class="n">xtk_txn_set</span><span class="p">(</span>
+<span class="w">        </span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">list_ref</span><span class="p">,</span><span class="w"> </span><span class="n">XTK_PROP_REALIZED_FIRST</span><span class="p">,</span>
+<span class="w">        </span><span class="p">(</span><span class="n">XtkValue</span><span class="p">)</span><span class="w"> </span><span class="p">{.</span><span class="n">kind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_VALUE_I32</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">u</span><span class="p">.</span><span class="n">i32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">first</span><span class="p">},</span>
+<span class="w">        </span><span class="p">(</span><span class="n">XtkChangeStamp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">}</span>
+<span class="w">    </span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">XtkBatchResult</span><span class="w"> </span><span class="o">*</span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_txn_commit</span><span class="p">(</span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">res</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">XTK_EVENT_HANDLED</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">count</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">vl</span><span class="o">-&gt;</span><span class="n">slots</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">next_refs</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">kind</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">XTK_REF_LOCAL</span>
+<span class="w">            </span><span class="o">?</span><span class="w"> </span><span class="n">find_ctrl</span><span class="p">(</span><span class="n">res</span><span class="p">,</span><span class="w"> </span><span class="n">next_refs</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">u</span><span class="p">.</span><span class="n">local</span><span class="p">)</span>
+<span class="w">            </span><span class="o">:</span><span class="w"> </span><span class="n">next_refs</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">u</span><span class="p">.</span><span class="n">existing</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">vl</span><span class="o">-&gt;</span><span class="n">first</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">first</span><span class="p">;</span>
+<span class="w">    </span><span class="n">vl</span><span class="o">-&gt;</span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">count</span><span class="p">;</span>
+<span class="w">    </span><span class="n">xtk_batchresult_destroy</span><span class="p">(</span><span class="n">res</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">XTK_EVENT_HANDLED</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>在初始构建事务中创建列表时挂载 <code class="docutils literal notranslate"><span class="pre">on_list_realize</span></code> 回调：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">XtkLocalId</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_list_create</span><span class="p">(</span>
+<span class="w">    </span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">parent</span><span class="p">,</span>
+<span class="w">    </span><span class="o">&amp;</span><span class="p">(</span><span class="n">XtkListProps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">set</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_LIST_GROW_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_LIST_NITEM_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_LIST_ITEMH_MASK</span>
+<span class="w">               </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_LIST_MODE_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_LIST_SEL_MASK</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">grow</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0f</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">nitem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100000</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">itemh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">40.0f</span><span class="p">,</span><span class="w"> </span><span class="c1">// Set 0.0f in 0.3.3 for measured variable-height rows</span>
+<span class="w">        </span><span class="p">.</span><span class="n">mode</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_LIST_SELECT_SINGLE</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">sel</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="p">,</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">);</span>
+<span class="n">xtk_txn_on</span><span class="p">(</span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_ref_local</span><span class="p">(</span><span class="n">list</span><span class="p">),</span><span class="w"> </span><span class="n">XTK_EVENT_REALIZE</span><span class="p">,</span><span class="w"> </span><span class="n">XTK_EVENT_PHASE_MASK_TARGET</span><span class="p">,</span><span class="w"> </span><span class="n">on_list_realize</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">app</span><span class="o">-&gt;</span><span class="n">vlist</span><span class="p">);</span>
+<span class="n">xtk_list_onselect</span><span class="p">(</span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_ref_local</span><span class="p">(</span><span class="n">list</span><span class="p">),</span><span class="w"> </span><span class="n">on_row_selected</span><span class="p">,</span><span class="w"> </span><span class="n">app</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="grouped-lists-sticky-headers-0-3-3">
+<h2>分组列表与吸顶组标题（0.3.3）<a class="headerlink" href="#grouped-lists-sticky-headers-0-3-3" title="链接到此标题。">¶</a></h2>
+<p>为 <code class="docutils literal notranslate"><span class="pre">ListView</span></code> 或 <code class="docutils literal notranslate"><span class="pre">GridView</span></code> 启用分段与内联吸顶组标题只需两步：</p>
+<ol class="arabic">
+<li><p>创建列表时将各组元素个数的 <code class="docutils literal notranslate"><span class="pre">int32_t</span></code> 数组作为 <code class="docutils literal notranslate"><span class="pre">XTK_VALUE_BYTES</span></code> 字节切片写入 <code class="docutils literal notranslate"><span class="pre">XTK_PROP_GROUPS</span></code> ：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">int32_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">kGroupSizes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span><span class="w"> </span><span class="mi">9</span><span class="w"> </span><span class="p">};</span>
+
+<span class="n">xtk_txn_set</span><span class="p">(</span>
+<span class="w">    </span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_ref_local</span><span class="p">(</span><span class="n">list</span><span class="p">),</span><span class="w"> </span><span class="n">XTK_PROP_GROUPS</span><span class="p">,</span>
+<span class="w">    </span><span class="p">(</span><span class="n">XtkValue</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">kind</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_VALUE_BYTES</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">u</span><span class="p">.</span><span class="n">bytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{(</span><span class="kt">uint8_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">kGroupSizes</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">kGroupSizes</span><span class="p">)},</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">(</span><span class="n">XtkChangeStamp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">}</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>在 <code class="docutils literal notranslate"><span class="pre">XTK_EVENT_REALIZE</span></code> 回调中，扁平行号由组标题与数据项交错组成。调用 <code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk.h&gt;</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">XtkListRow</span> <span class="pre">at</span> <span class="pre">=</span> <span class="pre">xtk_list_row(kGroupSizes,</span> <span class="pre">3,</span> <span class="pre">row)</span></code> 进行映射：</p>
+<ul class="simple">
+<li><p>当 <code class="docutils literal notranslate"><span class="pre">at.item</span> <span class="pre">&lt;</span> <span class="pre">0</span></code> 时，该 <code class="docutils literal notranslate"><span class="pre">row</span></code> 是第 <code class="docutils literal notranslate"><span class="pre">at.group</span></code> 组的标题行——通过 <code class="docutils literal notranslate"><span class="pre">xtk_txn_create</span></code> 创建 <code class="docutils literal notranslate"><span class="pre">XTK_CTRL_GROUPHEADER</span></code> 。</p></li>
+<li><p>当 <code class="docutils literal notranslate"><span class="pre">at.item</span> <span class="pre">&gt;=</span> <span class="pre">0</span></code> 时，该 <code class="docutils literal notranslate"><span class="pre">row</span></code> 是第 <code class="docutils literal notranslate"><span class="pre">at.group</span></code> 组内的逻辑数据项 <code class="docutils literal notranslate"><span class="pre">at.item</span></code> ——创建 <code class="docutils literal notranslate"><span class="pre">XTK_CTRL_LISTITEM</span></code> 。</p></li>
+<li><p>当 <code class="docutils literal notranslate"><span class="pre">window.first</span></code> 落在某个分组内部（ <code class="docutils literal notranslate"><span class="pre">at.item</span> <span class="pre">&gt;=</span> <span class="pre">0</span></code> ）时，同时将该组对应的标题行实例化在 <code class="docutils literal notranslate"><span class="pre">first</span></code> 之前，以便宿主将其吸顶固定在视口顶端。可直接参考 <code class="docutils literal notranslate"><span class="pre">fluxent/examples/gallery_imp/app.c</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">groups_realize</span></code> 完整实现。</p></li>
+</ul>
+</li>
+</ol>
+</section>
+</section>
+
+
+    </main>
+    <nav class="related bottom" role="navigation">
+  <a class="prev" href="events.html" title="Previous">
+    &larr; 4. 事件路由、帧同步与变更戳
+  </a>
+  <a class="next" href="shell.html" title="Next">
+    6. 对话框、拖放、剪贴板与窗口集成 &rarr;
+  </a>
+  <div class="clear"></div>
+    </nav>
+    
+
+  </div>
+
+  <div class="clear"></div>
+</div>
+<footer class="footer" role="contentinfo">
+    &copy; Copyright 2026, Project Xent.
+  
+  Created using <a href="http://sphinx-doc.org/">Sphinx</a> with
+  <a href="https://github.com/vsalvino/sphinx-library">Library</a> theme.
+  
+  <a href="../_sources/imperative/virtualization.rst.txt" rel="nofollow">Page source</a>
+</footer>
+  </body>
+</html>

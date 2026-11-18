@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>xent-kit &#8212; Xent 0.3.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=c03c27c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/library/library.css?v=fa49c7df" />
+    <script src="../_static/documentation_options.js?v=d5a15cff"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Fluxent" href="fluxent.html" />
+    <link rel="prev" title="xent-core" href="core.html" />
+ 
+
+<link rel="stylesheet" id="sphinx-library-type" href="../_static/library/type-book.css" type="text/css" />
+<link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+<meta name="viewport" content="width=device-width, initial-scale=0.9" />
+<script>
+  mobile_menu_content = "";
+  function toggleMenu() {
+    var div = document.getElementsByClassName("document").item(0);
+    var btn = document.getElementById("menu-toggler");
+    if(div.classList.contains("mobile-show")) {
+      div.classList.remove("mobile-show");
+      btn.innerHTML = mobile_menu_content;
+    }
+    else {
+      div.classList.add("mobile-show");
+      mobile_menu_content = btn.innerHTML;
+      btn.innerHTML = btn.getAttribute("data-open");
+    }
+  }
+</script>
+  </head>
+<body class="sepia">
+<script>
+  (function () {
+    var key = "sphinx-library-mode";
+    var dark = window.matchMedia("(prefers-color-scheme: dark)");
+    function stored() {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function apply() {
+      document.body.className = stored() || (dark.matches ? "dark" : "sepia");
+    }
+    window.toggleMode = function (theme) {
+      try {
+        if (theme) localStorage.setItem(key, theme);
+        else localStorage.removeItem(key);
+      } catch (e) {}
+      apply();
+    };
+    dark.addEventListener("change", apply);
+    apply();
+  })();
+</script>
+<div class="document">
+
+  
+  <nav class="mobile-menu" role="navigation">
+    
+  <button type="button" id="menu-toggler" onclick="toggleMenu();"
+    data-open="× Close">≡ Menu</button>
+  <a href="../index.html">Xent</a>
+  <noscript>
+    <div>
+      JavaScript is required to open/close mobile menu.
+    </div>
+  </noscript>
+  </nav>
+  
+
+  
+  <nav class="sphinxsidebar" role="navigation" aria-label="main navigation">
+    
+
+
+<h1 class="logo ">
+  <a href="../index.html">Xent</a>
+</h1>
+
+
+
+<p class="description">Native cross-platform UI in C23.</p>
+
+
+
+<p class="description">Version 0.3.3</p>
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Contents</h3>
+<p class="caption" role="heading"><span class="caption-text">Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../declarative/index.html">Declarative UI Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imperative/index.html">Imperative UI Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts.html">Architecture &amp; Core Concepts</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">xent-core</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">xent-kit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fluxent.html">Fluxent</a></li>
+</ul>
+</li>
+</ul>
+
+<h3>Page Contents</h3>
+<div class="localtoc"><ul>
+<li><a class="reference internal" href="#">xent-kit</a><ul>
+<li><a class="reference internal" href="#c.xtk_batch_set"><code class="docutils literal notranslate"><span class="pre">xtk_batch_set()</span></code></a></li>
+<li><a class="reference internal" href="#c.xtk_batch_on"><code class="docutils literal notranslate"><span class="pre">xtk_batch_on()</span></code></a></li>
+<li><a class="reference internal" href="#c.XtkValueView"><code class="docutils literal notranslate"><span class="pre">XtkValueView</span></code></a></li>
+<li><a class="reference internal" href="#c.XtkEventPayload"><code class="docutils literal notranslate"><span class="pre">XtkEventPayload</span></code></a></li>
+<li><a class="reference internal" href="#c.xtk_rt_post"><code class="docutils literal notranslate"><span class="pre">xtk_rt_post()</span></code></a></li>
+<li><a class="reference internal" href="#c.xtk_rt_poststring"><code class="docutils literal notranslate"><span class="pre">xtk_rt_poststring()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div><h3>Reading Mode</h3>
+<button type="button" onclick="toggleMode(null);">Auto</button>
+<button type="button" onclick="toggleMode('light');">Light</button>
+<button type="button" onclick="toggleMode('sepia');">Sepia</button>
+<button type="button" onclick="toggleMode('dark');">Dark</button>
+<noscript>
+  <div>JavaScript is required to toggle reading modes.</div>
+</noscript>
+  </nav>
+  <div class="documentwrapper">
+    
+
+    <main class="body" role="main" id="main">
+      
+  <section id="xent-kit">
+<h1>xent-kit<a class="headerlink" href="#xent-kit" title="Link to this heading">¶</a></h1>
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xtk_batch_set">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xtk_batch_set</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XtkBatch</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">batch</span></span>, <span class="n"><span class="pre">XtkNodeRef</span></span><span class="w"> </span><span class="n"><span class="pre">target</span></span>, <span class="n"><span class="pre">XtkPropertyId</span></span><span class="w"> </span><span class="n"><span class="pre">id</span></span>, <span class="n"><span class="pre">XtkValue</span></span><span class="w"> </span><span class="n"><span class="pre">value</span></span>, <span class="n"><span class="pre">XtkChangeStamp</span></span><span class="w"> </span><span class="n"><span class="pre">change</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xtk_batch_set" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Copies string and bytes. The caller may free them. <cite>len &gt; 0</cite> with a NULL pointer fails and appends nothing. A resource id is copied; <cite>res_retain</cite> is not called.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xtk_batch_on">
+<span class="n"><span class="pre">XtkSubRef</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xtk_batch_on</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XtkBatch</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">batch</span></span>, <span class="n"><span class="pre">XtkNodeRef</span></span><span class="w"> </span><span class="n"><span class="pre">target</span></span>, <span class="n"><span class="pre">XtkEventId</span></span><span class="w"> </span><span class="n"><span class="pre">event</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">phases</span></span>, <span class="n"><span class="pre">XtkEventFn</span></span><span class="w"> </span><span class="n"><span class="pre">fn</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">arg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xtk_batch_on" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Borrows <cite>arg</cite> until unsubscribe or the host is destroyed.</p>
+</dd></dl>
+
+<dl class="c struct">
+<dt class="sig sig-object c" id="c.XtkValueView">
+<span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">XtkValueView</span></span></span><a class="headerlink" href="#c.XtkValueView" title="Link to this definition">¶</a><br /></dt>
+<dd><p><cite>string</cite> and <cite>bytes</cite> point at the host’s stored copy, until that property changes or the host is destroyed.</p>
+</dd></dl>
+
+<dl class="c struct">
+<dt class="sig sig-object c" id="c.XtkEventPayload">
+<span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">XtkEventPayload</span></span></span><a class="headerlink" href="#c.XtkEventPayload" title="Link to this definition">¶</a><br /></dt>
+<dd><p><cite>string</cite> and <cite>query.text</cite> are valid only for the duration of the callback.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xtk_rt_post">
+<span class="n"><span class="pre">XtkPostStatus</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xtk_rt_post</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XtkRt</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">rt</span></span>, <span class="n"><span class="pre">XtkMsg</span></span><span class="w"> </span><span class="n"><span class="pre">msg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xtk_rt_post" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Must run on the thread that created <cite>rt</cite>.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xtk_rt_poststring">
+<span class="n"><span class="pre">XtkPostStatus</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xtk_rt_poststring</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XtkRt</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">rt</span></span>, <span class="n"><span class="pre">XtkMsg</span></span><span class="w"> </span><span class="n"><span class="pre">msg</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">data</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xtk_rt_poststring" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Must run on the thread that created <cite>rt</cite>. Copies <cite>data</cite>; the caller may free it. <cite>len &gt; 0</cite> with NULL <cite>data</cite> is rejected.</p>
+</dd></dl>
+
+</section>
+
+
+    </main>
+    <nav class="related bottom" role="navigation">
+  <a class="prev" href="core.html" title="Previous">
+    &larr; xent-core
+  </a>
+  <a class="next" href="fluxent.html" title="Next">
+    Fluxent &rarr;
+  </a>
+  <div class="clear"></div>
+    </nav>
+    
+
+  </div>
+
+  <div class="clear"></div>
+</div>
+<footer class="footer" role="contentinfo">
+    &copy; Copyright 2026, Project Xent.
+  
+  Created using <a href="http://sphinx-doc.org/">Sphinx</a> with
+  <a href="https://github.com/vsalvino/sphinx-library">Library</a> theme.
+  
+  <a href="../_sources/api/kit.rst.txt" rel="nofollow">Page source</a>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Fluxent &#8212; Xent 0.3.3 文档</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=c03c27c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/library/library.css?v=fa49c7df" />
+    <script src="../_static/documentation_options.js?v=0538d007"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/translations.js?v=540d3cec"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="prev" title="xent-kit" href="kit.html" />
+ 
+
+<link rel="stylesheet" id="sphinx-library-type" href="../_static/library/type-book.css" type="text/css" />
+<link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+<meta name="viewport" content="width=device-width, initial-scale=0.9" />
+<script>
+  mobile_menu_content = "";
+  function toggleMenu() {
+    var div = document.getElementsByClassName("document").item(0);
+    var btn = document.getElementById("menu-toggler");
+    if(div.classList.contains("mobile-show")) {
+      div.classList.remove("mobile-show");
+      btn.innerHTML = mobile_menu_content;
+    }
+    else {
+      div.classList.add("mobile-show");
+      mobile_menu_content = btn.innerHTML;
+      btn.innerHTML = btn.getAttribute("data-open");
+    }
+  }
+</script>
+  </head>
+<body class="sepia">
+<script>
+  (function () {
+    var key = "sphinx-library-mode";
+    var dark = window.matchMedia("(prefers-color-scheme: dark)");
+    function stored() {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function apply() {
+      document.body.className = stored() || (dark.matches ? "dark" : "sepia");
+    }
+    window.toggleMode = function (theme) {
+      try {
+        if (theme) localStorage.setItem(key, theme);
+        else localStorage.removeItem(key);
+      } catch (e) {}
+      apply();
+    };
+    dark.addEventListener("change", apply);
+    apply();
+  })();
+</script>
+<div class="document">
+
+  
+  <nav class="mobile-menu" role="navigation">
+    
+  <button type="button" id="menu-toggler" onclick="toggleMenu();"
+    data-open="× Close">≡ Menu</button>
+  <a href="../index.html">Xent</a>
+  <noscript>
+    <div>
+      JavaScript is required to open/close mobile menu.
+    </div>
+  </noscript>
+  </nav>
+  
+
+  
+  <nav class="sphinxsidebar" role="navigation" aria-label="main navigation">
+    
+
+
+<h1 class="logo ">
+  <a href="../index.html">Xent</a>
+</h1>
+
+
+
+<p class="description">Native cross-platform UI in C23.</p>
+
+
+
+<p class="description">Version 0.3.3</p>
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="提交" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>目录</h3>
+<p class="caption" role="heading"><span class="caption-text">使用手册</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../declarative/index.html">声明式开发指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imperative/index.html">命令式开发指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts.html">架构与核心概念</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API 参考</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">xent-core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kit.html">xent-kit</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Fluxent</a></li>
+</ul>
+</li>
+</ul>
+
+<h3>本页目录</h3>
+<div class="localtoc"><ul>
+<li><a class="reference internal" href="#">Fluxent</a><ul>
+<li><a class="reference internal" href="#c.flux_host_create"><code class="docutils literal notranslate"><span class="pre">flux_host_create()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_host_adopt"><code class="docutils literal notranslate"><span class="pre">flux_host_adopt()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_host_subscribe"><code class="docutils literal notranslate"><span class="pre">flux_host_subscribe()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_image_respath"><code class="docutils literal notranslate"><span class="pre">flux_image_respath()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_app_onframe"><code class="docutils literal notranslate"><span class="pre">flux_app_onframe()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_app_invoke"><code class="docutils literal notranslate"><span class="pre">flux_app_invoke()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_app_poststring"><code class="docutils literal notranslate"><span class="pre">flux_app_poststring()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_data_settext"><code class="docutils literal notranslate"><span class="pre">flux_data_settext()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_data_setfiles"><code class="docutils literal notranslate"><span class="pre">flux_data_setfiles()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_data_setbitmap"><code class="docutils literal notranslate"><span class="pre">flux_data_setbitmap()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_data_setcustom"><code class="docutils literal notranslate"><span class="pre">flux_data_setcustom()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_data_text"><code class="docutils literal notranslate"><span class="pre">flux_data_text()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_data_files"><code class="docutils literal notranslate"><span class="pre">flux_data_files()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_data_bitmap"><code class="docutils literal notranslate"><span class="pre">flux_data_bitmap()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_data_custom"><code class="docutils literal notranslate"><span class="pre">flux_data_custom()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_clipboard_get"><code class="docutils literal notranslate"><span class="pre">flux_clipboard_get()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_clipboard_settext"><code class="docutils literal notranslate"><span class="pre">flux_clipboard_settext()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_clipboard_text"><code class="docutils literal notranslate"><span class="pre">flux_clipboard_text()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_drag_data"><code class="docutils literal notranslate"><span class="pre">flux_drag_data()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_filedialog_show"><code class="docutils literal notranslate"><span class="pre">flux_filedialog_show()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_filedialog_post"><code class="docutils literal notranslate"><span class="pre">flux_filedialog_post()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_window_onrender"><code class="docutils literal notranslate"><span class="pre">flux_window_onrender()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_window_onresize"><code class="docutils literal notranslate"><span class="pre">flux_window_onresize()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_window_addresizeobs"><code class="docutils literal notranslate"><span class="pre">flux_window_addresizeobs()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_window_ondpi"><code class="docutils literal notranslate"><span class="pre">flux_window_ondpi()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_window_onpointer"><code class="docutils literal notranslate"><span class="pre">flux_window_onpointer()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_window_onkey"><code class="docutils literal notranslate"><span class="pre">flux_window_onkey()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_window_onchar"><code class="docutils literal notranslate"><span class="pre">flux_window_onchar()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_window_onime"><code class="docutils literal notranslate"><span class="pre">flux_window_onime()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_window_onsettings"><code class="docutils literal notranslate"><span class="pre">flux_window_onsettings()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_window_onuia"><code class="docutils literal notranslate"><span class="pre">flux_window_onuia()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_window_settitlebar"><code class="docutils literal notranslate"><span class="pre">flux_window_settitlebar()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_popup_ondismiss"><code class="docutils literal notranslate"><span class="pre">flux_popup_ondismiss()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_popup_onpaint"><code class="docutils literal notranslate"><span class="pre">flux_popup_onpaint()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_popup_onrecord"><code class="docutils literal notranslate"><span class="pre">flux_popup_onrecord()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_popup_onmouse"><code class="docutils literal notranslate"><span class="pre">flux_popup_onmouse()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_gfx_onredraw"><code class="docutils literal notranslate"><span class="pre">flux_gfx_onredraw()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_store_ondel"><code class="docutils literal notranslate"><span class="pre">flux_store_ondel()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_flyout_onpaint"><code class="docutils literal notranslate"><span class="pre">flux_flyout_onpaint()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_flyout_ondismiss"><code class="docutils literal notranslate"><span class="pre">flux_flyout_ondismiss()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_menu_ondismiss"><code class="docutils literal notranslate"><span class="pre">flux_menu_ondismiss()</span></code></a></li>
+<li><a class="reference internal" href="#c.flux_input_setmodal"><code class="docutils literal notranslate"><span class="pre">flux_input_setmodal()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div><h3>阅读模式</h3>
+<button type="button" onclick="toggleMode(null);">自动</button>
+<button type="button" onclick="toggleMode('light');">浅色</button>
+<button type="button" onclick="toggleMode('sepia');">护眼</button>
+<button type="button" onclick="toggleMode('dark');">深色</button>
+<noscript>
+  <div>切换阅读模式需要启用 JavaScript.</div>
+</noscript>
+  </nav>
+  <div class="documentwrapper">
+    
+
+    <main class="body" role="main" id="main">
+      
+  <section id="fluxent">
+<h1>Fluxent<a class="headerlink" href="#fluxent" title="链接到此标题。">¶</a></h1>
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_host_create">
+<span class="n"><span class="pre">XtkHost</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">flux_host_create</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_host_create" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>调用 <cite>flux_host_destroy</cite> 时会一并释放该函数创建的上下文与存储实例。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_host_adopt">
+<span class="n"><span class="pre">XtkHost</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">flux_host_adopt</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XentCtx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span>, <span class="n"><span class="pre">FluxStore</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">store</span></span>, <span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="n"><span class="pre">root</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_host_adopt" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用外部传入的 <cite>ctx</cite> 与 <cite>store</cite> （所有权仍归调用方）。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_host_subscribe">
+<span class="n"><span class="pre">XtkSubId</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_host_subscribe</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XtkHost</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">host</span></span>, <span class="n"><span class="pre">XtkCtrl</span></span><span class="w"> </span><span class="n"><span class="pre">target</span></span>, <span class="n"><span class="pre">XtkEventId</span></span><span class="w"> </span><span class="n"><span class="pre">event</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">phases</span></span>, <span class="n"><span class="pre">XtkEventFn</span></span><span class="w"> </span><span class="n"><span class="pre">fn</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">userdata</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_host_subscribe" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>userdata</cite> 直至调用 <cite>flux_host_unsubscribe</cite> 或 <cite>flux_host_destroy</cite> 。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_image_respath">
+<span class="n"><span class="pre">XtkResource</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_image_respath</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">path</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_image_respath" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>拷贝 <cite>path</cite> ，调用方随后可释放原字符串；返回的资源 ID 在整个进程生命周期内有效。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_app_onframe">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_app_onframe</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxApp</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">app</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">cb</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span><span class="p"><span class="pre">)</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_app_onframe" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>ctx</cite> 直至该回调被替换或应用销毁。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_app_invoke">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_app_invoke</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxApp</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">app</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span><span class="p"><span class="pre">)</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_app_invoke" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>ctx</cite> 直至 <cite>fn</cite> 在窗口线程上执行完毕。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_app_poststring">
+<span class="n"><span class="pre">XtkPostStatus</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_app_poststring</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxApp</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">app</span></span>, <span class="n"><span class="pre">XtkMsg</span></span><span class="w"> </span><span class="n"><span class="pre">msg</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">data</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_app_poststring" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>拷贝 <cite>data</cite> 并投递到窗口线程，调用方随后可释放 <cite>data</cite> ；当 <cite>len &gt; 0</cite> 且 <cite>data</cite> 为 NULL 时拒绝投递。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_data_settext">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_data_settext</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxData</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">data</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">utf8</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_data_settext" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>拷贝 <cite>utf8</cite> 字符串，调用方随后可释放原缓冲区。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_data_setfiles">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_data_setfiles</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxData</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">data</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">paths</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_data_setfiles" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>拷贝 <cite>paths</cite> 字符串，调用方随后可释放原缓冲区。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_data_setbitmap">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_data_setbitmap</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxData</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">data</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">FluxBitmap</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">bitmap</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_data_setbitmap" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>拷贝 <cite>bitmap-&gt;pixels</cite> 像素数据，调用方随后可释放原缓冲区。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_data_setcustom">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_data_setcustom</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxData</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">data</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">format</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">bytes</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_data_setcustom" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>拷贝 <cite>bytes</cite> 字节数据，调用方随后可释放原缓冲区。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_data_text">
+<span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">flux_data_text</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">FluxData</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">data</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_data_text" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>返回由 <cite>malloc</cite> 分配的 UTF-8 字符串，由调用方负责释放。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_data_files">
+<span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">flux_data_files</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">FluxData</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">data</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_data_files" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>返回由 <cite>malloc</cite> 分配的 UTF-8 字符串（每行一个路径），由调用方负责释放。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_data_bitmap">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_data_bitmap</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">FluxData</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">data</span></span>, <span class="n"><span class="pre">FluxBitmap</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">out</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_data_bitmap" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>将像素数据拷贝至 <cite>out</cite> ，由调用方负责释放 <cite>out-&gt;pixels</cite> 。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_data_custom">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">flux_data_custom</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">FluxData</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">data</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">format</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_data_custom" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>返回由 <cite>malloc</cite> 分配的字节缓冲区（ <cite>*len</cite> 为字节数），由调用方负责释放该指针。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_clipboard_get">
+<span class="n"><span class="pre">FluxData</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">flux_clipboard_get</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_clipboard_get" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>返回调用方拥有的实例，使用完毕后由调用方销毁。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_clipboard_settext">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_clipboard_settext</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">utf8</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_clipboard_settext" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>拷贝 <cite>utf8</cite> 字符串，调用方随后可释放原缓冲区。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_clipboard_text">
+<span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">flux_clipboard_text</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_clipboard_text" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>返回由 <cite>malloc</cite> 分配的 UTF-8 字符串，由调用方负责释放。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_drag_data">
+<span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">FluxData</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">flux_drag_data</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_drag_data" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用引用，仅在拖放回调执行期间有效。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_filedialog_show">
+<span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">flux_filedialog_show</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxApp</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">app</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">FluxFileDialogDesc</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">desc</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_filedialog_show" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>返回由 <cite>malloc</cite> 分配的 UTF-8 字符串（每行一个路径；用户取消时返回 NULL），由调用方负责释放。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_filedialog_post">
+<span class="n"><span class="pre">XtkPostStatus</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_filedialog_post</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxApp</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">app</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">FluxFileDialogDesc</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">desc</span></span>, <span class="n"><span class="pre">XtkMsg</span></span><span class="w"> </span><span class="n"><span class="pre">reply</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_filedialog_post" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>拷贝 <cite>desc</cite> 中的各字符串，调用方随后可释放；选中的路径按每行一个 UTF-8 路径投递。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_window_onrender">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_window_onrender</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxWindow</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">win</span></span>, <span class="n"><span class="pre">FluxRenderFn</span></span><span class="w"> </span><span class="n"><span class="pre">cb</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_window_onrender" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>ctx</cite> 直至该回调被替换或窗口销毁。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_window_onresize">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_window_onresize</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxWindow</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">win</span></span>, <span class="n"><span class="pre">FluxResizeFn</span></span><span class="w"> </span><span class="n"><span class="pre">cb</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_window_onresize" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>ctx</cite> 直至该回调被替换或窗口销毁。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_window_addresizeobs">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_window_addresizeobs</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxWindow</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">win</span></span>, <span class="n"><span class="pre">FluxResizeFn</span></span><span class="w"> </span><span class="n"><span class="pre">cb</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_window_addresizeobs" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>ctx</cite> 直至调用 <cite>flux_window_delresizeobs</cite> 或窗口销毁。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_window_ondpi">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_window_ondpi</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxWindow</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">win</span></span>, <span class="n"><span class="pre">FluxDpiChangedFn</span></span><span class="w"> </span><span class="n"><span class="pre">cb</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_window_ondpi" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>ctx</cite> 直至该回调被替换或窗口销毁。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_window_onpointer">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_window_onpointer</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxWindow</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">win</span></span>, <span class="n"><span class="pre">FluxPointerFn</span></span><span class="w"> </span><span class="n"><span class="pre">cb</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_window_onpointer" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>ctx</cite> 直至该回调被替换或窗口销毁。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_window_onkey">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_window_onkey</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxWindow</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">win</span></span>, <span class="n"><span class="pre">FluxKeyFn</span></span><span class="w"> </span><span class="n"><span class="pre">cb</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_window_onkey" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>ctx</cite> 直至该回调被替换或窗口销毁。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_window_onchar">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_window_onchar</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxWindow</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">win</span></span>, <span class="n"><span class="pre">FluxCharFn</span></span><span class="w"> </span><span class="n"><span class="pre">cb</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_window_onchar" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>ctx</cite> 直至该回调被替换或窗口销毁。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_window_onime">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_window_onime</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxWindow</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">win</span></span>, <span class="n"><span class="pre">FluxImeCompositionFn</span></span><span class="w"> </span><span class="n"><span class="pre">cb</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_window_onime" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>ctx</cite> 直至该回调被替换或窗口销毁。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_window_onsettings">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_window_onsettings</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxWindow</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">win</span></span>, <span class="n"><span class="pre">FluxSettingChangedFn</span></span><span class="w"> </span><span class="n"><span class="pre">cb</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_window_onsettings" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>ctx</cite> 直至该回调被替换或窗口销毁。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_window_onuia">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_window_onuia</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxWindow</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">win</span></span>, <span class="n"><span class="pre">FluxUiaProviderFn</span></span><span class="w"> </span><span class="n"><span class="pre">cb</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_window_onuia" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>ctx</cite> 直至该回调被替换或窗口销毁。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_window_settitlebar">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_window_settitlebar</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxWindow</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">win</span></span>, <span class="n"><span class="pre">FluxRect</span></span><span class="w"> </span><span class="n"><span class="pre">drag</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">FluxRect</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">passthrough</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n"><span class="pre">count</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_window_settitlebar" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>拷贝 <cite>passthrough</cite> 区域数组，调用方随后可释放。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_popup_ondismiss">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_popup_ondismiss</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxPopup</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">popup</span></span>, <span class="n"><span class="pre">FluxPopupDismissFn</span></span><span class="w"> </span><span class="n"><span class="pre">cb</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_popup_ondismiss" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>ctx</cite> 直至该回调被替换或弹出层销毁。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_popup_onpaint">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_popup_onpaint</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxPopup</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">popup</span></span>, <span class="n"><span class="pre">FluxPopupPaintFn</span></span><span class="w"> </span><span class="n"><span class="pre">cb</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_popup_onpaint" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>ctx</cite> 直至该回调被替换或弹出层销毁。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_popup_onrecord">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_popup_onrecord</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxPopup</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">popup</span></span>, <span class="n"><span class="pre">FluxPopupRecordFn</span></span><span class="w"> </span><span class="n"><span class="pre">cb</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span>, <span class="n"><span class="pre">FluxText</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">text</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_popup_onrecord" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>ctx</cite> 与 <cite>text</cite> 直至该回调被替换或弹出层销毁。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_popup_onmouse">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_popup_onmouse</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxPopup</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">popup</span></span>, <span class="n"><span class="pre">FluxPopupMouseFn</span></span><span class="w"> </span><span class="n"><span class="pre">cb</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_popup_onmouse" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>ctx</cite> 直至该回调被替换或弹出层销毁。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_gfx_onredraw">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_gfx_onredraw</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxGfx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">gfx</span></span>, <span class="n"><span class="pre">FluxRedrawFn</span></span><span class="w"> </span><span class="n"><span class="pre">cb</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_gfx_onredraw" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>ctx</cite> 直至该回调被替换或图形对象销毁。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_store_ondel">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_store_ondel</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxStore</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">store</span></span>, <span class="n"><span class="pre">FluxNodeRemovedFn</span></span><span class="w"> </span><span class="n"><span class="pre">fn</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">userdata</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_store_ondel" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>userdata</cite> 直至该回调被替换或存储实例销毁。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_flyout_onpaint">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_flyout_onpaint</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxFlyout</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">flyout</span></span>, <span class="n"><span class="pre">FluxFlyoutPaintFn</span></span><span class="w"> </span><span class="n"><span class="pre">cb</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">user_ctx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_flyout_onpaint" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>user_ctx</cite> 直至该回调被替换或浮出层销毁。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_flyout_ondismiss">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_flyout_ondismiss</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxFlyout</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">flyout</span></span>, <span class="n"><span class="pre">FluxPopupDismissFn</span></span><span class="w"> </span><span class="n"><span class="pre">cb</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">user_ctx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_flyout_ondismiss" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>user_ctx</cite> 直至该回调被替换或浮出层销毁。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_menu_ondismiss">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_menu_ondismiss</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxMenu</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">menu</span></span>, <span class="n"><span class="pre">FluxPopupDismissFn</span></span><span class="w"> </span><span class="n"><span class="pre">cb</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_menu_ondismiss" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>ctx</cite> 直至该回调被替换或菜单销毁。</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.flux_input_setmodal">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flux_input_setmodal</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FluxInput</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">input</span></span>, <span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="n"><span class="pre">root</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">on_escape</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span><span class="p"><span class="pre">)</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.flux_input_setmodal" title="链接到此定义。">¶</a><br /></dt>
+<dd><p>借用 <cite>ctx</cite> 直至该回调被替换或输入对象销毁。</p>
+</dd></dl>
+
+</section>
+
+
+    </main>
+    <nav class="related bottom" role="navigation">
+  <a class="prev" href="kit.html" title="Previous">
+    &larr; xent-kit
+  </a>
+  <div class="clear"></div>
+    </nav>
+    
+
+  </div>
+
+  <div class="clear"></div>
+</div>
+<footer class="footer" role="contentinfo">
+    &copy; Copyright 2026, Project Xent.
+  
+  Created using <a href="http://sphinx-doc.org/">Sphinx</a> with
+  <a href="https://github.com/vsalvino/sphinx-library">Library</a> theme.
+  
+  <a href="../_sources/api/fluxent.rst.txt" rel="nofollow">Page source</a>
+</footer>
+  </body>
+</html>

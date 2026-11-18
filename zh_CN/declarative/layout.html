@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>2. 布局容器、文本排版与图像媒体 &#8212; Xent 0.3.3 文档</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=c03c27c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/library/library.css?v=fa49c7df" />
+    <script src="../_static/documentation_options.js?v=0538d007"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/translations.js?v=540d3cec"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="3. 表单输入、选择器与受控状态" href="inputs.html" />
+    <link rel="prev" title="1. Elm MVU 循环与应用结构" href="mvu.html" />
+ 
+
+<link rel="stylesheet" id="sphinx-library-type" href="../_static/library/type-book.css" type="text/css" />
+<link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+<meta name="viewport" content="width=device-width, initial-scale=0.9" />
+<script>
+  mobile_menu_content = "";
+  function toggleMenu() {
+    var div = document.getElementsByClassName("document").item(0);
+    var btn = document.getElementById("menu-toggler");
+    if(div.classList.contains("mobile-show")) {
+      div.classList.remove("mobile-show");
+      btn.innerHTML = mobile_menu_content;
+    }
+    else {
+      div.classList.add("mobile-show");
+      mobile_menu_content = btn.innerHTML;
+      btn.innerHTML = btn.getAttribute("data-open");
+    }
+  }
+</script>
+  </head>
+<body class="sepia">
+<script>
+  (function () {
+    var key = "sphinx-library-mode";
+    var dark = window.matchMedia("(prefers-color-scheme: dark)");
+    function stored() {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function apply() {
+      document.body.className = stored() || (dark.matches ? "dark" : "sepia");
+    }
+    window.toggleMode = function (theme) {
+      try {
+        if (theme) localStorage.setItem(key, theme);
+        else localStorage.removeItem(key);
+      } catch (e) {}
+      apply();
+    };
+    dark.addEventListener("change", apply);
+    apply();
+  })();
+</script>
+<div class="document">
+
+  
+  <nav class="mobile-menu" role="navigation">
+    
+  <button type="button" id="menu-toggler" onclick="toggleMenu();"
+    data-open="× Close">≡ Menu</button>
+  <a href="../index.html">Xent</a>
+  <noscript>
+    <div>
+      JavaScript is required to open/close mobile menu.
+    </div>
+  </noscript>
+  </nav>
+  
+
+  
+  <nav class="sphinxsidebar" role="navigation" aria-label="main navigation">
+    
+
+
+<h1 class="logo ">
+  <a href="../index.html">Xent</a>
+</h1>
+
+
+
+<p class="description">Native cross-platform UI in C23.</p>
+
+
+
+<p class="description">Version 0.3.3</p>
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="提交" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>目录</h3>
+<p class="caption" role="heading"><span class="caption-text">使用手册</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">快速开始</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">声明式开发指南</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="mvu.html">1. Elm MVU 循环与应用结构</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2. 布局容器、文本排版与图像媒体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html">3. 表单输入、选择器与受控状态</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collections.html">4. 虚拟化列表、网格、树视图与子树缓存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="navigation.html">5. 多页导航、工具栏与模态弹层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="host.html">6. 文件对话框、拖放、主题切换与后台线程</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../imperative/index.html">命令式开发指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts.html">架构与核心概念</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API 参考</a></li>
+</ul>
+
+<h3>本页目录</h3>
+<div class="localtoc"><ul>
+<li><a class="reference internal" href="#">2. 布局容器、文本排版与图像媒体</a><ul>
+<li><a class="reference internal" href="#flex-stacks-cards-and-xtk-kids">Flex 堆栈容器、卡片与 <code class="docutils literal notranslate"><span class="pre">xtk_kids</span></code></a><ul>
+<li><a class="reference internal" href="#xtkstackdesc-reference"><code class="docutils literal notranslate"><span class="pre">XtkStackDesc</span></code> 字段说明</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#sizing-and-layout-modifiers">尺寸与布局修饰器</a></li>
+<li><a class="reference internal" href="#scrollable-viewports-controlled-scrolling">可滚动视口与受控滚动</a><ul>
+<li><a class="reference internal" href="#auto-following-log-viewports">自动跟随底部的日志视口</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#typography-inherited-text-styles">文本排版与样式继承</a></li>
+<li><a class="reference internal" href="#images-svg-animated-media-nine-grid">图像、SVG、动图与九宫格拉伸</a></li>
+</ul>
+</li>
+</ul>
+</div><h3>阅读模式</h3>
+<button type="button" onclick="toggleMode(null);">自动</button>
+<button type="button" onclick="toggleMode('light');">浅色</button>
+<button type="button" onclick="toggleMode('sepia');">护眼</button>
+<button type="button" onclick="toggleMode('dark');">深色</button>
+<noscript>
+  <div>切换阅读模式需要启用 JavaScript.</div>
+</noscript>
+  </nav>
+  <div class="documentwrapper">
+    
+
+    <main class="body" role="main" id="main">
+      
+  <section id="layout-typography-media">
+<h1>2. 布局容器、文本排版与图像媒体<a class="headerlink" href="#layout-typography-media" title="链接到此标题。">¶</a></h1>
+<p>Xent 声明式布局由 Flex 堆栈容器、布局修饰器、可滚动视口、继承式文本排版与异步 WIC 图像组合而成。</p>
+<section id="flex-stacks-cards-and-xtk-kids">
+<h2>Flex 堆栈容器、卡片与 <code class="docutils literal notranslate"><span class="pre">xtk_kids</span></code><a class="headerlink" href="#flex-stacks-cards-and-xtk-kids" title="链接到此标题。">¶</a></h2>
+<p>四类常用构建器用于组织子元素与间隔：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_column(ui,</span> <span class="pre">desc,</span> <span class="pre">children)</span></code> —— 纵向排列子元素（主轴自上而下，交叉轴水平）。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_row(ui,</span> <span class="pre">desc,</span> <span class="pre">children)</span></code> —— 横向排列子元素（主轴自左向右，交叉轴垂直）。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_card(ui,</span> <span class="pre">desc,</span> <span class="pre">children)</span></code> —— 带主题背景色、圆角与描边边框的纵向 Fluent 卡片容器。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_divider(ui)</span></code> 与 <code class="docutils literal notranslate"><span class="pre">xtk_spacer(ui)</span></code> —— 堆栈内的视觉分隔线与弹性空白占位项。</p></li>
+</ul>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">xtk_kids(...)</span></code> 包裹内联子元素列表，它会自动构造以 <code class="docutils literal notranslate"><span class="pre">XTK_END</span></code> 哨兵结尾的复合字面量数组：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">xtk_card</span><span class="p">(</span>
+<span class="w">    </span><span class="n">ui</span><span class="p">,</span>
+<span class="w">    </span><span class="p">(</span><span class="n">XtkStackDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">gap</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">},</span>
+<span class="w">        </span><span class="p">.</span><span class="n">align</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">XENT_FLEX_ALIGN_STRETCH</span><span class="p">,</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="n">xtk_kids</span><span class="p">(</span>
+<span class="w">        </span><span class="n">xtk_text</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="s">"Storage"</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkTextDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{.</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">weight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_FONT_SEMI_BOLD</span><span class="p">}),</span>
+<span class="w">        </span><span class="n">xtk_divider</span><span class="p">(</span><span class="n">ui</span><span class="p">),</span>
+<span class="w">        </span><span class="n">xtk_row</span><span class="p">(</span>
+<span class="w">            </span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkStackDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{.</span><span class="n">gap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">align</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XENT_FLEX_ALIGN_CENTER</span><span class="p">},</span>
+<span class="w">            </span><span class="n">xtk_kids</span><span class="p">(</span>
+<span class="w">                </span><span class="n">xtk_text</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="s">"System drive (C:)"</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkTextDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">}),</span>
+<span class="w">                </span><span class="n">xtk_grow</span><span class="p">(</span><span class="n">xtk_spacer</span><span class="p">(</span><span class="n">ui</span><span class="p">),</span><span class="w"> </span><span class="mf">1.0f</span><span class="p">),</span>
+<span class="w">                </span><span class="n">xtk_text</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="s">"142 GB free"</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkTextDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">})</span>
+<span class="w">            </span><span class="p">)</span>
+<span class="w">        </span><span class="p">)</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<section id="xtkstackdesc-reference">
+<h3><code class="docutils literal notranslate"><span class="pre">XtkStackDesc</span></code> 字段说明<a class="headerlink" href="#xtkstackdesc-reference" title="链接到此标题。">¶</a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24.0%" />
+<col style="width: 76.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>字段</p></th>
+<th class="head"><p>作用</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.gap</span></code></p></td>
+<td><p>相邻可见子元素之间的逻辑像素间距。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">.padding</span></code></p></td>
+<td><p>按 <code class="docutils literal notranslate"><span class="pre">{left,</span> <span class="pre">top,</span> <span class="pre">right,</span> <span class="pre">bottom}``（左、上、右、下）顺序排列的</span> <span class="pre">``XentInsets</span></code> 内边距。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.align</span></code></p></td>
+<td><p>交叉轴对齐方式： <code class="docutils literal notranslate"><span class="pre">XENT_FLEX_ALIGN_START</span></code> 、 <code class="docutils literal notranslate"><span class="pre">CENTER</span></code> 、 <code class="docutils literal notranslate"><span class="pre">END</span></code> 或 <code class="docutils literal notranslate"><span class="pre">STRETCH</span></code> 。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">.justify</span></code></p></td>
+<td><p>主轴空间分布： <code class="docutils literal notranslate"><span class="pre">XENT_FLEX_JUSTIFY_START</span></code> 、 <code class="docutils literal notranslate"><span class="pre">CENTER</span></code> 、 <code class="docutils literal notranslate"><span class="pre">END</span></code> 、 <code class="docutils literal notranslate"><span class="pre">SPACE_BETWEEN</span></code> 、 <code class="docutils literal notranslate"><span class="pre">SPACE_AROUND</span></code> 或 <code class="docutils literal notranslate"><span class="pre">SPACE_EVENLY</span></code> 。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.wrap</span></code></p></td>
+<td><p>默认 <code class="docutils literal notranslate"><span class="pre">XENT_FLEX_NO_WRAP</span></code> ；设为 <code class="docutils literal notranslate"><span class="pre">XENT_FLEX_WRAP</span></code> 时支持多行自动折行（如标签组或流式工具栏）。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">.fill</span></code></p></td>
+<td><p>使容器扩展以填满父容器的可用空间。</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="sizing-and-layout-modifiers">
+<h2>尺寸与布局修饰器<a class="headerlink" href="#sizing-and-layout-modifiers" title="链接到此标题。">¶</a></h2>
+<p>修饰器函数接收一个 <code class="docutils literal notranslate"><span class="pre">XtkEl</span> <span class="pre">*</span></code> 并为其附加布局约束：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_sized(el,</span> <span class="pre">width,</span> <span class="pre">height)</span></code> —— 按逻辑像素指定宽度、高度或同时指定两者；引入 <code class="docutils literal notranslate"><span class="pre">&lt;math.h&gt;</span></code> 后对按内容自适应的轴传入 <code class="docutils literal notranslate"><span class="pre">NAN</span></code> （例如 <code class="docutils literal notranslate"><span class="pre">xtk_sized(btn,</span> <span class="pre">120.0f,</span> <span class="pre">NAN)</span></code> ）。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_grow(el,</span> <span class="pre">factor)</span></code> —— 设置沿父堆栈主轴的 Flex 伸展权重。使用 <code class="docutils literal notranslate"><span class="pre">xtk_grow(...,</span> <span class="pre">1.0f)</span></code> 包裹根容器或主内容区即可让它铺满窗口。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_align(el,</span> <span class="pre">XENT_FLEX_ALIGN_...)</span></code> —— 单独覆盖某个子元素的交叉轴对齐（例如在左对齐纵列中用 <code class="docutils literal notranslate"><span class="pre">XENT_FLEX_ALIGN_END</span></code> 让底部按钮靠右对齐）。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_margin(el,</span> <span class="pre">(XentInsets)</span> <span class="pre">{left,</span> <span class="pre">top,</span> <span class="pre">right,</span> <span class="pre">bottom})</span></code> —— 为元素四周添加外边距。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_tooltip(ui,</span> <span class="pre">el,</span> <span class="pre">&quot;Save</span> <span class="pre">Ctrl+S&quot;)</span></code> —— 附加鼠标悬停与键盘焦点提示框（需注册 <code class="docutils literal notranslate"><span class="pre">&amp;flux_ctrl_tooltip</span></code> ）。</p></li>
+</ul>
+</section>
+<section id="scrollable-viewports-controlled-scrolling">
+<h2>可滚动视口与受控滚动<a class="headerlink" href="#scrollable-viewports-controlled-scrolling" title="链接到此标题。">¶</a></h2>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">xtk_scroll</span></code> （需注册 <code class="docutils literal notranslate"><span class="pre">&amp;flux_ctrl_scroll</span></code> ）包裹长页面内容，即可获得 DirectManipulation 触控板惯性滚动与主题滚动条：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">xtk_grow</span><span class="p">(</span>
+<span class="w">    </span><span class="n">xtk_scroll</span><span class="p">(</span>
+<span class="w">        </span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkScrollDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">},</span>
+<span class="w">        </span><span class="n">xtk_kids</span><span class="p">(</span>
+<span class="w">            </span><span class="n">xtk_column</span><span class="p">(</span>
+<span class="w">                </span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkStackDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{.</span><span class="n">padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">24</span><span class="p">},</span><span class="w"> </span><span class="p">.</span><span class="n">gap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">align</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XENT_FLEX_ALIGN_STRETCH</span><span class="p">},</span>
+<span class="w">                </span><span class="n">xtk_kids</span><span class="p">(</span><span class="cm">/* page content */</span><span class="p">)</span>
+<span class="w">            </span><span class="p">)</span>
+<span class="w">        </span><span class="p">)</span>
+<span class="w">    </span><span class="p">),</span>
+<span class="w">    </span><span class="mf">1.0f</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<section id="auto-following-log-viewports">
+<h3>自动跟随底部的日志视口<a class="headerlink" href="#auto-following-log-viewports" title="链接到此标题。">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">XtkScrollDesc</span></code> 支持由 <code class="docutils literal notranslate"><span class="pre">Model</span></code> 驱动滚动偏移，非常适合实时构建日志或聊天消息面板：</p>
+<ul>
+<li><p>某个轴向传入 <code class="docutils literal notranslate"><span class="pre">NAN</span></code> 时完全交由用户滚动；传入具体像素偏移时由 <code class="docutils literal notranslate"><span class="pre">Model</span></code> 受控驱动；在 <code class="docutils literal notranslate"><span class="pre">.y</span></code> 上传入 <code class="docutils literal notranslate"><span class="pre">INFINITY</span></code> 时会在新行追加时自动吸附到底部。</p></li>
+<li><p>绑定 <code class="docutils literal notranslate"><span class="pre">.scroll</span> <span class="pre">=</span> <span class="pre">xtk_msg(MSG_LOG_SCROLL)</span></code> 后， <code class="docutils literal notranslate"><span class="pre">update()</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">msg.f</span></code> 会收到当前纵向滚动位置，而当视口贴底时 <code class="docutils literal notranslate"><span class="pre">msg.b</span></code> 为 <code class="docutils literal notranslate"><span class="pre">true</span></code> ——用户向上翻阅时自动暂停跟随，滚回底部后自动恢复跟随：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// In update():</span>
+<span class="k">case</span><span class="w"> </span><span class="no">MSG_LOG_SCROLL</span><span class="p">:</span>
+<span class="w">    </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">log_follow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">msg</span><span class="p">.</span><span class="n">b</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">log_y</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">msg</span><span class="p">.</span><span class="n">f</span><span class="p">;</span>
+<span class="w">    </span><span class="k">break</span><span class="p">;</span>
+
+<span class="c1">// In view():</span>
+<span class="n">xtk_scroll</span><span class="p">(</span>
+<span class="w">    </span><span class="n">ui</span><span class="p">,</span>
+<span class="w">    </span><span class="p">(</span><span class="n">XtkScrollDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{.</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">NAN</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">log_follow</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">INFINITY</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">log_y</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">scroll</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_LOG_SCROLL</span><span class="p">)},</span>
+<span class="w">    </span><span class="n">xtk_kids</span><span class="p">(</span><span class="n">xtk_text</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">log_buffer</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkTextDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{.</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">selectable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">}))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+<section id="typography-inherited-text-styles">
+<h2>文本排版与样式继承<a class="headerlink" href="#typography-inherited-text-styles" title="链接到此标题。">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">xtk_text(ui,</span> <span class="pre">content,</span> <span class="pre">desc)</span></code> 使用 DirectWrite 渲染排版完整的 Unicode 文本：</p>
+<ul class="simple">
+<li><p><strong>字号与字重继承（0.3.3）</strong> ：保持 <code class="docutils literal notranslate"><span class="pre">.size</span> <span class="pre">=</span> <span class="pre">0</span></code> 或 <code class="docutils literal notranslate"><span class="pre">.weight</span> <span class="pre">=</span> <span class="pre">XTK_FONT_INHERIT</span></code> 时，会自动继承最近祖先节点的字号与字重（根节点默认为 <code class="docutils literal notranslate"><span class="pre">14.0f</span></code> 与 <code class="docutils literal notranslate"><span class="pre">XTK_FONT_REGULAR</span></code> ）。标题与小节头可显式指定如 <code class="docutils literal notranslate"><span class="pre">.size</span> <span class="pre">=</span> <span class="pre">28,</span> <span class="pre">.weight</span> <span class="pre">=</span> <span class="pre">XTK_FONT_SEMI_BOLD</span></code> 。</p></li>
+<li><p><strong>自动换行、行数限制与省略号</strong> ：文本默认按容器宽度自动折行。设置 <code class="docutils literal notranslate"><span class="pre">.nowrap</span> <span class="pre">=</span> <span class="pre">true</span></code> 或 <code class="docutils literal notranslate"><span class="pre">.max_lines</span> <span class="pre">=</span> <span class="pre">2</span></code> 并配合 <code class="docutils literal notranslate"><span class="pre">.trim</span> <span class="pre">=</span> <span class="pre">XTK_TRIM_CHAR_ELLIPSIS</span></code> 、 <code class="docutils literal notranslate"><span class="pre">XTK_TRIM_WORD_ELLIPSIS</span></code> 或 <code class="docutils literal notranslate"><span class="pre">XTK_TRIM_PATH_ELLIPSIS</span></code> （适合长文件路径中间/路径级省略）可控制截断方式。</p></li>
+<li><p><strong>可选中文本</strong> ：在只读输出、错误详情或日志区域上设置 <code class="docutils literal notranslate"><span class="pre">.selectable</span> <span class="pre">=</span> <span class="pre">true</span></code> ，用户即可拖拽框选文本并按 <code class="docutils literal notranslate"><span class="pre">Ctrl+C</span></code> 复制。</p></li>
+<li><p><strong>文本颜色</strong> ：在 <code class="docutils literal notranslate"><span class="pre">.color</span></code> 中传入 <code class="docutils literal notranslate"><span class="pre">XtkColor</span></code> （保持零初始化则自动使用当前深浅色主题的主文本画刷）。</p></li>
+</ul>
+</section>
+<section id="images-svg-animated-media-nine-grid">
+<h2>图像、SVG、动图与九宫格拉伸<a class="headerlink" href="#images-svg-animated-media-nine-grid" title="链接到此标题。">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">xtk_image</span></code> （需注册 <code class="docutils literal notranslate"><span class="pre">&amp;flux_ctrl_image</span></code> ）在后台线程池上异步解码位图、GIF 动图、APNG 与矢量 SVG：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">XtkResource</span><span class="w"> </span><span class="n">logo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">flux_image_respath</span><span class="p">(</span><span class="s">"assets/logo.svg"</span><span class="p">);</span>
+
+<span class="n">xtk_sized</span><span class="p">(</span>
+<span class="w">    </span><span class="n">xtk_image</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkImageDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">logo</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">stretch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_IMAGE_UNIFORM</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">opened</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_IMG_READY</span><span class="p">),</span>
+<span class="w">        </span><span class="p">.</span><span class="n">failed</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_IMG_ERROR</span><span class="p">),</span>
+<span class="w">    </span><span class="p">}),</span>
+<span class="w">    </span><span class="mf">160.0f</span><span class="p">,</span><span class="w"> </span><span class="mf">160.0f</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">flux_image_respath(path)</span></code> 对 UTF-8 文件路径做驻留并返回进程生命周期内有效的 <code class="docutils literal notranslate"><span class="pre">XtkResource</span></code> 资源句柄。</p></li>
+<li><p><strong>缩放模式</strong> ：支持 <code class="docutils literal notranslate"><span class="pre">XTK_IMAGE_UNIFORM</span></code> （保持宽高比适应边界）、 <code class="docutils literal notranslate"><span class="pre">XTK_IMAGE_FILL</span></code> （双向拉伸填满）、 <code class="docutils literal notranslate"><span class="pre">XTK_IMAGE_UNIFORM_TO_FILL</span></code> （等比填满并裁剪溢出部分）与 <code class="docutils literal notranslate"><span class="pre">XTK_IMAGE_NONE</span></code> 。省略 <code class="docutils literal notranslate"><span class="pre">xtk_sized</span></code> 时，图像在头部异步解析完成后按其自然像素尺寸参与排版。</p></li>
+<li><p><strong>九宫格切片</strong> ：配合 <code class="docutils literal notranslate"><span class="pre">XTK_IMAGE_FILL</span></code> 设置 <code class="docutils literal notranslate"><span class="pre">.nine</span> <span class="pre">=</span> <span class="pre">{left,</span> <span class="pre">top,</span> <span class="pre">right,</span> <span class="pre">bottom}</span></code> 可保持四角原尺寸并拉伸四边与中心区域。</p></li>
+<li><p><strong>头像控件</strong> ： <code class="docutils literal notranslate"><span class="pre">xtk_avatar</span></code> （需注册 <code class="docutils literal notranslate"><span class="pre">&amp;flux_ctrl_avatar</span></code> ）可根据 <code class="docutils literal notranslate"><span class="pre">.image</span></code> 、 <code class="docutils literal notranslate"><span class="pre">.initials</span></code> 或 <code class="docutils literal notranslate"><span class="pre">.display_name</span></code> 渲染圆形 <code class="docutils literal notranslate"><span class="pre">PersonPicture</span></code> 头像及状态角标。</p></li>
+</ul>
+</section>
+</section>
+
+
+    </main>
+    <nav class="related bottom" role="navigation">
+  <a class="prev" href="mvu.html" title="Previous">
+    &larr; 1. Elm MVU 循环与应用结构
+  </a>
+  <a class="next" href="inputs.html" title="Next">
+    3. 表单输入、选择器与受控状态 &rarr;
+  </a>
+  <div class="clear"></div>
+    </nav>
+    
+
+  </div>
+
+  <div class="clear"></div>
+</div>
+<footer class="footer" role="contentinfo">
+    &copy; Copyright 2026, Project Xent.
+  
+  Created using <a href="http://sphinx-doc.org/">Sphinx</a> with
+  <a href="https://github.com/vsalvino/sphinx-library">Library</a> theme.
+  
+  <a href="../_sources/declarative/layout.rst.txt" rel="nofollow">Page source</a>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>命令式开发指南 &#8212; Xent 0.3.3 文档</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=c03c27c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/library/library.css?v=fa49c7df" />
+    <script src="../_static/documentation_options.js?v=0538d007"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/translations.js?v=540d3cec"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="1. 应用、宿主与场景生命周期" href="lifecycle.html" />
+    <link rel="prev" title="6. 文件对话框、拖放、主题切换与后台线程" href="../declarative/host.html" />
+ 
+
+<link rel="stylesheet" id="sphinx-library-type" href="../_static/library/type-book.css" type="text/css" />
+<link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+<meta name="viewport" content="width=device-width, initial-scale=0.9" />
+<script>
+  mobile_menu_content = "";
+  function toggleMenu() {
+    var div = document.getElementsByClassName("document").item(0);
+    var btn = document.getElementById("menu-toggler");
+    if(div.classList.contains("mobile-show")) {
+      div.classList.remove("mobile-show");
+      btn.innerHTML = mobile_menu_content;
+    }
+    else {
+      div.classList.add("mobile-show");
+      mobile_menu_content = btn.innerHTML;
+      btn.innerHTML = btn.getAttribute("data-open");
+    }
+  }
+</script>
+  </head>
+<body class="sepia">
+<script>
+  (function () {
+    var key = "sphinx-library-mode";
+    var dark = window.matchMedia("(prefers-color-scheme: dark)");
+    function stored() {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function apply() {
+      document.body.className = stored() || (dark.matches ? "dark" : "sepia");
+    }
+    window.toggleMode = function (theme) {
+      try {
+        if (theme) localStorage.setItem(key, theme);
+        else localStorage.removeItem(key);
+      } catch (e) {}
+      apply();
+    };
+    dark.addEventListener("change", apply);
+    apply();
+  })();
+</script>
+<div class="document">
+
+  
+  <nav class="mobile-menu" role="navigation">
+    
+  <button type="button" id="menu-toggler" onclick="toggleMenu();"
+    data-open="× Close">≡ Menu</button>
+  <a href="../index.html">Xent</a>
+  <noscript>
+    <div>
+      JavaScript is required to open/close mobile menu.
+    </div>
+  </noscript>
+  </nav>
+  
+
+  
+  <nav class="sphinxsidebar" role="navigation" aria-label="main navigation">
+    
+
+
+<h1 class="logo ">
+  <a href="../index.html">Xent</a>
+</h1>
+
+
+
+<p class="description">Native cross-platform UI in C23.</p>
+
+
+
+<p class="description">Version 0.3.3</p>
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="提交" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>目录</h3>
+<p class="caption" role="heading"><span class="caption-text">使用手册</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../declarative/index.html">声明式开发指南</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">命令式开发指南</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lifecycle.html">1. 应用、宿主与场景生命周期</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transactions.html">2. 原子事务与动态子树管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="properties.html">3. 强类型构建器、属性位掩码与布局</a></li>
+<li class="toctree-l2"><a class="reference internal" href="events.html">4. 事件路由、帧同步与变更戳</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualization.html">5. 命令式虚拟化列表与分组协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shell.html">6. 对话框、拖放、剪贴板与窗口集成</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts.html">架构与核心概念</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API 参考</a></li>
+</ul>
+<h3>阅读模式</h3>
+<button type="button" onclick="toggleMode(null);">自动</button>
+<button type="button" onclick="toggleMode('light');">浅色</button>
+<button type="button" onclick="toggleMode('sepia');">护眼</button>
+<button type="button" onclick="toggleMode('dark');">深色</button>
+<noscript>
+  <div>切换阅读模式需要启用 JavaScript.</div>
+</noscript>
+  </nav>
+  <div class="documentwrapper">
+    
+
+    <main class="body" role="main" id="main">
+      
+  <section id="imperative-ui-guide">
+<h1>命令式开发指南<a class="headerlink" href="#imperative-ui-guide" title="链接到此标题。">¶</a></h1>
+<p><strong>命令式路线</strong> （ <code class="docutils literal notranslate"><span class="pre">fluxent.imp</span></code> ）赋予 C23 程序对保留式 <code class="docutils literal notranslate"><span class="pre">XtkScene</span></code> 、原子化 <code class="docutils literal notranslate"><span class="pre">XtkTxn</span></code> 事务、 <code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk_controls.h&gt;</span></code> 自动生成的强类型控件包装函数以及 <code class="docutils literal notranslate"><span class="pre">XtkEventFn</span></code> 路由事件回调的直接控制权。</p>
+<p>命令式 API 同时也是 Xent 的稳定 C ABI 边界： <code class="docutils literal notranslate"><span class="pre">oxent</span></code> （Rust）、 <code class="docutils literal notranslate"><span class="pre">zxent</span></code> （Zig）、 <code class="docutils literal notranslate"><span class="pre">xenthon</span></code> （Python）与 <code class="docutils literal notranslate"><span class="pre">hsxent</span></code> （Haskell）均直接调用这组底层函数。</p>
+<p>按顺序阅读以下六章，即可从基础窗口启动一路掌握 10 万行虚拟化集合与系统外壳集成：</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="lifecycle.html"><span class="doc">1. 应用、宿主与场景生命周期</span></a> —— 初始化控件模块、 <code class="docutils literal notranslate"><span class="pre">FluxApp</span></code> 、 <code class="docutils literal notranslate"><span class="pre">XtkHost</span></code> 与 <code class="docutils literal notranslate"><span class="pre">XtkScene</span></code> ，拆解 <code class="docutils literal notranslate"><span class="pre">fluxent.imp</span></code> 模板并按规范顺序释放资源。</p></li>
+<li><p><a class="reference internal" href="transactions.html"><span class="doc">2. 原子事务与动态子树管理</span></a> —— 使用 <code class="docutils literal notranslate"><span class="pre">XtkTxn</span></code> 、 <code class="docutils literal notranslate"><span class="pre">XtkNodeRef</span></code> 、 <code class="docutils literal notranslate"><span class="pre">XtkBatchResult</span></code> 与 <code class="docutils literal notranslate"><span class="pre">XtkBatchDiag</span></code> 原子化构建、重排、重挂载并切换动态页面子树。</p></li>
+<li><p><a class="reference internal" href="properties.html"><span class="doc">3. 强类型构建器、属性位掩码与布局</span></a> —— 掌握 <code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk_controls.h&gt;</span></code> 的 <code class="docutils literal notranslate"><span class="pre">.set</span></code> 属性位掩码、字符串长度约定、可复用的 Flex 布局辅助函数、通用属性读取与复合数据设置函数。</p></li>
+<li><p><a class="reference internal" href="events.html"><span class="doc">4. 事件路由、帧同步与变更戳</span></a> —— 订阅捕获/目标/冒泡阶段事件，解析各类 <code class="docutils literal notranslate"><span class="pre">XtkEventPayload</span></code> 载荷，通过 <code class="docutils literal notranslate"><span class="pre">flux_app_onframe</span></code> 合并帧内属性同步，并用 <code class="docutils literal notranslate"><span class="pre">XtkChangeStamp</span></code> 协调受控输入。</p></li>
+<li><p><a class="reference internal" href="virtualization.html"><span class="doc">5. 命令式虚拟化列表与分组协议</span></a> —— 基于 <code class="docutils literal notranslate"><span class="pre">XTK_EVENT_REALIZE</span></code> 视口范围事件、行槽位复用与吸顶组标题，以命令式方式驱动 10 万行 <code class="docutils literal notranslate"><span class="pre">ListView</span></code> 与 <code class="docutils literal notranslate"><span class="pre">GridView</span></code> 。</p></li>
+<li><p><a class="reference internal" href="shell.html"><span class="doc">6. 对话框、拖放、剪贴板与窗口集成</span></a> —— 控制模态 <code class="docutils literal notranslate"><span class="pre">ContentDialog</span></code> 、调用原生文件对话框、处理 <code class="docutils literal notranslate"><span class="pre">FluxData</span></code> 剪贴板与 OLE 拖放数据、定制窗口外观并从工作线程回调 UI 线程。</p></li>
+</ol>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="lifecycle.html">1. 应用、宿主与场景生命周期</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lifecycle.html#complete-fluxent-imp-counter-walkthrough">完整 <code class="docutils literal notranslate"><span class="pre">fluxent.imp</span></code> 计数器模板解析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lifecycle.html#startup-teardown-order">启动与逆序清理流程</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">2. 原子事务与动态子树管理</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="transactions.html#all-or-nothing-commit-guarantee">全有或全无的原子提交保证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transactions.html#transaction-operations-overview">事务操作函数一览</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transactions.html#addressing-nodes-with-xtknoderef">使用 <code class="docutils literal notranslate"><span class="pre">XtkNodeRef</span></code> 统一寻址节点</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transactions.html#resolving-xtklocalid-to-xtkctrl-after-commit">提交后将 <code class="docutils literal notranslate"><span class="pre">XtkLocalId</span></code> 解析为持久 <code class="docutils literal notranslate"><span class="pre">XtkCtrl</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="transactions.html#diagnosing-rejected-batches-with-xtkbatchdiag">使用 <code class="docutils literal notranslate"><span class="pre">XtkBatchDiag</span></code> 排查批次失败原因</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transactions.html#atomic-page-switching-pattern">无闪烁原子切页模式</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="properties.html">3. 强类型构建器、属性位掩码与布局</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="properties.html#naming-conventions-in-xtk-xtk-controls-h"><code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk_controls.h&gt;</span></code> 命名规律</a></li>
+<li class="toctree-l2"><a class="reference internal" href="properties.html#working-with-set-masks-and-strings">使用 <code class="docutils literal notranslate"><span class="pre">.set</span></code> 位掩码与字符串切片</a></li>
+<li class="toctree-l2"><a class="reference internal" href="properties.html#writing-reusable-flex-layout-helpers">封装可复用的 Flex 布局辅助函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="properties.html#generic-property-access-composite-setters">通用属性读写与复合数据源函数</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="events.html">4. 事件路由、帧同步与变更戳</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="events.html#three-ways-to-subscribe-to-events">订阅事件的三种方式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="events.html#decoding-xtkevent-and-xtkeventpayload">解析 <code class="docutils literal notranslate"><span class="pre">XtkEvent</span></code> 与 <code class="docutils literal notranslate"><span class="pre">XtkEventPayload</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="events.html#frame-coalesced-ui-synchronization">按帧合并的 UI 同步模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="events.html#controlled-inputs-xtkchangestamp">受控输入与 <code class="docutils literal notranslate"><span class="pre">XtkChangeStamp</span></code> 变更戳</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="virtualization.html">5. 命令式虚拟化列表与分组协议</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="virtualization.html#how-xtk-event-realize-works"><code class="docutils literal notranslate"><span class="pre">XTK_EVENT_REALIZE</span></code> 工作机制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualization.html#complete-100-000-row-imperative-listview-example">完整的 10 万行命令式 <code class="docutils literal notranslate"><span class="pre">ListView</span></code> 示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualization.html#grouped-lists-sticky-headers-0-3-3">分组列表与吸顶组标题（0.3.3）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="shell.html">6. 对话框、拖放、剪贴板与窗口集成</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="shell.html#modal-contentdialog">模态 <code class="docutils literal notranslate"><span class="pre">ContentDialog</span></code> 对话框</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shell.html#native-file-folder-dialogs">原生文件与文件夹对话框</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shell.html#ole-drag-and-drop-on-containers-cards">容器与卡片上的 OLE 拖放</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shell.html#clipboard-data-fluxdata">剪贴板数据（ <code class="docutils literal notranslate"><span class="pre">FluxData</span></code> ）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shell.html#window-chrome-themes-background-threads">窗口外观、主题与后台线程调度</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+    </main>
+    <nav class="related bottom" role="navigation">
+  <a class="prev" href="../declarative/host.html" title="Previous">
+    &larr; 6. 文件对话框、拖放、主题切换与后台线程
+  </a>
+  <a class="next" href="lifecycle.html" title="Next">
+    1. 应用、宿主与场景生命周期 &rarr;
+  </a>
+  <div class="clear"></div>
+    </nav>
+    
+
+  </div>
+
+  <div class="clear"></div>
+</div>
+<footer class="footer" role="contentinfo">
+    &copy; Copyright 2026, Project Xent.
+  
+  Created using <a href="http://sphinx-doc.org/">Sphinx</a> with
+  <a href="https://github.com/vsalvino/sphinx-library">Library</a> theme.
+  
+  <a href="../_sources/imperative/index.rst.txt" rel="nofollow">Page source</a>
+</footer>
+  </body>
+</html>

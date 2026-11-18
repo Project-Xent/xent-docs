@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>3. 强类型构建器、属性位掩码与布局 &#8212; Xent 0.3.3 文档</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=c03c27c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/library/library.css?v=fa49c7df" />
+    <script src="../_static/documentation_options.js?v=0538d007"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/translations.js?v=540d3cec"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="4. 事件路由、帧同步与变更戳" href="events.html" />
+    <link rel="prev" title="2. 原子事务与动态子树管理" href="transactions.html" />
+ 
+
+<link rel="stylesheet" id="sphinx-library-type" href="../_static/library/type-book.css" type="text/css" />
+<link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+<meta name="viewport" content="width=device-width, initial-scale=0.9" />
+<script>
+  mobile_menu_content = "";
+  function toggleMenu() {
+    var div = document.getElementsByClassName("document").item(0);
+    var btn = document.getElementById("menu-toggler");
+    if(div.classList.contains("mobile-show")) {
+      div.classList.remove("mobile-show");
+      btn.innerHTML = mobile_menu_content;
+    }
+    else {
+      div.classList.add("mobile-show");
+      mobile_menu_content = btn.innerHTML;
+      btn.innerHTML = btn.getAttribute("data-open");
+    }
+  }
+</script>
+  </head>
+<body class="sepia">
+<script>
+  (function () {
+    var key = "sphinx-library-mode";
+    var dark = window.matchMedia("(prefers-color-scheme: dark)");
+    function stored() {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function apply() {
+      document.body.className = stored() || (dark.matches ? "dark" : "sepia");
+    }
+    window.toggleMode = function (theme) {
+      try {
+        if (theme) localStorage.setItem(key, theme);
+        else localStorage.removeItem(key);
+      } catch (e) {}
+      apply();
+    };
+    dark.addEventListener("change", apply);
+    apply();
+  })();
+</script>
+<div class="document">
+
+  
+  <nav class="mobile-menu" role="navigation">
+    
+  <button type="button" id="menu-toggler" onclick="toggleMenu();"
+    data-open="× Close">≡ Menu</button>
+  <a href="../index.html">Xent</a>
+  <noscript>
+    <div>
+      JavaScript is required to open/close mobile menu.
+    </div>
+  </noscript>
+  </nav>
+  
+
+  
+  <nav class="sphinxsidebar" role="navigation" aria-label="main navigation">
+    
+
+
+<h1 class="logo ">
+  <a href="../index.html">Xent</a>
+</h1>
+
+
+
+<p class="description">Native cross-platform UI in C23.</p>
+
+
+
+<p class="description">Version 0.3.3</p>
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="提交" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>目录</h3>
+<p class="caption" role="heading"><span class="caption-text">使用手册</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../declarative/index.html">声明式开发指南</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">命令式开发指南</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lifecycle.html">1. 应用、宿主与场景生命周期</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transactions.html">2. 原子事务与动态子树管理</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">3. 强类型构建器、属性位掩码与布局</a></li>
+<li class="toctree-l2"><a class="reference internal" href="events.html">4. 事件路由、帧同步与变更戳</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualization.html">5. 命令式虚拟化列表与分组协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shell.html">6. 对话框、拖放、剪贴板与窗口集成</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts.html">架构与核心概念</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API 参考</a></li>
+</ul>
+
+<h3>本页目录</h3>
+<div class="localtoc"><ul>
+<li><a class="reference internal" href="#">3. 强类型构建器、属性位掩码与布局</a><ul>
+<li><a class="reference internal" href="#naming-conventions-in-xtk-xtk-controls-h"><code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk_controls.h&gt;</span></code> 命名规律</a></li>
+<li><a class="reference internal" href="#working-with-set-masks-and-strings">使用 <code class="docutils literal notranslate"><span class="pre">.set</span></code> 位掩码与字符串切片</a><ul>
+<li><a class="reference internal" href="#string-length-rules">字符串长度规则</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#writing-reusable-flex-layout-helpers">封装可复用的 Flex 布局辅助函数</a></li>
+<li><a class="reference internal" href="#generic-property-access-composite-setters">通用属性读写与复合数据源函数</a></li>
+</ul>
+</li>
+</ul>
+</div><h3>阅读模式</h3>
+<button type="button" onclick="toggleMode(null);">自动</button>
+<button type="button" onclick="toggleMode('light');">浅色</button>
+<button type="button" onclick="toggleMode('sepia');">护眼</button>
+<button type="button" onclick="toggleMode('dark');">深色</button>
+<noscript>
+  <div>切换阅读模式需要启用 JavaScript.</div>
+</noscript>
+  </nav>
+  <div class="documentwrapper">
+    
+
+    <main class="body" role="main" id="main">
+      
+  <section id="typed-control-builders-bitmasks-layouts">
+<h1>3. 强类型构建器、属性位掩码与布局<a class="headerlink" href="#typed-control-builders-bitmasks-layouts" title="链接到此标题。">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk_controls.h&gt;</span></code> 直接由 <code class="docutils literal notranslate"><span class="pre">xent-kit/tools/catalog.lua</span></code> 生成，为全部 70 余种控件提供强类型创建结构体、单属性设置函数与事件订阅包装函数。</p>
+<section id="naming-conventions-in-xtk-xtk-controls-h">
+<h2><code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk_controls.h&gt;</span></code> 命名规律<a class="headerlink" href="#naming-conventions-in-xtk-xtk-controls-h" title="链接到此标题。">¶</a></h2>
+<p>目录中的每种控件 <code class="docutils literal notranslate"><span class="pre">&lt;ctrl&gt;</span></code> （如 <code class="docutils literal notranslate"><span class="pre">container</span></code> 、 <code class="docutils literal notranslate"><span class="pre">card</span></code> 、 <code class="docutils literal notranslate"><span class="pre">scroll</span></code> 、 <code class="docutils literal notranslate"><span class="pre">text</span></code> 、 <code class="docutils literal notranslate"><span class="pre">button</span></code> 、 <code class="docutils literal notranslate"><span class="pre">checkbox</span></code> 、 <code class="docutils literal notranslate"><span class="pre">slider</span></code> 、 <code class="docutils literal notranslate"><span class="pre">textbox</span></code> 、 <code class="docutils literal notranslate"><span class="pre">combo</span></code> 、 <code class="docutils literal notranslate"><span class="pre">list</span></code> 、 <code class="docutils literal notranslate"><span class="pre">nav</span></code> 、 <code class="docutils literal notranslate"><span class="pre">dialog</span></code> 、 <code class="docutils literal notranslate"><span class="pre">commandbar</span></code> ）均遵循统一的生成命名规则：</p>
+<ul class="simple">
+<li><p><strong>属性结构体</strong> ： <code class="docutils literal notranslate"><span class="pre">Xtk&lt;Ctrl&gt;Props</span></code> （例如 <code class="docutils literal notranslate"><span class="pre">XtkButtonProps</span></code> 、 <code class="docutils literal notranslate"><span class="pre">XtkContainerProps</span></code> 、 <code class="docutils literal notranslate"><span class="pre">XtkTextBoxProps</span></code> ）。</p></li>
+<li><p><strong>属性掩码常量</strong> ： <code class="docutils literal notranslate"><span class="pre">XTK_&lt;CTRL&gt;_&lt;PROP&gt;_MASK</span></code> （例如 <code class="docutils literal notranslate"><span class="pre">XTK_BUTTON_TEXT_MASK</span></code> 、 <code class="docutils literal notranslate"><span class="pre">XTK_BUTTON_STYLE_MASK</span></code> 、 <code class="docutils literal notranslate"><span class="pre">XTK_BUTTON_W_MASK</span></code> ）。</p></li>
+<li><p><strong>事务内创建函数</strong> ： <code class="docutils literal notranslate"><span class="pre">XtkLocalId</span> <span class="pre">xtk_&lt;ctrl&gt;_create(XtkTxn</span> <span class="pre">*txn,</span> <span class="pre">XtkNodeRef</span> <span class="pre">parent,</span> <span class="pre">Xtk&lt;Ctrl&gt;Props</span> <span class="pre">const</span> <span class="pre">*props);</span></code></p></li>
+<li><p><strong>运行期属性设置函数</strong> ： <code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">xtk_&lt;ctrl&gt;_set&lt;prop&gt;(XtkScene</span> <span class="pre">*scene,</span> <span class="pre">XtkCtrl</span> <span class="pre">control,</span> <span class="pre">&lt;type&gt;</span> <span class="pre">value,</span> <span class="pre">XtkChangeStamp</span> <span class="pre">change);</span></code></p></li>
+<li><p><strong>事件订阅函数</strong> ： <code class="docutils literal notranslate"><span class="pre">XtkSubRef</span> <span class="pre">xtk_&lt;ctrl&gt;_on&lt;event&gt;(XtkTxn</span> <span class="pre">*txn,</span> <span class="pre">XtkNodeRef</span> <span class="pre">target,</span> <span class="pre">XtkEventFn</span> <span class="pre">fn,</span> <span class="pre">void</span> <span class="pre">*arg);</span></code></p></li>
+</ul>
+<p>公共布局字段—— <code class="docutils literal notranslate"><span class="pre">w</span></code> 、 <code class="docutils literal notranslate"><span class="pre">h</span></code> 、 <code class="docutils literal notranslate"><span class="pre">grow</span></code> 、 <code class="docutils literal notranslate"><span class="pre">shrink</span></code> 、 <code class="docutils literal notranslate"><span class="pre">self</span></code> （ <code class="docutils literal notranslate"><span class="pre">XentFlexAlign</span></code> ）、 <code class="docutils literal notranslate"><span class="pre">ml</span></code> / <code class="docutils literal notranslate"><span class="pre">mt</span></code> / <code class="docutils literal notranslate"><span class="pre">mr</span></code> / <code class="docutils literal notranslate"><span class="pre">mb</span></code> （外边距）以及 <code class="docutils literal notranslate"><span class="pre">tip</span></code> （工具提示文本）——直接内嵌在每种控件的 <code class="docutils literal notranslate"><span class="pre">Xtk&lt;Ctrl&gt;Props</span></code> 结构体中。</p>
+</section>
+<section id="working-with-set-masks-and-strings">
+<h2>使用 <code class="docutils literal notranslate"><span class="pre">.set</span></code> 位掩码与字符串切片<a class="headerlink" href="#working-with-set-masks-and-strings" title="链接到此标题。">¶</a></h2>
+<p>在 C 复合字面量中，未填写的字段默认初始化为 <code class="docutils literal notranslate"><span class="pre">0</span></code> ——而 <code class="docutils literal notranslate"><span class="pre">0</span></code> 同时也是 <code class="docutils literal notranslate"><span class="pre">gap</span> <span class="pre">=</span> <span class="pre">0.0f</span></code> 、 <code class="docutils literal notranslate"><span class="pre">sel</span> <span class="pre">=</span> <span class="pre">0</span></code> 或首个枚举值的有效取值。因此通过 <code class="docutils literal notranslate"><span class="pre">.set</span></code> 位掩码明确告知编码器本次要设置哪些字段：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">XtkLocalId</span><span class="w"> </span><span class="n">btn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_button_create</span><span class="p">(</span>
+<span class="w">    </span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">parent</span><span class="p">,</span>
+<span class="w">    </span><span class="o">&amp;</span><span class="p">(</span><span class="n">XtkButtonProps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">set</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_BUTTON_TEXT_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_BUTTON_ICON_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_BUTTON_STYLE_MASK</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">text</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">"Save"</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">icon</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">"Save"</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_BUTTON_ACCENT</span><span class="p">,</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<section id="string-length-rules">
+<h3>字符串长度规则<a class="headerlink" href="#string-length-rules" title="链接到此标题。">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Xtk&lt;Ctrl&gt;Props</span></code> 中的每个字符串属性都成对提供指针字段（如 <code class="docutils literal notranslate"><span class="pre">.text</span></code> 、 <code class="docutils literal notranslate"><span class="pre">.icon</span></code> 、 <code class="docutils literal notranslate"><span class="pre">.placeholder</span></code> 、 <code class="docutils literal notranslate"><span class="pre">.tip</span></code> ）与字节长度字段（ <code class="docutils literal notranslate"><span class="pre">.text_len</span></code> 、 <code class="docutils literal notranslate"><span class="pre">.icon_len</span></code> 、 <code class="docutils literal notranslate"><span class="pre">.placeholder_len</span></code> 、 <code class="docutils literal notranslate"><span class="pre">.tip_len</span></code> ），字符串 setter 函数同样接收 <code class="docutils literal notranslate"><span class="pre">(char</span> <span class="pre">const</span> <span class="pre">*data,</span> <span class="pre">uint32_t</span> <span class="pre">len)</span></code> ：</p>
+<ul class="simple">
+<li><p><strong>以 NUL 结尾的普通 C 字符串</strong> ：保持 <code class="docutils literal notranslate"><span class="pre">.text_len</span> <span class="pre">=</span> <span class="pre">0</span></code> （或在 <code class="docutils literal notranslate"><span class="pre">xtk_&lt;ctrl&gt;_set&lt;prop&gt;</span></code> 中传 <code class="docutils literal notranslate"><span class="pre">len</span> <span class="pre">=</span> <span class="pre">0</span></code> ）时，非空 <code class="docutils literal notranslate"><span class="pre">data</span></code> 会自动调用 <code class="docutils literal notranslate"><span class="pre">strlen(data)</span></code> 计算长度。</p></li>
+<li><p><strong>显式字节切片与编译期字面量</strong> ：传入非零长度可直接跳过 <code class="docutils literal notranslate"><span class="pre">strlen</span></code> 并支持无结尾符的 UTF-8 切片——例如对字面量定义 <code class="docutils literal notranslate"><span class="pre">#define</span> <span class="pre">LIT(s)</span> <span class="pre">.text</span> <span class="pre">=</span> <span class="pre">s,</span> <span class="pre">.text_len</span> <span class="pre">=</span> <span class="pre">sizeof(s)</span> <span class="pre">-</span> <span class="pre">1</span></code> ，或传入 <code class="docutils literal notranslate"><span class="pre">(uint32_t)</span> <span class="pre">snprintf(...)</span></code> 的返回值。</p></li>
+<li><p>批次在调用 <code class="docutils literal notranslate"><span class="pre">xtk_*_create</span></code> 与 <code class="docutils literal notranslate"><span class="pre">xtk_*_set*</span></code> 时会立即拷贝字符串内容，因此局部栈数组 <code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">buf[64]</span></code> 在调用返回后即可安全复用。</p></li>
+</ul>
+</section>
+</section>
+<section id="writing-reusable-flex-layout-helpers">
+<h2>封装可复用的 Flex 布局辅助函数<a class="headerlink" href="#writing-reusable-flex-layout-helpers" title="链接到此标题。">¶</a></h2>
+<p>将常用的纵列、横排、卡片与标签封装成几行辅助函数后，命令式布局代码同样紧凑易读（ <code class="docutils literal notranslate"><span class="pre">fluxent/examples/gallery_imp/helpers.c</span></code> 即采用此方式）：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="n">XtkLocalId</span><span class="w"> </span><span class="nf">ui_column</span><span class="p">(</span><span class="n">XtkTxn</span><span class="w"> </span><span class="o">*</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">XtkNodeRef</span><span class="w"> </span><span class="n">parent</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">gap</span><span class="p">,</span><span class="w"> </span><span class="n">XentFlexAlign</span><span class="w"> </span><span class="n">align</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">xtk_container_create</span><span class="p">(</span>
+<span class="w">        </span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">parent</span><span class="p">,</span>
+<span class="w">        </span><span class="o">&amp;</span><span class="p">(</span><span class="n">XtkContainerProps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="p">.</span><span class="n">set</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_CONTAINER_DIR_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_ITEMS_MASK</span>
+<span class="w">                   </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_GAP_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_SHRINK_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_FITH_MASK</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">dir</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_STACK_COLUMN</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">items</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">align</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">gap</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">gap</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">fith</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="n">XtkLocalId</span><span class="w"> </span><span class="nf">ui_row</span><span class="p">(</span><span class="n">XtkTxn</span><span class="w"> </span><span class="o">*</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">XtkNodeRef</span><span class="w"> </span><span class="n">parent</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">gap</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">wrap</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">xtk_container_create</span><span class="p">(</span>
+<span class="w">        </span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">parent</span><span class="p">,</span>
+<span class="w">        </span><span class="o">&amp;</span><span class="p">(</span><span class="n">XtkContainerProps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="p">.</span><span class="n">set</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_CONTAINER_DIR_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_ITEMS_MASK</span>
+<span class="w">                   </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_GAP_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_WRAP_MASK</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">dir</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_STACK_ROW</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">items</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XENT_FLEX_ALIGN_CENTER</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">gap</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">gap</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">wrap</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">wrap</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">XENT_FLEX_WRAP</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">XENT_FLEX_NO_WRAP</span><span class="p">,</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="n">XtkLocalId</span><span class="w"> </span><span class="nf">ui_card</span><span class="p">(</span><span class="n">XtkTxn</span><span class="w"> </span><span class="o">*</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">XtkNodeRef</span><span class="w"> </span><span class="n">parent</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">gap</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">pad</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">xtk_card_create</span><span class="p">(</span>
+<span class="w">        </span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">parent</span><span class="p">,</span>
+<span class="w">        </span><span class="o">&amp;</span><span class="p">(</span><span class="n">XtkContainerProps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="p">.</span><span class="n">set</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_CONTAINER_DIR_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_ITEMS_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_GAP_MASK</span>
+<span class="w">                   </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_PL_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_PT_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_PR_MASK</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">XTK_CONTAINER_PB_MASK</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">dir</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_STACK_COLUMN</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">items</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XENT_FLEX_ALIGN_STRETCH</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">gap</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">gap</span><span class="p">,</span>
+<span class="w">            </span><span class="p">.</span><span class="n">pl</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">pad</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">pt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pad</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">pr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pad</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">pb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pad</span><span class="p">,</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">XtkContainerProps</span></code> 核心布局字段：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">.dir</span></code> ： <code class="docutils literal notranslate"><span class="pre">XTK_STACK_COLUMN</span></code> （纵向）或 <code class="docutils literal notranslate"><span class="pre">XTK_STACK_ROW</span></code> （横向）。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.items</span></code> 与 <code class="docutils literal notranslate"><span class="pre">.justify</span></code> ：交叉轴 <code class="docutils literal notranslate"><span class="pre">XentFlexAlign</span></code> 对齐与主轴 <code class="docutils literal notranslate"><span class="pre">XentFlexJustify</span></code> 分布。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.pl</span></code> 、 <code class="docutils literal notranslate"><span class="pre">.pt</span></code> 、 <code class="docutils literal notranslate"><span class="pre">.pr</span></code> 、 <code class="docutils literal notranslate"><span class="pre">.pb</span></code> ：左、上、右、下四边内边距。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.fill</span></code> ：使容器拉伸填满父容器可用空间。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.fith</span></code> / <code class="docutils literal notranslate"><span class="pre">.fitw</span></code> ：在滚动区域内使容器高度或宽度紧贴子元素测量尺寸。</p></li>
+</ul>
+</section>
+<section id="generic-property-access-composite-setters">
+<h2>通用属性读写与复合数据源函数<a class="headerlink" href="#generic-property-access-composite-setters" title="链接到此标题。">¶</a></h2>
+<p>除按控件生成的包装函数外， <code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk_scene.h&gt;</span></code> 还提供与具体控件类型无关的通用操作：</p>
+<ul class="simple">
+<li><p><strong>在多操作事务内批量修改属性</strong> ：调用 <code class="docutils literal notranslate"><span class="pre">xtk_txn_set(&amp;txn,</span> <span class="pre">ref,</span> <span class="pre">XTK_PROP_WIDTH,</span> <span class="pre">(XtkValue)</span> <span class="pre">{.kind</span> <span class="pre">=</span> <span class="pre">XTK_VALUE_F32,</span> <span class="pre">.u.f32</span> <span class="pre">=</span> <span class="pre">240.0f},</span> <span class="pre">(XtkChangeStamp)</span> <span class="pre">{0})</span></code> 可将跨多个控件的属性修改合并进同一次原子提交。</p></li>
+<li><p><strong>读取当前属性值</strong> ：调用 <code class="docutils literal notranslate"><span class="pre">xtk_ctrl_get(&amp;scene,</span> <span class="pre">ctrl,</span> <span class="pre">XTK_PROP_TEXT,</span> <span class="pre">&amp;view,</span> <span class="pre">&amp;stamp)</span></code> 。 <code class="docutils literal notranslate"><span class="pre">XtkValueView</span></code> 内的字符串与字节切片直接指向宿主内部存储，有效至该属性下次变更或宿主销毁为止。</p></li>
+<li><p><strong>填充复合子项集合</strong> ：拥有结构化子项定义的控件在 <code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk_scene.h&gt;</span></code> 中配有专用事务设置函数：</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_txn_setitems(&amp;txn,</span> <span class="pre">target,</span> <span class="pre">strings,</span> <span class="pre">count)</span></code> （及运行期 <code class="docutils literal notranslate"><span class="pre">xtk_ctrl_setitems</span></code> ）——填充 <code class="docutils literal notranslate"><span class="pre">ComboBox</span></code> 、 <code class="docutils literal notranslate"><span class="pre">AutoSuggestBox</span></code> 、 <code class="docutils literal notranslate"><span class="pre">BreadcrumbBar</span></code> 或 <code class="docutils literal notranslate"><span class="pre">LoopingSelector</span></code> 的字符串列表。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_txn_setselitems(&amp;txn,</span> <span class="pre">target,</span> <span class="pre">selector_items,</span> <span class="pre">count)</span></code> —— 填充带图标与文字的 <code class="docutils literal notranslate"><span class="pre">SelectorBar</span></code> 选项。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_txn_settabs(&amp;txn,</span> <span class="pre">target,</span> <span class="pre">tab_descs,</span> <span class="pre">count)</span></code> —— 填充 <code class="docutils literal notranslate"><span class="pre">TabView</span></code> 标签栏。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_txn_settree(&amp;txn,</span> <span class="pre">target,</span> <span class="pre">&amp;tree_desc)</span></code> —— 填充 <code class="docutils literal notranslate"><span class="pre">TreeView</span></code> 层级树节点。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_txn_setnav(&amp;txn,</span> <span class="pre">target,</span> <span class="pre">&amp;nav_desc)</span></code> —— 填充 <code class="docutils literal notranslate"><span class="pre">NavigationView</span></code> 的导航项、分类头、分隔线、底部固定项以及一体化窗口标题栏配置。</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+
+
+    </main>
+    <nav class="related bottom" role="navigation">
+  <a class="prev" href="transactions.html" title="Previous">
+    &larr; 2. 原子事务与动态子树管理
+  </a>
+  <a class="next" href="events.html" title="Next">
+    4. 事件路由、帧同步与变更戳 &rarr;
+  </a>
+  <div class="clear"></div>
+    </nav>
+    
+
+  </div>
+
+  <div class="clear"></div>
+</div>
+<footer class="footer" role="contentinfo">
+    &copy; Copyright 2026, Project Xent.
+  
+  Created using <a href="http://sphinx-doc.org/">Sphinx</a> with
+  <a href="https://github.com/vsalvino/sphinx-library">Library</a> theme.
+  
+  <a href="../_sources/imperative/properties.rst.txt" rel="nofollow">Page source</a>
+</footer>
+  </body>
+</html>

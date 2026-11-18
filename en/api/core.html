@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>xent-core &#8212; Xent 0.3.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=c03c27c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/library/library.css?v=fa49c7df" />
+    <script src="../_static/documentation_options.js?v=d5a15cff"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="xent-kit" href="kit.html" />
+    <link rel="prev" title="API Reference" href="index.html" />
+ 
+
+<link rel="stylesheet" id="sphinx-library-type" href="../_static/library/type-book.css" type="text/css" />
+<link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+<meta name="viewport" content="width=device-width, initial-scale=0.9" />
+<script>
+  mobile_menu_content = "";
+  function toggleMenu() {
+    var div = document.getElementsByClassName("document").item(0);
+    var btn = document.getElementById("menu-toggler");
+    if(div.classList.contains("mobile-show")) {
+      div.classList.remove("mobile-show");
+      btn.innerHTML = mobile_menu_content;
+    }
+    else {
+      div.classList.add("mobile-show");
+      mobile_menu_content = btn.innerHTML;
+      btn.innerHTML = btn.getAttribute("data-open");
+    }
+  }
+</script>
+  </head>
+<body class="sepia">
+<script>
+  (function () {
+    var key = "sphinx-library-mode";
+    var dark = window.matchMedia("(prefers-color-scheme: dark)");
+    function stored() {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function apply() {
+      document.body.className = stored() || (dark.matches ? "dark" : "sepia");
+    }
+    window.toggleMode = function (theme) {
+      try {
+        if (theme) localStorage.setItem(key, theme);
+        else localStorage.removeItem(key);
+      } catch (e) {}
+      apply();
+    };
+    dark.addEventListener("change", apply);
+    apply();
+  })();
+</script>
+<div class="document">
+
+  
+  <nav class="mobile-menu" role="navigation">
+    
+  <button type="button" id="menu-toggler" onclick="toggleMenu();"
+    data-open="× Close">≡ Menu</button>
+  <a href="../index.html">Xent</a>
+  <noscript>
+    <div>
+      JavaScript is required to open/close mobile menu.
+    </div>
+  </noscript>
+  </nav>
+  
+
+  
+  <nav class="sphinxsidebar" role="navigation" aria-label="main navigation">
+    
+
+
+<h1 class="logo ">
+  <a href="../index.html">Xent</a>
+</h1>
+
+
+
+<p class="description">Native cross-platform UI in C23.</p>
+
+
+
+<p class="description">Version 0.3.3</p>
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Contents</h3>
+<p class="caption" role="heading"><span class="caption-text">Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../declarative/index.html">Declarative UI Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imperative/index.html">Imperative UI Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts.html">Architecture &amp; Core Concepts</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">xent-core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kit.html">xent-kit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fluxent.html">Fluxent</a></li>
+</ul>
+</li>
+</ul>
+
+<h3>Page Contents</h3>
+<div class="localtoc"><ul>
+<li><a class="reference internal" href="#">xent-core</a><ul>
+<li><a class="reference internal" href="#c.xent_node_create"><code class="docutils literal notranslate"><span class="pre">xent_node_create()</span></code></a></li>
+<li><a class="reference internal" href="#c.xent_node_destroy"><code class="docutils literal notranslate"><span class="pre">xent_node_destroy()</span></code></a></li>
+<li><a class="reference internal" href="#c.xent_node_append"><code class="docutils literal notranslate"><span class="pre">xent_node_append()</span></code></a></li>
+<li><a class="reference internal" href="#c.xent_node_remove"><code class="docutils literal notranslate"><span class="pre">xent_node_remove()</span></code></a></li>
+<li><a class="reference internal" href="#c.xent_node_insert"><code class="docutils literal notranslate"><span class="pre">xent_node_insert()</span></code></a></li>
+<li><a class="reference internal" href="#c.xent_node_move"><code class="docutils literal notranslate"><span class="pre">xent_node_move()</span></code></a></li>
+<li><a class="reference internal" href="#c.xent_node_reparent"><code class="docutils literal notranslate"><span class="pre">xent_node_reparent()</span></code></a></li>
+<li><a class="reference internal" href="#c.xent_node_addobs"><code class="docutils literal notranslate"><span class="pre">xent_node_addobs()</span></code></a></li>
+<li><a class="reference internal" href="#c.xent_sem_setlabel"><code class="docutils literal notranslate"><span class="pre">xent_sem_setlabel()</span></code></a></li>
+<li><a class="reference internal" href="#c.xent_sem_label"><code class="docutils literal notranslate"><span class="pre">xent_sem_label()</span></code></a></li>
+<li><a class="reference internal" href="#c.xent_node_text"><code class="docutils literal notranslate"><span class="pre">xent_node_text()</span></code></a></li>
+<li><a class="reference internal" href="#c.xent_settext"><code class="docutils literal notranslate"><span class="pre">xent_settext()</span></code></a></li>
+<li><a class="reference internal" href="#c.xent_setfontfamily"><code class="docutils literal notranslate"><span class="pre">xent_setfontfamily()</span></code></a></li>
+<li><a class="reference internal" href="#c.xent_settextruns"><code class="docutils literal notranslate"><span class="pre">xent_settextruns()</span></code></a></li>
+<li><a class="reference internal" href="#c.xent_node_setmeasure"><code class="docutils literal notranslate"><span class="pre">xent_node_setmeasure()</span></code></a></li>
+<li><a class="reference internal" href="#c.xent_dl_drawtext"><code class="docutils literal notranslate"><span class="pre">xent_dl_drawtext()</span></code></a></li>
+<li><a class="reference internal" href="#c.xent_dl_drawtextstyle"><code class="docutils literal notranslate"><span class="pre">xent_dl_drawtextstyle()</span></code></a></li>
+<li><a class="reference internal" href="#c.xent_dl_end"><code class="docutils literal notranslate"><span class="pre">xent_dl_end()</span></code></a></li>
+<li><a class="reference internal" href="#c.xent_dl_text"><code class="docutils literal notranslate"><span class="pre">xent_dl_text()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div><h3>Reading Mode</h3>
+<button type="button" onclick="toggleMode(null);">Auto</button>
+<button type="button" onclick="toggleMode('light');">Light</button>
+<button type="button" onclick="toggleMode('sepia');">Sepia</button>
+<button type="button" onclick="toggleMode('dark');">Dark</button>
+<noscript>
+  <div>JavaScript is required to toggle reading modes.</div>
+</noscript>
+  </nav>
+  <div class="documentwrapper">
+    
+
+    <main class="body" role="main" id="main">
+      
+  <section id="xent-core">
+<h1>xent-core<a class="headerlink" href="#xent-core" title="Link to this heading">¶</a></h1>
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xent_node_create">
+<span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xent_node_create</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XentCtx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xent_node_create" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Fails while an observer is running.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xent_node_destroy">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xent_node_destroy</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XentCtx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span>, <span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="n"><span class="pre">node</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xent_node_destroy" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Destroys the subtree. Fails while an observer is running.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xent_node_append">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xent_node_append</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XentCtx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span>, <span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="n"><span class="pre">parent</span></span>, <span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="n"><span class="pre">child</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xent_node_append" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Detaches <cite>child</cite> from its current parent and appends it. Fails while an observer is running, or if <cite>child</cite> is an ancestor of <cite>parent</cite>.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xent_node_remove">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xent_node_remove</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XentCtx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span>, <span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="n"><span class="pre">parent</span></span>, <span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="n"><span class="pre">child</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xent_node_remove" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Fails while an observer is running.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xent_node_insert">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xent_node_insert</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XentCtx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span>, <span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="n"><span class="pre">parent</span></span>, <span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="n"><span class="pre">child</span></span>, <span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="n"><span class="pre">before</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xent_node_insert" title="Link to this definition">¶</a><br /></dt>
+<dd><p><cite>before == XENT_NODE_INVALID</cite> appends. <cite>child</cite> must have no parent. Fails while an observer is running, or if <cite>child</cite> is an ancestor of <cite>parent</cite>.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xent_node_move">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xent_node_move</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XentCtx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span>, <span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="n"><span class="pre">parent</span></span>, <span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="n"><span class="pre">child</span></span>, <span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="n"><span class="pre">before</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xent_node_move" title="Link to this definition">¶</a><br /></dt>
+<dd><p><cite>before == XENT_NODE_INVALID</cite> moves to the end. <cite>child</cite> must already be under <cite>parent</cite>. Fails while an observer is running.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xent_node_reparent">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xent_node_reparent</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XentCtx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span>, <span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="n"><span class="pre">new_parent</span></span>, <span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="n"><span class="pre">child</span></span>, <span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="n"><span class="pre">before</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xent_node_reparent" title="Link to this definition">¶</a><br /></dt>
+<dd><p><cite>before == XENT_NODE_INVALID</cite> appends. <cite>child</cite> must already have a different parent. Fails while an observer is running, or if <cite>child</cite> is an ancestor of <cite>new_parent</cite>.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xent_node_addobs">
+<span class="n"><span class="pre">XentObsId</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xent_node_addobs</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XentCtx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">XentNodeObs</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">observer</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xent_node_addobs" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Borrows <cite>observer-&gt;userdata</cite> until <cite>xent_node_delobs</cite> or <cite>xent_ctx_destroy</cite>.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xent_sem_setlabel">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xent_sem_setlabel</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XentCtx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span>, <span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="n"><span class="pre">node</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">label</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xent_sem_setlabel" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Copies <cite>label</cite>. NULL is stored as an empty string. The caller may free it.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xent_sem_label">
+<span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">xent_sem_label</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">XentCtx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span>, <span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="n"><span class="pre">node</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xent_sem_label" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Borrowed until the next <cite>xent_sem_setlabel</cite> on this node, or until the node is destroyed.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xent_node_text">
+<span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">xent_node_text</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">XentCtx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span>, <span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="n"><span class="pre">node</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xent_node_text" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Borrowed until the next <cite>xent_settext</cite> on this node, or until the node is destroyed.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xent_settext">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xent_settext</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XentCtx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span>, <span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="n"><span class="pre">node</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">text</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xent_settext" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Copies <cite>text</cite>. NULL is stored as an empty string. The caller may free it.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xent_setfontfamily">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xent_setfontfamily</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XentCtx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span>, <span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="n"><span class="pre">node</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">family</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xent_setfontfamily" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Copies <cite>family</cite>. NULL or “” clears it. The caller may free it.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xent_settextruns">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xent_settextruns</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XentCtx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span>, <span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="n"><span class="pre">node</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">XentTextRun</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">runs</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">count</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xent_settextruns" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Copies <cite>runs</cite> and each <cite>font_family</cite>. The caller may free the input.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xent_node_setmeasure">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xent_node_setmeasure</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XentCtx</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">ctx</span></span>, <span class="n"><span class="pre">XentNodeId</span></span><span class="w"> </span><span class="n"><span class="pre">node</span></span>, <span class="n"><span class="pre">XentExternalMeasureFn</span></span><span class="w"> </span><span class="n"><span class="pre">fn</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">userdata</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xent_node_setmeasure" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Borrows <cite>userdata</cite> until <cite>xent_node_clearmeasure</cite> or the node is destroyed.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xent_dl_drawtext">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xent_dl_drawtext</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XentDlBuilder</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">b</span></span>, <span class="n"><span class="pre">XentRect</span></span><span class="w"> </span><span class="n"><span class="pre">bounds</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">utf8</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n"><span class="pre">font_size</span></span>, <span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="n"><span class="pre">font_weight</span></span>, <span class="n"><span class="pre">XentColor</span></span><span class="w"> </span><span class="n"><span class="pre">color</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xent_dl_drawtext" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Copies <cite>utf8</cite>. The caller may free it.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xent_dl_drawtextstyle">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xent_dl_drawtextstyle</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XentDlBuilder</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">b</span></span>, <span class="n"><span class="pre">XentRect</span></span><span class="w"> </span><span class="n"><span class="pre">bounds</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">utf8</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">XentTextStyle</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">style</span></span>, <span class="n"><span class="pre">XentColor</span></span><span class="w"> </span><span class="n"><span class="pre">color</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xent_dl_drawtextstyle" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Copies <cite>utf8</cite>. The caller may free it.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xent_dl_end">
+<span class="n"><span class="pre">XentDl</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">xent_dl_end</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">XentDlBuilder</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">b</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xent_dl_end" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Consumes <cite>b</cite>, including when a clip, transform, or opacity push is still open.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.xent_dl_text">
+<span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">xent_dl_text</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">XentDl</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">list</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">offset</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.xent_dl_text" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Points into <cite>list</cite> until <cite>xent_dl_free</cite>.</p>
+</dd></dl>
+
+</section>
+
+
+    </main>
+    <nav class="related bottom" role="navigation">
+  <a class="prev" href="index.html" title="Previous">
+    &larr; API Reference
+  </a>
+  <a class="next" href="kit.html" title="Next">
+    xent-kit &rarr;
+  </a>
+  <div class="clear"></div>
+    </nav>
+    
+
+  </div>
+
+  <div class="clear"></div>
+</div>
+<footer class="footer" role="contentinfo">
+    &copy; Copyright 2026, Project Xent.
+  
+  Created using <a href="http://sphinx-doc.org/">Sphinx</a> with
+  <a href="https://github.com/vsalvino/sphinx-library">Library</a> theme.
+  
+  <a href="../_sources/api/core.rst.txt" rel="nofollow">Page source</a>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>4. Event Routing, Frame Sync, &amp; Change Stamps &#8212; Xent 0.3.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=c03c27c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/library/library.css?v=fa49c7df" />
+    <script src="../_static/documentation_options.js?v=d5a15cff"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="5. Imperative Virtualized Lists &amp; Grouping" href="virtualization.html" />
+    <link rel="prev" title="3. Typed Control Builders, Bitmasks, &amp; Layouts" href="properties.html" />
+ 
+
+<link rel="stylesheet" id="sphinx-library-type" href="../_static/library/type-book.css" type="text/css" />
+<link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+<meta name="viewport" content="width=device-width, initial-scale=0.9" />
+<script>
+  mobile_menu_content = "";
+  function toggleMenu() {
+    var div = document.getElementsByClassName("document").item(0);
+    var btn = document.getElementById("menu-toggler");
+    if(div.classList.contains("mobile-show")) {
+      div.classList.remove("mobile-show");
+      btn.innerHTML = mobile_menu_content;
+    }
+    else {
+      div.classList.add("mobile-show");
+      mobile_menu_content = btn.innerHTML;
+      btn.innerHTML = btn.getAttribute("data-open");
+    }
+  }
+</script>
+  </head>
+<body class="sepia">
+<script>
+  (function () {
+    var key = "sphinx-library-mode";
+    var dark = window.matchMedia("(prefers-color-scheme: dark)");
+    function stored() {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function apply() {
+      document.body.className = stored() || (dark.matches ? "dark" : "sepia");
+    }
+    window.toggleMode = function (theme) {
+      try {
+        if (theme) localStorage.setItem(key, theme);
+        else localStorage.removeItem(key);
+      } catch (e) {}
+      apply();
+    };
+    dark.addEventListener("change", apply);
+    apply();
+  })();
+</script>
+<div class="document">
+
+  
+  <nav class="mobile-menu" role="navigation">
+    
+  <button type="button" id="menu-toggler" onclick="toggleMenu();"
+    data-open="× Close">≡ Menu</button>
+  <a href="../index.html">Xent</a>
+  <noscript>
+    <div>
+      JavaScript is required to open/close mobile menu.
+    </div>
+  </noscript>
+  </nav>
+  
+
+  
+  <nav class="sphinxsidebar" role="navigation" aria-label="main navigation">
+    
+
+
+<h1 class="logo ">
+  <a href="../index.html">Xent</a>
+</h1>
+
+
+
+<p class="description">Native cross-platform UI in C23.</p>
+
+
+
+<p class="description">Version 0.3.3</p>
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Contents</h3>
+<p class="caption" role="heading"><span class="caption-text">Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../declarative/index.html">Declarative UI Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Imperative UI Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lifecycle.html">1. App, Host, &amp; Scene Lifecycle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transactions.html">2. Atomic Transactions &amp; Dynamic Subtrees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="properties.html">3. Typed Control Builders, Bitmasks, &amp; Layouts</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">4. Event Routing, Frame Sync, &amp; Change Stamps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualization.html">5. Imperative Virtualized Lists &amp; Grouping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shell.html">6. Dialogs, Drag-and-Drop, Clipboard, &amp; Windowing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts.html">Architecture &amp; Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
+</ul>
+
+<h3>Page Contents</h3>
+<div class="localtoc"><ul>
+<li><a class="reference internal" href="#">4. Event Routing, Frame Sync, &amp; Change Stamps</a><ul>
+<li><a class="reference internal" href="#three-ways-to-subscribe-to-events">Three Ways to Subscribe to Events</a></li>
+<li><a class="reference internal" href="#decoding-xtkevent-and-xtkeventpayload">Decoding <code class="docutils literal notranslate"><span class="pre">XtkEvent</span></code> and <code class="docutils literal notranslate"><span class="pre">XtkEventPayload</span></code></a></li>
+<li><a class="reference internal" href="#frame-coalesced-ui-synchronization">Frame-Coalesced UI Synchronization</a></li>
+<li><a class="reference internal" href="#controlled-inputs-xtkchangestamp">Controlled Inputs &amp; <code class="docutils literal notranslate"><span class="pre">XtkChangeStamp</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div><h3>Reading Mode</h3>
+<button type="button" onclick="toggleMode(null);">Auto</button>
+<button type="button" onclick="toggleMode('light');">Light</button>
+<button type="button" onclick="toggleMode('sepia');">Sepia</button>
+<button type="button" onclick="toggleMode('dark');">Dark</button>
+<noscript>
+  <div>JavaScript is required to toggle reading modes.</div>
+</noscript>
+  </nav>
+  <div class="documentwrapper">
+    
+
+    <main class="body" role="main" id="main">
+      
+  <section id="event-routing-frame-sync-change-stamps">
+<h1>4. Event Routing, Frame Sync, &amp; Change Stamps<a class="headerlink" href="#event-routing-frame-sync-change-stamps" title="Link to this heading">¶</a></h1>
+<p>Imperative Xent routes normalized UI events through capture, target, and bubble
+phases and gives you full control over how state changes coalesce into visual
+updates.</p>
+<section id="three-ways-to-subscribe-to-events">
+<h2>Three Ways to Subscribe to Events<a class="headerlink" href="#three-ways-to-subscribe-to-events" title="Link to this heading">¶</a></h2>
+<ol class="arabic">
+<li><p><strong>Typed transaction helpers</strong> (most common): Generated <code class="docutils literal notranslate"><span class="pre">xtk_&lt;ctrl&gt;_on&lt;event&gt;</span></code>
+wrappers in <code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk_controls.h&gt;</span></code> subscribe on <code class="docutils literal notranslate"><span class="pre">XTK_EVENT_PHASE_MASK_TARGET</span></code>
+while building a transaction:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">xtk_button_oninvoke</span><span class="p">(</span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_ref_local</span><span class="p">(</span><span class="n">btn</span><span class="p">),</span><span class="w"> </span><span class="n">on_save_clicked</span><span class="p">,</span><span class="w"> </span><span class="n">app</span><span class="p">);</span>
+<span class="n">xtk_textbox_onchange</span><span class="p">(</span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_ref_local</span><span class="p">(</span><span class="n">box</span><span class="p">),</span><span class="w"> </span><span class="n">on_name_edited</span><span class="p">,</span><span class="w"> </span><span class="n">app</span><span class="p">);</span>
+<span class="n">xtk_slider_onchange</span><span class="p">(</span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_ref_local</span><span class="p">(</span><span class="n">sld</span><span class="p">),</span><span class="w"> </span><span class="n">on_volume_changed</span><span class="p">,</span><span class="w"> </span><span class="n">app</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Phase-aware transaction subscriptions</strong>: <code class="docutils literal notranslate"><span class="pre">xtk_txn_on</span></code> lets you listen on
+any <code class="docutils literal notranslate"><span class="pre">XtkEventId</span></code> across <code class="docutils literal notranslate"><span class="pre">XTK_EVENT_PHASE_MASK_CAPTURE</span></code> (root down to
+parent), <code class="docutils literal notranslate"><span class="pre">XTK_EVENT_PHASE_MASK_TARGET</span></code>, <code class="docutils literal notranslate"><span class="pre">XTK_EVENT_PHASE_MASK_BUBBLE</span></code>
+(parent up to root), or <code class="docutils literal notranslate"><span class="pre">XTK_EVENT_PHASE_MASK_ALL</span></code>:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">XtkSubRef</span><span class="w"> </span><span class="n">sub</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_txn_on</span><span class="p">(</span>
+<span class="w">    </span><span class="o">&amp;</span><span class="n">txn</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_ref_local</span><span class="p">(</span><span class="n">card</span><span class="p">),</span>
+<span class="w">    </span><span class="n">XTK_EVENT_INVOKE</span><span class="p">,</span><span class="w"> </span><span class="n">XTK_EVENT_PHASE_MASK_BUBBLE</span><span class="p">,</span>
+<span class="w">    </span><span class="n">on_any_card_button</span><span class="p">,</span><span class="w"> </span><span class="n">app</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>If you plan to unsubscribe dynamically later with <code class="docutils literal notranslate"><span class="pre">xtk_txn_off(&amp;txn,</span> <span class="pre">sub_id)</span></code>,
+map <code class="docutils literal notranslate"><span class="pre">sub</span></code> to its <code class="docutils literal notranslate"><span class="pre">XtkSubId</span></code> via <code class="docutils literal notranslate"><span class="pre">result-&gt;subscriptions</span></code> after commit.</p>
+</li>
+<li><p><strong>Direct host subscriptions</strong>: <code class="docutils literal notranslate"><span class="pre">flux_host_subscribe</span></code> and
+<code class="docutils literal notranslate"><span class="pre">flux_host_unsubscribe</span></code> attach or remove listeners directly on a committed
+<code class="docutils literal notranslate"><span class="pre">XtkCtrl</span></code> outside a transaction.</p></li>
+</ol>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The host borrows your <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*arg</span></code> (<code class="docutils literal notranslate"><span class="pre">userdata</span></code>) pointer until the
+subscription is removed (via <code class="docutils literal notranslate"><span class="pre">xtk_txn_off</span></code>, <code class="docutils literal notranslate"><span class="pre">flux_host_unsubscribe</span></code>, or
+dropping the target control’s subtree) or <code class="docutils literal notranslate"><span class="pre">flux_host_destroy</span></code> runs. Keep
+<code class="docutils literal notranslate"><span class="pre">arg</span></code> alive in your <code class="docutils literal notranslate"><span class="pre">App</span></code> struct or a page-scoped arena until after the
+control is dropped.</p>
+</div>
+</section>
+<section id="decoding-xtkevent-and-xtkeventpayload">
+<h2>Decoding <code class="docutils literal notranslate"><span class="pre">XtkEvent</span></code> and <code class="docutils literal notranslate"><span class="pre">XtkEventPayload</span></code><a class="headerlink" href="#decoding-xtkevent-and-xtkeventpayload" title="Link to this heading">¶</a></h2>
+<p>Every <code class="docutils literal notranslate"><span class="pre">XtkEventFn</span></code> receives <code class="docutils literal notranslate"><span class="pre">XtkEvent</span> <span class="pre">const</span> <span class="pre">*event</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">event-&gt;source</span></code> / <code class="docutils literal notranslate"><span class="pre">event-&gt;target</span></code> / <code class="docutils literal notranslate"><span class="pre">event-&gt;current_target</span></code> — Identify
+which <code class="docutils literal notranslate"><span class="pre">XtkCtrl</span></code> originated the event and which ancestor listener is
+currently running.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">event-&gt;cause</span></code> — Distinguishes <code class="docutils literal notranslate"><span class="pre">XTK_EVENT_CAUSE_USER</span></code>, <code class="docutils literal notranslate"><span class="pre">PROGRAM</span></code>,
+<code class="docutils literal notranslate"><span class="pre">BINDING</span></code>, and <code class="docutils literal notranslate"><span class="pre">ACCESSIBILITY</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">event-&gt;payload</span></code> — Tagged union matched via <code class="docutils literal notranslate"><span class="pre">event-&gt;payload.kind</span></code>:</p></li>
+</ul>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 34.0%" />
+<col style="width: 28.0%" />
+<col style="width: 38.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">event-&gt;payload.kind</span></code></p></th>
+<th class="head"><p>Union Member</p></th>
+<th class="head"><p>Typical Events</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">XTK_EVENT_PAYLOAD_NONE</span></code></p></td>
+<td><p><em>(none)</em></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Button</span></code> invoke, <code class="docutils literal notranslate"><span class="pre">PullToRefresh</span></code> trigger</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">XTK_EVENT_PAYLOAD_BOOL</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">u.b</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CheckBox</span></code> / <code class="docutils literal notranslate"><span class="pre">ToggleSwitch</span></code> toggle, drag hover</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">XTK_EVENT_PAYLOAD_I32</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">u.i32</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ComboBox</span></code> / <code class="docutils literal notranslate"><span class="pre">ListView</span></code> / <code class="docutils literal notranslate"><span class="pre">TabView</span></code> / <code class="docutils literal notranslate"><span class="pre">NavigationView</span></code> select,
+<code class="docutils literal notranslate"><span class="pre">ContentDialog</span></code> close result</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">XTK_EVENT_PAYLOAD_F32</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">u.f32</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Slider</span></code> change, <code class="docutils literal notranslate"><span class="pre">ColumnHeader</span></code> resize</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">XTK_EVENT_PAYLOAD_F64</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">u.f64</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">NumberBox</span></code> / <code class="docutils literal notranslate"><span class="pre">ScrollBar</span></code> change</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">XTK_EVENT_PAYLOAD_STRING</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">u.string.{data,</span> <span class="pre">len}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TextBox</span></code> / <code class="docutils literal notranslate"><span class="pre">PasswordBox</span></code> edit, dropped files/text (<strong>borrowed only
+during callback</strong>—copy immediately!)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">XTK_EVENT_PAYLOAD_QUERY</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">u.query.{text,</span> <span class="pre">len,</span> <span class="pre">index}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">AutoSuggestBox</span></code> query/choose (<strong>copy</strong> <code class="docutils literal notranslate"><span class="pre">text</span></code> <strong>during callback</strong>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">XTK_EVENT_PAYLOAD_INDEX_BOOL</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">u.index_bool.{index,</span> <span class="pre">value}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TreeView</span></code> expand, <code class="docutils literal notranslate"><span class="pre">CalendarView</span></code> date toggle</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">XTK_EVENT_PAYLOAD_RANGE</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">u.range.{start,</span> <span class="pre">end}</span></code></p></td>
+<td><p>Range <code class="docutils literal notranslate"><span class="pre">Slider</span></code> change</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">XTK_EVENT_PAYLOAD_WINDOW</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">u.window.{first,</span> <span class="pre">last,</span> <span class="pre">lanes}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">XTK_EVENT_REALIZE</span></code> on virtualized lists/grids</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">XTK_EVENT_PAYLOAD_SCROLL</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">u.scroll.{x,</span> <span class="pre">y,</span> <span class="pre">max_x,</span> <span class="pre">max_y}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ScrollViewer</span></code> viewport scroll</p></td>
+</tr>
+</tbody>
+</table>
+<p>Return <code class="docutils literal notranslate"><span class="pre">XTK_EVENT_HANDLED</span></code> when your callback handles the event, combine
+<code class="docutils literal notranslate"><span class="pre">XTK_EVENT_STOP_PROPAGATION</span></code> or <code class="docutils literal notranslate"><span class="pre">XTK_EVENT_STOP_IMMEDIATE</span></code> to halt bubbling,
+or return <code class="docutils literal notranslate"><span class="pre">XTK_EVENT_CONTINUE</span></code> (<code class="docutils literal notranslate"><span class="pre">0</span></code>) to let routing proceed.</p>
+</section>
+<section id="frame-coalesced-ui-synchronization">
+<h2>Frame-Coalesced UI Synchronization<a class="headerlink" href="#frame-coalesced-ui-synchronization" title="Link to this heading">¶</a></h2>
+<p>Decoupling state updates from scene mutations with <code class="docutils literal notranslate"><span class="pre">flux_app_onframe</span></code> coalesces
+multiple input events within a single vsync interval into one clean UI update:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// 1. Event callbacks update C state, copy any borrowed strings, and schedule a frame:</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="nf">on_name_change</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">arg</span><span class="p">,</span><span class="w"> </span><span class="n">XtkEvent</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">App</span><span class="w"> </span><span class="o">*</span><span class="n">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arg</span><span class="p">;</span>
+<span class="w">    </span><span class="n">free</span><span class="p">(</span><span class="n">app</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="o">-&gt;</span><span class="n">payload</span><span class="p">.</span><span class="n">kind</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">XTK_EVENT_PAYLOAD_STRING</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">e</span><span class="o">-&gt;</span><span class="n">payload</span><span class="p">.</span><span class="n">u</span><span class="p">.</span><span class="n">string</span><span class="p">.</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="o">-&gt;</span><span class="n">payload</span><span class="p">.</span><span class="n">u</span><span class="p">.</span><span class="n">string</span><span class="p">.</span><span class="n">len</span><span class="p">;</span>
+<span class="w">        </span><span class="n">app</span><span class="o">-&gt;</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">malloc</span><span class="p">(</span><span class="n">len</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">app</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">memcpy</span><span class="p">(</span><span class="n">app</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="o">-&gt;</span><span class="n">payload</span><span class="p">.</span><span class="n">u</span><span class="p">.</span><span class="n">string</span><span class="p">.</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
+<span class="w">            </span><span class="n">app</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">[</span><span class="n">len</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">'\0'</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">app</span><span class="o">-&gt;</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">app</span><span class="o">-&gt;</span><span class="n">dirty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">flux_app_redraw</span><span class="p">(</span><span class="n">app</span><span class="o">-&gt;</span><span class="n">flux</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">XTK_EVENT_HANDLED</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 2. Once per frame before rendering, flush dirty state into retained controls:</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">on_frame</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">arg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">App</span><span class="w"> </span><span class="o">*</span><span class="n">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arg</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">app</span><span class="o">-&gt;</span><span class="n">dirty</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="n">app</span><span class="o">-&gt;</span><span class="n">dirty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="n">greeting</span><span class="p">[</span><span class="mi">128</span><span class="p">];</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">snprintf</span><span class="p">(</span><span class="n">greeting</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">greeting</span><span class="p">),</span><span class="w"> </span><span class="s">"Hello, %s!"</span><span class="p">,</span>
+<span class="w">                       </span><span class="n">app</span><span class="o">-&gt;</span><span class="n">name</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">app</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">app</span><span class="o">-&gt;</span><span class="n">name</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">"stranger"</span><span class="p">);</span>
+<span class="w">    </span><span class="n">xtk_text_settext</span><span class="p">(</span><span class="o">&amp;</span><span class="n">app</span><span class="o">-&gt;</span><span class="n">scene</span><span class="p">,</span><span class="w"> </span><span class="n">app</span><span class="o">-&gt;</span><span class="n">greeting_label</span><span class="p">,</span><span class="w"> </span><span class="n">greeting</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">uint32_t</span><span class="p">)</span><span class="w"> </span><span class="n">len</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkChangeStamp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="controlled-inputs-xtkchangestamp">
+<h2>Controlled Inputs &amp; <code class="docutils literal notranslate"><span class="pre">XtkChangeStamp</span></code><a class="headerlink" href="#controlled-inputs-xtkchangestamp" title="Link to this heading">¶</a></h2>
+<p>Every property write takes an <code class="docutils literal notranslate"><span class="pre">XtkChangeStamp</span> <span class="pre">{</span> <span class="pre">XtkSourceId</span> <span class="pre">source;</span> <span class="pre">uint64_t</span> <span class="pre">revision;</span> <span class="pre">}</span></code>:</p>
+<ul class="simple">
+<li><p><strong>Programmatic writes to outputs or external resets</strong>: Pass
+<code class="docutils literal notranslate"><span class="pre">(XtkChangeStamp)</span> <span class="pre">{0}</span></code> (where <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">==</span> <span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">revision</span> <span class="pre">==</span> <span class="pre">0</span></code>). This
+authoritatively sets the control’s property—use it when updating output
+labels, toggling buttons, or clearing a <code class="docutils literal notranslate"><span class="pre">TextBox</span></code> from a “Reset” button.</p></li>
+<li><p><strong>Controlled two-way echo</strong>: When a user types into a <code class="docutils literal notranslate"><span class="pre">TextBox</span></code>, the emitted
+<code class="docutils literal notranslate"><span class="pre">XtkEvent</span></code> carries a non-zero <code class="docutils literal notranslate"><span class="pre">event-&gt;change</span></code> stamp generated by the
+control. If your architecture echoes every model value back to the input
+control on <code class="docutils literal notranslate"><span class="pre">on_frame</span></code>, forwarding that <code class="docutils literal notranslate"><span class="pre">event-&gt;change</span></code> stamp tells the
+host which edit revision your echo corresponds to—so newer keystrokes or active
+IME composition in flight on the control are preserved cleanly. In imperative
+code, updating the <code class="docutils literal notranslate"><span class="pre">TextBox</span></code> solely on external actions (such as a “Reset”
+button) keeps <code class="docutils literal notranslate"><span class="pre">on_name_change</span></code> even simpler because the control already
+displays the user’s live edits.</p></li>
+</ul>
+</section>
+</section>
+
+
+    </main>
+    <nav class="related bottom" role="navigation">
+  <a class="prev" href="properties.html" title="Previous">
+    &larr; 3. Typed Control Builders, Bitmasks, &amp; Layouts
+  </a>
+  <a class="next" href="virtualization.html" title="Next">
+    5. Imperative Virtualized Lists &amp; Grouping &rarr;
+  </a>
+  <div class="clear"></div>
+    </nav>
+    
+
+  </div>
+
+  <div class="clear"></div>
+</div>
+<footer class="footer" role="contentinfo">
+    &copy; Copyright 2026, Project Xent.
+  
+  Created using <a href="http://sphinx-doc.org/">Sphinx</a> with
+  <a href="https://github.com/vsalvino/sphinx-library">Library</a> theme.
+  
+  <a href="../_sources/imperative/events.rst.txt" rel="nofollow">Page source</a>
+</footer>
+  </body>
+</html>

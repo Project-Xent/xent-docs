@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Quick Start &#8212; Xent 0.3.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=c03c27c6" />
+    <link rel="stylesheet" type="text/css" href="_static/library/library.css?v=fa49c7df" />
+    <script src="_static/documentation_options.js?v=d5a15cff"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Declarative UI Guide" href="declarative/index.html" />
+    <link rel="prev" title="Project Xent" href="index.html" />
+ 
+
+<link rel="stylesheet" id="sphinx-library-type" href="_static/library/type-book.css" type="text/css" />
+<link rel="stylesheet" href="_static/custom.css" type="text/css" />
+<meta name="viewport" content="width=device-width, initial-scale=0.9" />
+<script>
+  mobile_menu_content = "";
+  function toggleMenu() {
+    var div = document.getElementsByClassName("document").item(0);
+    var btn = document.getElementById("menu-toggler");
+    if(div.classList.contains("mobile-show")) {
+      div.classList.remove("mobile-show");
+      btn.innerHTML = mobile_menu_content;
+    }
+    else {
+      div.classList.add("mobile-show");
+      mobile_menu_content = btn.innerHTML;
+      btn.innerHTML = btn.getAttribute("data-open");
+    }
+  }
+</script>
+  </head>
+<body class="sepia">
+<script>
+  (function () {
+    var key = "sphinx-library-mode";
+    var dark = window.matchMedia("(prefers-color-scheme: dark)");
+    function stored() {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function apply() {
+      document.body.className = stored() || (dark.matches ? "dark" : "sepia");
+    }
+    window.toggleMode = function (theme) {
+      try {
+        if (theme) localStorage.setItem(key, theme);
+        else localStorage.removeItem(key);
+      } catch (e) {}
+      apply();
+    };
+    dark.addEventListener("change", apply);
+    apply();
+  })();
+</script>
+<div class="document">
+
+  
+  <nav class="mobile-menu" role="navigation">
+    
+  <button type="button" id="menu-toggler" onclick="toggleMenu();"
+    data-open="× Close">≡ Menu</button>
+  <a href="index.html">Xent</a>
+  <noscript>
+    <div>
+      JavaScript is required to open/close mobile menu.
+    </div>
+  </noscript>
+  </nav>
+  
+
+  
+  <nav class="sphinxsidebar" role="navigation" aria-label="main navigation">
+    
+
+
+<h1 class="logo ">
+  <a href="index.html">Xent</a>
+</h1>
+
+
+
+<p class="description">Native cross-platform UI in C23.</p>
+
+
+
+<p class="description">Version 0.3.3</p>
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Contents</h3>
+<p class="caption" role="heading"><span class="caption-text">Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="declarative/index.html">Declarative UI Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="imperative/index.html">Imperative UI Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">Architecture &amp; Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API Reference</a></li>
+</ul>
+
+<h3>Page Contents</h3>
+<div class="localtoc"><ul>
+<li><a class="reference internal" href="#">Quick Start</a><ul>
+<li><a class="reference internal" href="#step-1-install-the-toolchain">Step 1: Install the Toolchain</a></li>
+<li><a class="reference internal" href="#step-2-install-the-project-templates">Step 2: Install the Project Templates</a></li>
+<li><a class="reference internal" href="#step-3-declarative-vs-imperative-comparison-how-to-choose">Step 3: Declarative vs. Imperative — Comparison &amp; How to Choose</a><ul>
+<li><a class="reference internal" href="#how-to-choose">How to Choose</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#step-4-create-install-dependencies-build-and-run-your-first-app">Step 4: Create, Install Dependencies, Build, and Run Your First App</a></li>
+<li><a class="reference internal" href="#next-steps">Next Steps</a></li>
+</ul>
+</li>
+</ul>
+</div><h3>Reading Mode</h3>
+<button type="button" onclick="toggleMode(null);">Auto</button>
+<button type="button" onclick="toggleMode('light');">Light</button>
+<button type="button" onclick="toggleMode('sepia');">Sepia</button>
+<button type="button" onclick="toggleMode('dark');">Dark</button>
+<noscript>
+  <div>JavaScript is required to toggle reading modes.</div>
+</noscript>
+  </nav>
+  <div class="documentwrapper">
+    
+
+    <main class="body" role="main" id="main">
+      
+  <section id="quick-start">
+<h1>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading">¶</a></h1>
+<p>This guide walks through installing the C23 toolchain on Windows, adding the
+official project templates, choosing between the <strong>declarative</strong> and
+<strong>imperative</strong> tracks, and building and running your first <strong>Xent 0.3.3</strong>
+application.</p>
+<section id="step-1-install-the-toolchain">
+<h2>Step 1: Install the Toolchain<a class="headerlink" href="#step-1-install-the-toolchain" title="Link to this heading">¶</a></h2>
+<p>Building a Xent C application on Windows requires <strong>Windows 10 version 1903 or
+later</strong>, <code class="docutils literal notranslate"><span class="pre">git</span></code>, <strong>Xmake 3.1.2+</strong>, and the <strong>llvm-mingw</strong> C23 compiler
+toolchain.</p>
+<ol class="arabic">
+<li><p><strong>Install Xmake (3.1.2 or newer)</strong>: Follow the official <a class="reference external" href="https://xmake.io/guide/quick-start.html">Xmake Installation
+Guide</a>, and install <a class="reference external" href="https://git-scm.com/">Git</a> so Xmake can fetch package repositories.</p></li>
+<li><p><strong>Install llvm-mingw (UCRT)</strong>: Xent uses <code class="docutils literal notranslate"><span class="pre">llvm-mingw</span></code> Clang as its primary
+C23 toolchain on Windows. Visit <a class="reference external" href="https://github.com/mstorsjo/llvm-mingw">mstorsjo/llvm-mingw</a> and download the latest
+Windows-native <strong>UCRT</strong> <code class="docutils literal notranslate"><span class="pre">.zip</span></code> archive for your architecture from
+<a class="reference external" href="https://github.com/mstorsjo/llvm-mingw/releases">llvm-mingw Releases</a>:</p>
+<ul class="simple">
+<li><p>64-bit x86 Windows: <code class="docutils literal notranslate"><span class="pre">llvm-mingw-&lt;date&gt;-ucrt-x86_64.zip</span></code></p></li>
+<li><p>Windows on ARM: <code class="docutils literal notranslate"><span class="pre">llvm-mingw-&lt;date&gt;-ucrt-aarch64.zip</span></code></p></li>
+</ul>
+<p>Extract the archive to a permanent directory (for example <code class="docutils literal notranslate"><span class="pre">C:\llvm-mingw</span></code>)
+and add its <code class="docutils literal notranslate"><span class="pre">bin</span></code> folder (<code class="docutils literal notranslate"><span class="pre">C:\llvm-mingw\bin</span></code>) to your user <code class="docutils literal notranslate"><span class="pre">PATH</span></code>.</p>
+</li>
+</ol>
+<p>Open a new terminal window and verify that all three commands report their
+versions:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">xmake</span> <span class="p">-</span><span class="n">-version</span>
+<span class="n">git</span> <span class="p">-</span><span class="n">-version</span>
+<span class="n">x86_64-w64-mingw32-clang</span> <span class="p">-</span><span class="n">-version</span>
+</pre></div>
+</div>
+</section>
+<section id="step-2-install-the-project-templates">
+<h2>Step 2: Install the Project Templates<a class="headerlink" href="#step-2-install-the-project-templates" title="Link to this heading">¶</a></h2>
+<p>Project Xent distributes ready-to-build C23 project templates as an <a class="reference external" href="https://xmake.io/guide/extensions/addons/installation.html">Xmake Addon</a>. Install the
+<code class="docutils literal notranslate"><span class="pre">xent-repo</span></code> addon once for your user account and list the available templates:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">xmake</span> <span class="n">addon</span> <span class="n">-i</span> <span class="n">github</span><span class="p">:</span><span class="n">Project-Xent</span><span class="p">/</span><span class="n">xent-repo</span>
+<span class="n">xmake</span> <span class="n">create</span> <span class="p">-</span><span class="n">-list</span>
+</pre></div>
+</div>
+<p>Under language <code class="docutils literal notranslate"><span class="pre">c</span></code>, two Fluxent templates are available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fluxent.decl</span></code> — Declarative application (<code class="docutils literal notranslate"><span class="pre">flux_run</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fluxent.imp</span></code> — Imperative application (<code class="docutils literal notranslate"><span class="pre">XtkScene</span></code> / <code class="docutils literal notranslate"><span class="pre">XtkTxn</span></code>)</p></li>
+</ul>
+</section>
+<section id="step-3-declarative-vs-imperative-comparison-how-to-choose">
+<h2>Step 3: Declarative vs. Imperative — Comparison &amp; How to Choose<a class="headerlink" href="#step-3-declarative-vs-imperative-comparison-how-to-choose" title="Link to this heading">¶</a></h2>
+<p>Both <code class="docutils literal notranslate"><span class="pre">fluxent.decl</span></code> and <code class="docutils literal notranslate"><span class="pre">fluxent.imp</span></code> share the same retained Fluxent host,
+native Direct2D/DirectWrite controls, accessibility support, and atomic
+<code class="docutils literal notranslate"><span class="pre">XtkBatch</span></code> commit engine. Pick the track whose programming model fits your
+application:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 40.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Dimension</p></th>
+<th class="head"><p>Declarative (<code class="docutils literal notranslate"><span class="pre">fluxent.decl</span></code>)</p></th>
+<th class="head"><p>Imperative (<code class="docutils literal notranslate"><span class="pre">fluxent.imp</span></code>)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Programming model</strong></p></td>
+<td><p>Unidirectional Model–View–Update (MVU) loop driven by <code class="docutils literal notranslate"><span class="pre">flux_run</span></code>.</p></td>
+<td><p>Retained <code class="docutils literal notranslate"><span class="pre">XtkScene</span></code> handles, atomic <code class="docutils literal notranslate"><span class="pre">XtkTxn</span></code> transactions, and C
+event callbacks.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Entry point &amp; headers</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">flux_run(&amp;cfg,</span> <span class="pre">&amp;model,</span> <span class="pre">update,</span> <span class="pre">view)</span></code> with <code class="docutils literal notranslate"><span class="pre">&lt;fluxent/fluxent.h&gt;</span></code>
+and <code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk.h&gt;</span></code> builders.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">flux_app_create</span></code> + <code class="docutils literal notranslate"><span class="pre">flux_app_attachhost</span></code> + <code class="docutils literal notranslate"><span class="pre">xtk_scene_fromhost</span></code>
+with <code class="docutils literal notranslate"><span class="pre">&lt;xtk/xtk_controls.h&gt;</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>UI construction &amp; updates</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">view()</span></code> returns a lightweight <code class="docutils literal notranslate"><span class="pre">XtkEl</span> <span class="pre">*</span></code> tree derived from <code class="docutils literal notranslate"><span class="pre">Model</span></code>;
+the reconciler computes and commits the minimal <code class="docutils literal notranslate"><span class="pre">XtkBatch</span></code> diff
+automatically.</p></td>
+<td><p>Your code opens an <code class="docutils literal notranslate"><span class="pre">XtkTxn</span></code>, calls typed <code class="docutils literal notranslate"><span class="pre">xtk_*_create</span></code> functions
+with <code class="docutils literal notranslate"><span class="pre">.set</span></code> bitmasks, saves <code class="docutils literal notranslate"><span class="pre">XtkCtrl</span></code> handles, and calls
+<code class="docutils literal notranslate"><span class="pre">xtk_*_set*</span></code> setters directly.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Event handling</strong></p></td>
+<td><p>Controls post <code class="docutils literal notranslate"><span class="pre">XtkMsg</span></code> values; state transitions live in a single
+<code class="docutils literal notranslate"><span class="pre">update(model,</span> <span class="pre">msg)</span></code> function.</p></td>
+<td><p>Controls invoke <code class="docutils literal notranslate"><span class="pre">XtkEventFn</span></code> callbacks attached via <code class="docutils literal notranslate"><span class="pre">xtk_*_on*</span></code> or
+<code class="docutils literal notranslate"><span class="pre">xtk_txn_on</span></code>; callbacks mark state dirty and update target controls.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Strengths</strong></p></td>
+<td><p>Concise code; automatic synchronization between state and UI; automatic
+control lifetime management; straightforward conditional layouts.</p></td>
+<td><p>Direct per-property writes; explicit control over transaction boundaries
+and <code class="docutils literal notranslate"><span class="pre">XtkCtrl</span></code> lifetimes; stable C ABI used by language bindings.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Considerations</strong></p></td>
+<td><p>Evaluates <code class="docutils literal notranslate"><span class="pre">view()</span></code> after message batches (use <code class="docutils literal notranslate"><span class="pre">xtk_memo_region</span></code> or
+<code class="docutils literal notranslate"><span class="pre">xtk_static_region</span></code> to cache large unchanging subtrees).</p></td>
+<td><p>Requires explicit <code class="docutils literal notranslate"><span class="pre">.set</span></code> property bitmasks, <code class="docutils literal notranslate"><span class="pre">XtkLocalId</span></code> to
+<code class="docutils literal notranslate"><span class="pre">XtkCtrl</span></code> handle resolution, and manual UI state updates.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="how-to-choose">
+<h3>How to Choose<a class="headerlink" href="#how-to-choose" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Choose Declarative (</strong> <code class="docutils literal notranslate"><span class="pre">fluxent.decl</span></code> <strong>) as the default</strong> when starting
+with Xent or building desktop applications, forms, settings panels, multi-step
+wizards, and developer tools.</p></li>
+<li><p><strong>Choose Imperative (</strong> <code class="docutils literal notranslate"><span class="pre">fluxent.imp</span></code> <strong>)</strong> when integrating Xent into an
+existing callback- or tick-driven C engine, issuing high-frequency targeted
+property writes per frame, or writing a foreign-language binding over Xent’s C
+ABI.</p></li>
+</ul>
+</section>
+</section>
+<section id="step-4-create-install-dependencies-build-and-run-your-first-app">
+<h2>Step 4: Create, Install Dependencies, Build, and Run Your First App<a class="headerlink" href="#step-4-create-install-dependencies-build-and-run-your-first-app" title="Link to this heading">¶</a></h2>
+<p>Create a new project from your chosen template (use <code class="docutils literal notranslate"><span class="pre">-t</span> <span class="pre">fluxent.decl</span></code> for
+declarative, or <code class="docutils literal notranslate"><span class="pre">-t</span> <span class="pre">fluxent.imp</span></code> for imperative):</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">xmake</span> <span class="n">create</span> <span class="n">-l</span> <span class="n">c</span> <span class="n">-t</span> <span class="n">fluxent</span><span class="p">.</span><span class="n">decl</span> <span class="n">hello</span>
+<span class="nb">cd </span><span class="n">hello</span>
+</pre></div>
+</div>
+<p>This generates <code class="docutils literal notranslate"><span class="pre">xmake.lua</span></code> and <code class="docutils literal notranslate"><span class="pre">src/main.c</span></code> configured for C23, the
+<code class="docutils literal notranslate"><span class="pre">xent-repo</span></code> package repository, and the Windows GUI subsystem.</p>
+<p>Configure Xmake with the root directory of your extracted <code class="docutils literal notranslate"><span class="pre">llvm-mingw</span></code>
+installation (the parent folder containing <code class="docutils literal notranslate"><span class="pre">bin</span></code>, such as <code class="docutils literal notranslate"><span class="pre">C:\llvm-mingw</span></code>):</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">xmake</span> <span class="n">f</span> <span class="n">-p</span> <span class="n">mingw</span> <span class="n">-a</span> <span class="n">x86_64</span> <span class="p">-</span><span class="n">-mingw</span><span class="p">=</span><span class="s2">"C:\llvm-mingw"</span> <span class="n">-m</span> <span class="n">debug</span> <span class="n">-y</span>
+</pre></div>
+</div>
+<p><em>(On ARM64 Windows, pass</em> <code class="docutils literal notranslate"><span class="pre">-a</span> <span class="pre">arm64</span></code> <em>.)</em></p>
+<p>Install the dependencies declared in <code class="docutils literal notranslate"><span class="pre">xmake.lua</span></code>—<code class="docutils literal notranslate"><span class="pre">xmake</span> <span class="pre">require</span></code> downloads
+and builds <code class="docutils literal notranslate"><span class="pre">fluxent</span> <span class="pre">0.3.3</span></code> together with <code class="docutils literal notranslate"><span class="pre">xent-kit</span> <span class="pre">0.3.3</span></code>, <code class="docutils literal notranslate"><span class="pre">xent-core</span>
+<span class="pre">0.3.3</span></code>, and <code class="docutils literal notranslate"><span class="pre">cwinrt</span> <span class="pre">0.3.1</span></code>:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">xmake</span> <span class="n">require</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The initial <code class="docutils literal notranslate"><span class="pre">xmake</span> <span class="pre">require</span></code> compiles all four packages from source and
+caches them locally. Run <code class="docutils literal notranslate"><span class="pre">xmake</span> <span class="pre">require</span> <span class="pre">--list</span></code> at any time to view the
+installed packages and versions.</p>
+</div>
+<p>Build and run the application:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">xmake</span>
+<span class="n">xmake</span> <span class="n">run</span>
+</pre></div>
+</div>
+<p>A native Mica-styled window titled <strong>hello</strong> opens with a <code class="docutils literal notranslate"><span class="pre">Counter</span></code> heading,
+<code class="docutils literal notranslate"><span class="pre">Value:</span> <span class="pre">0</span></code>, and <code class="docutils literal notranslate"><span class="pre">−</span></code>, <code class="docutils literal notranslate"><span class="pre">+</span></code>, and <code class="docutils literal notranslate"><span class="pre">Reset</span></code> buttons. After editing
+<code class="docutils literal notranslate"><span class="pre">src/main.c</span></code>, run <code class="docutils literal notranslate"><span class="pre">xmake</span></code> and <code class="docutils literal notranslate"><span class="pre">xmake</span> <span class="pre">run</span></code> to rebuild incrementally; run
+<code class="docutils literal notranslate"><span class="pre">xmake</span> <span class="pre">require</span></code> again whenever you update <code class="docutils literal notranslate"><span class="pre">add_requires</span></code> in <code class="docutils literal notranslate"><span class="pre">xmake.lua</span></code>.</p>
+</section>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">¶</a></h2>
+<p>Continue with the guide for your track:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="declarative/index.html"><span class="doc">Declarative UI Guide</span></a> — Learn the Elm MVU loop, walk through the
+<code class="docutils literal notranslate"><span class="pre">fluxent.decl</span></code> template, and master layout containers, form inputs,
+virtualized collections, multi-page navigation, and OS integration.</p></li>
+<li><p><a class="reference internal" href="imperative/index.html"><span class="doc">Imperative UI Guide</span></a> — Master the <code class="docutils literal notranslate"><span class="pre">fluxent.imp</span></code> lifecycle, atomic
+<code class="docutils literal notranslate"><span class="pre">XtkTxn</span></code> transactions, <code class="docutils literal notranslate"><span class="pre">.set</span></code> property bitmasks, event routing,
+<code class="docutils literal notranslate"><span class="pre">XTK_EVENT_REALIZE</span></code> list virtualization, and desktop shell APIs.</p></li>
+<li><p><a class="reference internal" href="concepts.html"><span class="doc">Architecture &amp; Core Concepts</span></a> — Understand how <code class="docutils literal notranslate"><span class="pre">xent-core</span></code>, <code class="docutils literal notranslate"><span class="pre">xent-kit</span></code>, and <code class="docutils literal notranslate"><span class="pre">fluxent</span></code>
+fit together, and how <code class="docutils literal notranslate"><span class="pre">flux_controls_use</span></code> keeps executables small.</p></li>
+</ul>
+</section>
+</section>
+
+
+    </main>
+    <nav class="related bottom" role="navigation">
+  <a class="prev" href="index.html" title="Previous">
+    &larr; Project Xent
+  </a>
+  <a class="next" href="declarative/index.html" title="Next">
+    Declarative UI Guide &rarr;
+  </a>
+  <div class="clear"></div>
+    </nav>
+    
+
+  </div>
+
+  <div class="clear"></div>
+</div>
+<footer class="footer" role="contentinfo">
+    &copy; Copyright 2026, Project Xent.
+  
+  Created using <a href="http://sphinx-doc.org/">Sphinx</a> with
+  <a href="https://github.com/vsalvino/sphinx-library">Library</a> theme.
+  
+  <a href="_sources/quickstart.rst.txt" rel="nofollow">Page source</a>
+</footer>
+  </body>
+</html>

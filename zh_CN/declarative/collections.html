@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>4. 虚拟化列表、网格、树视图与子树缓存 &#8212; Xent 0.3.3 文档</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=c03c27c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/library/library.css?v=fa49c7df" />
+    <script src="../_static/documentation_options.js?v=0538d007"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/translations.js?v=540d3cec"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="5. 多页导航、工具栏与模态弹层" href="navigation.html" />
+    <link rel="prev" title="3. 表单输入、选择器与受控状态" href="inputs.html" />
+ 
+
+<link rel="stylesheet" id="sphinx-library-type" href="../_static/library/type-book.css" type="text/css" />
+<link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+<meta name="viewport" content="width=device-width, initial-scale=0.9" />
+<script>
+  mobile_menu_content = "";
+  function toggleMenu() {
+    var div = document.getElementsByClassName("document").item(0);
+    var btn = document.getElementById("menu-toggler");
+    if(div.classList.contains("mobile-show")) {
+      div.classList.remove("mobile-show");
+      btn.innerHTML = mobile_menu_content;
+    }
+    else {
+      div.classList.add("mobile-show");
+      mobile_menu_content = btn.innerHTML;
+      btn.innerHTML = btn.getAttribute("data-open");
+    }
+  }
+</script>
+  </head>
+<body class="sepia">
+<script>
+  (function () {
+    var key = "sphinx-library-mode";
+    var dark = window.matchMedia("(prefers-color-scheme: dark)");
+    function stored() {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function apply() {
+      document.body.className = stored() || (dark.matches ? "dark" : "sepia");
+    }
+    window.toggleMode = function (theme) {
+      try {
+        if (theme) localStorage.setItem(key, theme);
+        else localStorage.removeItem(key);
+      } catch (e) {}
+      apply();
+    };
+    dark.addEventListener("change", apply);
+    apply();
+  })();
+</script>
+<div class="document">
+
+  
+  <nav class="mobile-menu" role="navigation">
+    
+  <button type="button" id="menu-toggler" onclick="toggleMenu();"
+    data-open="× Close">≡ Menu</button>
+  <a href="../index.html">Xent</a>
+  <noscript>
+    <div>
+      JavaScript is required to open/close mobile menu.
+    </div>
+  </noscript>
+  </nav>
+  
+
+  
+  <nav class="sphinxsidebar" role="navigation" aria-label="main navigation">
+    
+
+
+<h1 class="logo ">
+  <a href="../index.html">Xent</a>
+</h1>
+
+
+
+<p class="description">Native cross-platform UI in C23.</p>
+
+
+
+<p class="description">Version 0.3.3</p>
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="提交" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>目录</h3>
+<p class="caption" role="heading"><span class="caption-text">使用手册</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">快速开始</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">声明式开发指南</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="mvu.html">1. Elm MVU 循环与应用结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="layout.html">2. 布局容器、文本排版与图像媒体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html">3. 表单输入、选择器与受控状态</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">4. 虚拟化列表、网格、树视图与子树缓存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="navigation.html">5. 多页导航、工具栏与模态弹层</a></li>
+<li class="toctree-l2"><a class="reference internal" href="host.html">6. 文件对话框、拖放、主题切换与后台线程</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../imperative/index.html">命令式开发指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts.html">架构与核心概念</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API 参考</a></li>
+</ul>
+
+<h3>本页目录</h3>
+<div class="localtoc"><ul>
+<li><a class="reference internal" href="#">4. 虚拟化列表、网格、树视图与子树缓存</a><ul>
+<li><a class="reference internal" href="#virtualized-listview-listbox-gridview">虚拟化 <code class="docutils literal notranslate"><span class="pre">ListView</span></code> 、 <code class="docutils literal notranslate"><span class="pre">ListBox</span></code> 与 <code class="docutils literal notranslate"><span class="pre">GridView</span></code></a><ul>
+<li><a class="reference internal" href="#fixed-vs-variable-height-rows">固定行高与可变行高测量</a></li>
+<li><a class="reference internal" href="#selection-modes-rubber-band-marquee-selection">选择模式与矩形框选（Rubber-Band）</a></li>
+<li><a class="reference internal" href="#grid-layouts-itemsview">网格布局与 <code class="docutils literal notranslate"><span class="pre">ItemsView</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#grouped-lists-with-sticky-headers-0-3-3">带吸顶标题的分组列表（0.3.3）</a></li>
+<li><a class="reference internal" href="#details-table-view-with-columnheader-0-3-3">带 <code class="docutils literal notranslate"><span class="pre">ColumnHeader</span></code> 表头的明细列表（0.3.3）</a></li>
+<li><a class="reference internal" href="#hierarchical-treeview">层级树视图 <code class="docutils literal notranslate"><span class="pre">TreeView</span></code></a></li>
+<li><a class="reference internal" href="#reconciler-keys-memoized-regions">协调器节点键（Key）与缓存区域</a><ul>
+<li><a class="reference internal" href="#preserving-identity-with-xtk-keyed-u64-and-xtk-keyed">使用 <code class="docutils literal notranslate"><span class="pre">xtk_keyed_u64</span></code> 与 <code class="docutils literal notranslate"><span class="pre">xtk_keyed</span></code> 保持节点身份</a></li>
+<li><a class="reference internal" href="#skipping-unchanged-subtrees-with-static-memo-regions">利用静态与记忆化区域跳过未变子树</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div><h3>阅读模式</h3>
+<button type="button" onclick="toggleMode(null);">自动</button>
+<button type="button" onclick="toggleMode('light');">浅色</button>
+<button type="button" onclick="toggleMode('sepia');">护眼</button>
+<button type="button" onclick="toggleMode('dark');">深色</button>
+<noscript>
+  <div>切换阅读模式需要启用 JavaScript.</div>
+</noscript>
+  </nav>
+  <div class="documentwrapper">
+    
+
+    <main class="body" role="main" id="main">
+      
+  <section id="virtualized-lists-grids-trees-caching">
+<h1>4. 虚拟化列表、网格、树视图与子树缓存<a class="headerlink" href="#virtualized-lists-grids-trees-caching" title="链接到此标题。">¶</a></h1>
+<p>Xent 的集合控件开箱支持视口虚拟化：无论数据集包含 50 条还是 10 万条记录，宿主始终只为当前可见窗口实例化控件，并在滚动时平滑复用行槽位。</p>
+<section id="virtualized-listview-listbox-gridview">
+<h2>虚拟化 <code class="docutils literal notranslate"><span class="pre">ListView</span></code> 、 <code class="docutils literal notranslate"><span class="pre">ListBox</span></code> 与 <code class="docutils literal notranslate"><span class="pre">GridView</span></code><a class="headerlink" href="#virtualized-listview-listbox-gridview" title="链接到此标题。">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">xtk_list</span></code> （ <code class="docutils literal notranslate"><span class="pre">&amp;flux_ctrl_list</span></code> ）、 <code class="docutils literal notranslate"><span class="pre">xtk_listbox</span></code> 、 <code class="docutils literal notranslate"><span class="pre">xtk_gridview</span></code> 与 <code class="docutils literal notranslate"><span class="pre">xtk_repeater</span></code> 共用 <code class="docutils literal notranslate"><span class="pre">XtkListDesc</span></code> 描述结构。只需提供总条数 <code class="docutils literal notranslate"><span class="pre">.nitem</span></code> 与按需构建函数 <code class="docutils literal notranslate"><span class="pre">item(ui,</span> <span class="pre">env,</span> <span class="pre">index)</span></code> ，宿主便会自动构建可见视口内的行：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="n">XtkEl</span><span class="w"> </span><span class="o">*</span><span class="nf">build_contact_row</span><span class="p">(</span><span class="n">XtkUi</span><span class="w"> </span><span class="o">*</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">env</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">index</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Model</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">env</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">xtk_row</span><span class="p">(</span>
+<span class="w">        </span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkStackDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{.</span><span class="n">gap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">align</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XENT_FLEX_ALIGN_CENTER</span><span class="p">},</span>
+<span class="w">        </span><span class="n">xtk_kids</span><span class="p">(</span>
+<span class="w">            </span><span class="n">xtk_sized</span><span class="p">(</span><span class="n">xtk_text</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_fmt</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="s">"#%d"</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="n">XtkTextDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{.</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="p">}),</span><span class="w"> </span><span class="mf">64.0f</span><span class="p">,</span><span class="w"> </span><span class="n">NAN</span><span class="p">),</span>
+<span class="w">            </span><span class="n">xtk_text</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_fmt</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="s">"Record %d (filter: %d)"</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">active_filter</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="n">XtkTextDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">})</span>
+<span class="w">        </span><span class="p">)</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Inside view():</span>
+<span class="n">xtk_grow</span><span class="p">(</span>
+<span class="w">    </span><span class="n">xtk_list</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkListDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">nitem</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="mi">100000</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">itemh</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="mf">40.0f</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">item</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="n">build_contact_row</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">env</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">m</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">sel_mode</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_LIST_SELECT_SINGLE</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">sel</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">selected_row</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">select</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_ROW_SELECT</span><span class="p">),</span>
+<span class="w">        </span><span class="p">.</span><span class="n">item_invoked_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">invoke</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_ROW_ACTIVATE</span><span class="p">),</span>
+<span class="w">    </span><span class="p">}),</span>
+<span class="w">    </span><span class="mf">1.0f</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<section id="fixed-vs-variable-height-rows">
+<h3>固定行高与可变行高测量<a class="headerlink" href="#fixed-vs-variable-height-rows" title="链接到此标题。">¶</a></h3>
+<ul class="simple">
+<li><p><strong>统一固定行高</strong> ：将 <code class="docutils literal notranslate"><span class="pre">.itemh</span></code> 设为 <code class="docutils literal notranslate"><span class="pre">40.0f</span></code> （或所需像素高度），可实现 <code class="docutils literal notranslate"><span class="pre">O(1)</span></code> 精确滚动条定位。</p></li>
+<li><p><strong>动态测量可变行高（0.3.3 默认行为）</strong> ：当各行包含多行折行文本或不等高内容时，保持 <code class="docutils literal notranslate"><span class="pre">.itemh</span> <span class="pre">=</span> <span class="pre">0</span></code> ，Fluxent 会自动测量已实例化行的真实高度，并根据滑动平均值估算视口外总高度。</p></li>
+</ul>
+</section>
+<section id="selection-modes-rubber-band-marquee-selection">
+<h3>选择模式与矩形框选（Rubber-Band）<a class="headerlink" href="#selection-modes-rubber-band-marquee-selection" title="链接到此标题。">¶</a></h3>
+<p>通过 <code class="docutils literal notranslate"><span class="pre">.sel_mode</span></code> 选择交互模式：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">XTK_LIST_SELECT_SINGLE</span></code> —— 单选模式，通过 <code class="docutils literal notranslate"><span class="pre">.sel</span></code> 与 <code class="docutils literal notranslate"><span class="pre">msg.i</span></code> 同步选中下标。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">XTK_LIST_SELECT_NONE</span></code> —— 纯展示或仅响应行激活（invoke）的列表。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">XTK_LIST_SELECT_MULTIPLE</span></code> —— 多选复选框模式，点击逐行切换勾选。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">XTK_LIST_SELECT_EXTENDED</span></code> —— 资源管理器式扩展多选，支持 <code class="docutils literal notranslate"><span class="pre">Ctrl+单击</span></code> 、 <code class="docutils literal notranslate"><span class="pre">Shift+单击</span></code> 连续区间与 <code class="docutils literal notranslate"><span class="pre">Ctrl+A</span></code> 全选；在 <strong>0.3.3</strong> 中设置 <code class="docutils literal notranslate"><span class="pre">.rect_select</span> <span class="pre">=</span> <span class="pre">true</span></code> 可进一步启用鼠标拖拽橡皮筋矩形框选。</p></li>
+</ul>
+</section>
+<section id="grid-layouts-itemsview">
+<h3>网格布局与 <code class="docutils literal notranslate"><span class="pre">ItemsView</span></code><a class="headerlink" href="#grid-layouts-itemsview" title="链接到此标题。">¶</a></h3>
+<p>多列磁贴网格可使用 <code class="docutils literal notranslate"><span class="pre">xtk_gridview</span></code> 配合 <code class="docutils literal notranslate"><span class="pre">.itemw</span></code> 与 <code class="docutils literal notranslate"><span class="pre">.itemh</span></code> （ <code class="docutils literal notranslate"><span class="pre">.ncol</span> <span class="pre">=</span> <span class="pre">0</span></code> 时按容器宽度自动计算列数），或使用 <code class="docutils literal notranslate"><span class="pre">xtk_itemsview</span></code> （ <code class="docutils literal notranslate"><span class="pre">&amp;flux_ctrl_itemsview</span></code> ）配合 <code class="docutils literal notranslate"><span class="pre">XTK_ITEMS_LAYOUT_UNIFORM_GRID</span></code> / <code class="docutils literal notranslate"><span class="pre">XTK_ITEMS_LAYOUT_FLOW</span></code> 。</p>
+</section>
+</section>
+<section id="grouped-lists-with-sticky-headers-0-3-3">
+<h2>带吸顶标题的分组列表（0.3.3）<a class="headerlink" href="#grouped-lists-with-sticky-headers-0-3-3" title="链接到此标题。">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">xtk_list</span></code> 与 <code class="docutils literal notranslate"><span class="pre">xtk_gridview</span></code> 均支持分段数据与 WinUI 风格的内联吸顶组标题。在 <code class="docutils literal notranslate"><span class="pre">.groups</span></code> 中传入各组元素个数的 <code class="docutils literal notranslate"><span class="pre">int32_t</span></code> 数组、在 <code class="docutils literal notranslate"><span class="pre">.ngroup</span></code> 中指定组数，并提供 <code class="docutils literal notranslate"><span class="pre">.group_header</span></code> 构建函数：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">int32_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">kSectionCounts</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="p">};</span><span class="w"> </span><span class="c1">// Total .nitem = 23</span>
+
+<span class="k">static</span><span class="w"> </span><span class="n">XtkEl</span><span class="w"> </span><span class="o">*</span><span class="nf">build_section_header</span><span class="p">(</span><span class="n">XtkUi</span><span class="w"> </span><span class="o">*</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">env</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">group</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">env</span><span class="p">;</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="k">const</span><span class="w"> </span><span class="n">kTitles</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">"Pinned"</span><span class="p">,</span><span class="w"> </span><span class="s">"Recent"</span><span class="p">,</span><span class="w"> </span><span class="s">"Archived"</span><span class="w"> </span><span class="p">};</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">xtk_text</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="n">kTitles</span><span class="p">[</span><span class="n">group</span><span class="p">],</span><span class="w"> </span><span class="p">(</span><span class="n">XtkTextDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{.</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">weight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_FONT_SEMI_BOLD</span><span class="p">});</span>
+<span class="p">}</span>
+
+<span class="n">xtk_list</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkListDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">nitem</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="mi">23</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">itemh</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="mf">40.0f</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">groups</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="n">kSectionCounts</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">ngroup</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">group_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">build_section_header</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">item</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="n">build_contact_row</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">env</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">m</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">sel_mode</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_LIST_SELECT_SINGLE</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">sel</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">selected_row</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">select</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_ROW_SELECT</span><span class="p">),</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<p>注意 <code class="docutils literal notranslate"><span class="pre">item(ui,</span> <span class="pre">env,</span> <span class="pre">index)</span></code> 接收的依然是 <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">..</span> <span class="pre">nitem</span> <span class="pre">-</span> <span class="pre">1</span></code> 的逻辑数据下标，而 <code class="docutils literal notranslate"><span class="pre">group_header</span></code> 接收 <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">..</span> <span class="pre">ngroup</span> <span class="pre">-</span> <span class="pre">1</span></code> 的组下标。如需将组头与数据项交错排列的扁平行号映射回 <code class="docutils literal notranslate"><span class="pre">{group,</span> <span class="pre">item}</span></code> ，可调用 <code class="docutils literal notranslate"><span class="pre">xtk_list_row(groups,</span> <span class="pre">ngroup,</span> <span class="pre">flat_row)</span></code> 。</p>
+</section>
+<section id="details-table-view-with-columnheader-0-3-3">
+<h2>带 <code class="docutils literal notranslate"><span class="pre">ColumnHeader</span></code> 表头的明细列表（0.3.3）<a class="headerlink" href="#details-table-view-with-columnheader-0-3-3" title="链接到此标题。">¶</a></h2>
+<p>将 <code class="docutils literal notranslate"><span class="pre">xtk_colheader</span></code> （需注册 <code class="docutils literal notranslate"><span class="pre">&amp;flux_ctrl_colheader</span></code> 与 <code class="docutils literal notranslate"><span class="pre">&amp;flux_ctrl_colitem</span></code> ）挂载到 <code class="docutils literal notranslate"><span class="pre">XtkListDesc.header</span></code> 上，即可构建支持点击排序箭头、拖拽调整列宽、双击分隔线自适应列宽以及拖拽重排列顺序的明细表格：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">XtkEl</span><span class="w"> </span><span class="o">*</span><span class="n">hdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_colheader</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="n">xtk_kids</span><span class="p">(</span>
+<span class="w">    </span><span class="n">xtk_colitem</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="s">"Name"</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkColItemDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">width</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">col_w</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="w">        </span><span class="p">.</span><span class="n">min_width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">120.0f</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">sort</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">sort_col</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">m</span><span class="o">-&gt;</span><span class="n">sort_desc</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">XTK_SORT_DESCENDING</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">XTK_SORT_ASCENDING</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">XTK_SORT_NONE</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">click</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg_i</span><span class="p">(</span><span class="n">MSG_COL_SORT</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">        </span><span class="p">.</span><span class="n">resize</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg_i</span><span class="p">(</span><span class="n">MSG_COL_RESIZE</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">        </span><span class="p">.</span><span class="n">fit</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg_i</span><span class="p">(</span><span class="n">MSG_COL_FIT</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">        </span><span class="p">.</span><span class="n">reorder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg_i</span><span class="p">(</span><span class="n">MSG_COL_REORDER</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">    </span><span class="p">}),</span>
+<span class="w">    </span><span class="n">xtk_colitem</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="s">"Size"</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkColItemDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">width</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">col_w</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+<span class="w">        </span><span class="p">.</span><span class="n">align</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_ALIGN_RIGHT</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">click</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg_i</span><span class="p">(</span><span class="n">MSG_COL_SORT</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span>
+<span class="w">        </span><span class="p">.</span><span class="n">resize</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg_i</span><span class="p">(</span><span class="n">MSG_COL_RESIZE</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="p">));</span>
+
+<span class="c1">// Pass .header = hdr on XtkListDesc, and size cells in each row to m-&gt;col_w[c].</span>
+</pre></div>
+</div>
+<p>在 <code class="docutils literal notranslate"><span class="pre">update()</span></code> 中， <code class="docutils literal notranslate"><span class="pre">.resize</span></code> 将调整后的列宽写入 <code class="docutils literal notranslate"><span class="pre">msg.f</span></code> （列下标在 <code class="docutils literal notranslate"><span class="pre">msg.i</span></code> 中）， <code class="docutils literal notranslate"><span class="pre">.reorder</span></code> 将目标位置放入 <code class="docutils literal notranslate"><span class="pre">msg.i</span></code> 、被拖动的原列放入 <code class="docutils literal notranslate"><span class="pre">(int)</span> <span class="pre">msg.d</span></code> 。</p>
+</section>
+<section id="hierarchical-treeview">
+<h2>层级树视图 <code class="docutils literal notranslate"><span class="pre">TreeView</span></code><a class="headerlink" href="#hierarchical-treeview" title="链接到此标题。">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">xtk_tree</span></code> （ <code class="docutils literal notranslate"><span class="pre">&amp;flux_ctrl_tree</span></code> ）将 <code class="docutils literal notranslate"><span class="pre">XtkTreeNodeDesc</span></code> 层级树中的可见节点展平为带展开/折叠箭头的虚拟化列表：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="n">XtkTreeNodeDesc</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">kSrcFiles</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">{.</span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"main.c"</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">icon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Document"</span><span class="p">},</span>
+<span class="w">    </span><span class="p">{.</span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"view.c"</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">icon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Document"</span><span class="p">},</span>
+<span class="p">};</span>
+
+<span class="n">XtkTreeNodeDesc</span><span class="w"> </span><span class="n">roots</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">text</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s">"src"</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">icon</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s">"Folder"</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">expanded</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">src_expanded</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">children</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">kSrcFiles</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">child_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{.</span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"xmake.lua"</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">icon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Document"</span><span class="p">},</span>
+<span class="p">};</span>
+
+<span class="n">xtk_sized</span><span class="p">(</span>
+<span class="w">    </span><span class="n">xtk_tree</span><span class="p">(</span><span class="n">ui</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">XtkTreeDesc</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">roots</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">roots</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">nroot</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">sel_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XTK_TREE_SELECT_SINGLE</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">sel</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="o">-&gt;</span><span class="n">tree_sel</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">select</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_TREE_SELECT</span><span class="p">),</span>
+<span class="w">        </span><span class="p">.</span><span class="n">expand</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_TREE_EXPAND</span><span class="p">),</span>
+<span class="w">        </span><span class="p">.</span><span class="n">invoke</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">xtk_msg</span><span class="p">(</span><span class="n">MSG_TREE_INVOKE</span><span class="p">),</span>
+<span class="w">    </span><span class="p">}),</span>
+<span class="w">    </span><span class="n">NAN</span><span class="p">,</span><span class="w"> </span><span class="mf">280.0f</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">.select</span></code> 、 <code class="docutils literal notranslate"><span class="pre">.expand</span></code> 与 <code class="docutils literal notranslate"><span class="pre">.invoke</span></code> 均在 <code class="docutils literal notranslate"><span class="pre">msg.i</span></code> 中报告 <strong>当前可见行的扁平下标</strong> ； <code class="docutils literal notranslate"><span class="pre">.expand</span></code> 同时在 <code class="docutils literal notranslate"><span class="pre">msg.b</span></code> 中给出新的展开布尔值。</p>
+</section>
+<section id="reconciler-keys-memoized-regions">
+<h2>协调器节点键（Key）与缓存区域<a class="headerlink" href="#reconciler-keys-memoized-regions" title="链接到此标题。">¶</a></h2>
+<section id="preserving-identity-with-xtk-keyed-u64-and-xtk-keyed">
+<h3>使用 <code class="docutils literal notranslate"><span class="pre">xtk_keyed_u64</span></code> 与 <code class="docutils literal notranslate"><span class="pre">xtk_keyed</span></code> 保持节点身份<a class="headerlink" href="#preserving-identity-with-xtk-keyed-u64-and-xtk-keyed" title="链接到此标题。">¶</a></h3>
+<p>容器内的同级元素默认按位置匹配。当子元素会发生排序变化、中间增删，或在同一个父槽位下切换不同页面时，为其指定稳定键值即可让保留状态（滚动偏移、焦点、过渡动画、输入光标）始终跟随对应的逻辑条目：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_keyed_u64(el,</span> <span class="pre">item_id)</span></code> —— 零内存分配的 64 位整数键（推荐用于记录 ID、页面枚举 ID 与标签页 ID）。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_keyed(ui,</span> <span class="pre">xtk_fmt(ui,</span> <span class="pre">&quot;card-%s&quot;,</span> <span class="pre">slug),</span> <span class="pre">el)</span></code> —— 字符串键（便于命名路由与调试诊断）。</p></li>
+</ul>
+</section>
+<section id="skipping-unchanged-subtrees-with-static-memo-regions">
+<h3>利用静态与记忆化区域跳过未变子树<a class="headerlink" href="#skipping-unchanged-subtrees-with-static-memo-regions" title="链接到此标题。">¶</a></h3>
+<p>当界面中既有高频刷新的状态指示器，又有很少改动的复杂侧边栏或大型表单时，可通过区域缓存直接跳过未变子树的构建与比对：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_static_region(ui,</span> <span class="pre">0x1001u,</span> <span class="pre">build_footer,</span> <span class="pre">NULL)</span></code> —— 首帧调用一次 <code class="docutils literal notranslate"><span class="pre">build_footer</span></code> ，后续所有帧直接复用保留子树。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xtk_memo_region(ui,</span> <span class="pre">0x1002u,</span> <span class="pre">m-&gt;sidebar_rev,</span> <span class="pre">build_sidebar,</span> <span class="pre">(void</span> <span class="pre">*)</span> <span class="pre">m)</span></code> —— 仅当 <code class="docutils literal notranslate"><span class="pre">m-&gt;sidebar_rev</span></code> 变化时重建该子树；只需在 <code class="docutils literal notranslate"><span class="pre">update()</span></code> 中真正修改侧边栏数据的分支里递增 <code class="docutils literal notranslate"><span class="pre">m-&gt;sidebar_rev</span></code> 。</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+    </main>
+    <nav class="related bottom" role="navigation">
+  <a class="prev" href="inputs.html" title="Previous">
+    &larr; 3. 表单输入、选择器与受控状态
+  </a>
+  <a class="next" href="navigation.html" title="Next">
+    5. 多页导航、工具栏与模态弹层 &rarr;
+  </a>
+  <div class="clear"></div>
+    </nav>
+    
+
+  </div>
+
+  <div class="clear"></div>
+</div>
+<footer class="footer" role="contentinfo">
+    &copy; Copyright 2026, Project Xent.
+  
+  Created using <a href="http://sphinx-doc.org/">Sphinx</a> with
+  <a href="https://github.com/vsalvino/sphinx-library">Library</a> theme.
+  
+  <a href="../_sources/declarative/collections.rst.txt" rel="nofollow">Page source</a>
+</footer>
+  </body>
+</html>
